@@ -5,13 +5,18 @@ const toggle = document.querySelector('.menu-toggle');
 const navigation = document.getElementById('navigation');
 const motionButtons = document.querySelectorAll('.motion-toggle');
 let manuallyPaused = false;
+try { manuallyPaused = localStorage.getItem('bza-motion-paused') === 'true'; } catch {}
 
 function setMenu(open) {
   navigation.classList.toggle('is-open', open);
   toggle.setAttribute('aria-expanded', String(open));
   toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
 }
-toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+toggle.addEventListener('click', () => {
+  const open = toggle.getAttribute('aria-expanded') !== 'true';
+  setMenu(open);
+  if (open) navigation.querySelector('a').focus();
+});
 navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
@@ -22,7 +27,7 @@ document.addEventListener('keydown', event => {
 document.addEventListener('click', event => {
   if (!event.target.closest('.site-header')) setMenu(false);
 });
-window.matchMedia('(min-width: 701px)').addEventListener('change', event => {
+window.matchMedia('(min-width: 1081px)').addEventListener('change', event => {
   if (event.matches) setMenu(false);
 });
 
@@ -42,6 +47,7 @@ function syncMotion() {
 }
 motionButtons.forEach(button => button.addEventListener('click', () => {
   manuallyPaused = !manuallyPaused;
+  try { localStorage.setItem('bza-motion-paused', String(manuallyPaused)); } catch {}
   syncMotion();
 }));
 reducedMotion.addEventListener('change', syncMotion);
@@ -55,8 +61,8 @@ if ('IntersectionObserver' in window) {
     }
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
-  syncMotion();
 }
+syncMotion();
 document.querySelectorAll('[data-message]').forEach(link => {
   link.href = 'https://wa.me/523342781554?text=' + encodeURIComponent(link.dataset.message);
 });
