@@ -1,4 +1,5 @@
 /* Shared navigation and the three editorial pages. */
+.creative-studio{margin:0;min-width:0;transform:rotate(2deg)}.creative-studio img{display:block;width:100%;height:auto;box-shadow:0 18px 45px #17171714}.creative-studio figcaption{margin-top:18px;color:var(--muted);font-size:.65rem;letter-spacing:.12em;line-height:1.7}
 .navigation>a[aria-current="page"]{color:var(--red)}
 .navigation>a[aria-current="page"]::after{transform:scaleX(1)}
 .navigation{gap:24px}.header-inner{gap:24px}
