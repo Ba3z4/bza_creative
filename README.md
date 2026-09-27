@@ -26,14 +26,18 @@ El flujo de GitHub Pages se conserva como una alternativa; no es necesario para 
 - `/servicios/`: servicios, alcances, entregables y preguntas frecuentes.
 - `/creatividad/`: conceptos creativos con intención, decisiones visuales y aplicaciones.
 - `/enfoque/`: proceso de trabajo, principios y preparación del proyecto.
+- `/campana/`: página de captación para anuncios y diagnóstico inicial.
 
-La navegación principal y el pie enlazan las cuatro páginas. `dist/styles.css` contiene el estilo original; `dist/pages.css`, los estilos compartidos de las páginas interiores. La preferencia de pausar las animaciones se conserva en el navegador al navegar entre páginas.
+La navegación principal y el pie enlazan las cuatro páginas institucionales; `/campana/` funciona como destino enfocado para anuncios. `dist/styles.css` contiene el estilo original; `dist/pages.css`, los estilos compartidos de las páginas interiores. La preferencia de pausar las animaciones se conserva en el navegador al navegar entre páginas.
+
+`dist/campaign.js` conserva parámetros UTM durante la sesión, prepara eventos en `dataLayer` y añade el origen de la visita al mensaje de WhatsApp. La guía de activación está en `docs/configuracion-campana.md` y el plan de lanzamiento en `docs/plan-mercadotecnia-90-dias.md`.
 
 ## Verificación local
 
 ```powershell
 node --check dist/script.js
+node --check dist/campaign.js
 node scripts/check-site.mjs
 ```
 
-La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos y el WhatsApp de contacto en las cuatro páginas.
+La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, atribución y el WhatsApp de contacto en las cinco páginas.

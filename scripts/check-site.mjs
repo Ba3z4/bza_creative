@@ -27,6 +27,7 @@ for (const file of pages) {
   assert.ok(description && !descriptions.has(description), `${relative}: unique description`);
   descriptions.add(description);
   assert.match(html, /aria-current="page"/, `${relative}: current page indicator`);
+  assert.match(html, /campaign\.js/, `${relative}: campaign attribution script`);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
   assert.equal(new Set(ids).size, ids.length, `${relative}: no duplicate IDs`);
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
@@ -46,5 +47,5 @@ for (const file of pages) {
     assert.equal(match[1], 'https://wa.me/523342781554', `${relative}: correct contact number`);
   }
 }
-assert.equal(pages.length, 4, 'Home and three detail pages exist');
+assert.equal(pages.length, 5, 'Home, campaign landing and three detail pages exist');
 console.log(`Verified ${pages.length} pages and ${references} local links/assets; unique metadata and valid WhatsApp links.`);
