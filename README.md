@@ -32,6 +32,8 @@ La navegación principal y el pie enlazan las cuatro páginas institucionales; `
 
 `dist/campaign.js` conserva parámetros UTM durante la sesión, prepara eventos en `dataLayer` y añade el origen de la visita al mensaje de WhatsApp. La guía de activación está en `docs/configuracion-campana.md` y el plan de lanzamiento en `docs/plan-mercadotecnia-90-dias.md`.
 
+La primera secuencia editorial y la preparación para Meta Ads están en `docs/campana-instagram-lanzamiento.md`.
+
 ## Verificación local
 
 ```powershell
