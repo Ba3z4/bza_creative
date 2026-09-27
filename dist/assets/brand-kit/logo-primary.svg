@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="360" viewBox="0 0 1400 360" role="img" aria-labelledby="title desc">
+  <title id="title">BZA Creative</title><desc id="desc">Logotipo de BZA Creative con estrella roja</desc>
+  <g fill="none" stroke="#D92E22" stroke-width="22" stroke-linecap="butt">
+    <path d="M170 50v260M40 180h260M78 88l184 184M78 272 262 88"/>
+  </g>
+  <text x="350" y="230" fill="#083D3A" font-family="Arial, Helvetica, sans-serif" font-size="190" font-weight="700" letter-spacing="-10">BZA</text>
+  <text x="735" y="230" fill="#171717" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="400" letter-spacing="-5">creative</text>
+  <circle cx="1245" cy="218" r="15" fill="#D92E22"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo BZA Creative</title><desc id="desc">Monograma BZA sobre fondo verde con estrella roja</desc>
+  <rect width="1080" height="1080" rx="120" fill="#083D3A"/>
+  <g fill="none" stroke="#D92E22" stroke-width="27" stroke-linecap="butt">
+    <path d="M540 120v220M430 230h220M462 152l156 156M462 308l156-156"/>
+  </g>
+  <text x="540" y="690" text-anchor="middle" fill="#F7F7F5" font-family="Arial, Helvetica, sans-serif" font-size="300" font-weight="700" letter-spacing="-18">BZA</text>
+  <text x="540" y="815" text-anchor="middle" fill="#F7F7F5" font-family="Arial, Helvetica, sans-serif" font-size="72" letter-spacing="15">CREATIVE</text>
+  <circle cx="540" cy="900" r="25" fill="#D92E22"/>
+</svg>
