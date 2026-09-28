@@ -10,11 +10,11 @@ Construir credibilidad inicial y generar conversaciones calificadas sobre diseñ
 
 ## Punto de partida
 
-El perfil de Instagram comenzó con una publicación, cero seguidores, cero cuentas seguidas y sin biografía visible. En una cuenta nueva, programar contenido por sí solo suele producir poco alcance. La distribución manual y la optimización del perfil son parte obligatoria de esta campaña.
+El perfil de Instagram comenzó con una publicación, cero seguidores, cero cuentas seguidas y sin biografía visible. La biografía ya fue optimizada para presentar diseño web, aplicaciones, plataformas y el enfoque en empresas. En una cuenta nueva, programar contenido por sí solo suele producir poco alcance. La distribución manual y la optimización del perfil son parte obligatoria de esta campaña.
 
 ## Contenido programado
 
-Hay 15 publicaciones automáticas en Facebook e Instagram. La primera ya fue publicada y las demás se distribuyen hasta el 23 de octubre, principalmente a las 10:00, la mejor ventana compartida observada en Metricool.
+Hay 18 publicaciones automáticas, incluyendo tres Reels verticales en Facebook e Instagram. La primera ya fue publicada y las demás se distribuyen hasta el 23 de octubre, principalmente a las 10:00, la mejor ventana compartida observada en Metricool.
 
 Los contenidos cubren identidad, web, estrategia, proceso, buscadores, diagnóstico, aplicaciones, integraciones y alcance de proyectos grandes. Cada pieza utiliza una palabra clave diferente para identificar el interés en mensajes directos.
 
@@ -51,7 +51,7 @@ Enlace recomendado: `https://bza-creative.ingluisbaeza.workers.dev/`
 
 ## Expectativa razonable del primer ciclo
 
-Con el perfil partiendo de cero, 15 publicaciones y ejecución diaria consistente:
+Con el perfil partiendo de cero, 18 publicaciones y ejecución diaria consistente:
 
 - Alcance total: 1,000–5,000 cuentas.
 - Visitas al perfil: 30–150.

@@ -1,5 +1,6 @@
 .sites-runtime/
 .openai/
 node_modules/
+.tools/
 *.tar.gz
 *.tar
