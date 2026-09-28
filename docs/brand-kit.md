@@ -23,6 +23,11 @@ Fecha de preparación: 27 de septiembre de 2026
 - `profile-carousel/intro-01.png` — apertura del carrusel de presentación.
 - `profile-carousel/intro-02.png` — resumen de servicios.
 - `profile-carousel/intro-03.png` — llamada al diagnóstico inicial.
+- `feed/feed-identity.png` — sistema visual e identidad de marca.
+- `feed/feed-web-example.png` — ejemplo de diseño web adaptable.
+- `feed/feed-content-example.png` — concepto de contenido para redes.
+- `feed/feed-process.png` — proceso BZA en tres etapas.
+- `feed/feed-diagnostic.png` — lista de comprobación y llamada al diagnóstico.
 
 ## Uso recomendado
 
