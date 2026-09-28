@@ -2,7 +2,7 @@
 
 Zona horaria: `America/Mexico_City`
 
-Las nueve publicaciones están configuradas para publicarse automáticamente en Facebook e Instagram.
+Las diez publicaciones están configuradas para publicarse automáticamente en Facebook e Instagram.
 
 | Fecha | Tema | Palabra de respuesta | Formato |
 |---|---|---|---|
@@ -15,5 +15,6 @@ Las nueve publicaciones están configuradas para publicarse automáticamente en 
 | 5 oct 2026, 10:00 | Proceso de trabajo | `PROCESO` | Imagen |
 | 6 oct 2026, 10:00 | Publicidad en buscadores | `BUSCAR` | Imagen |
 | 7 oct 2026, 10:00 | Diagnóstico digital | `DIAGNÓSTICO` | Imagen |
+| 8 oct 2026, 10:00 | Aplicaciones Android, Windows y macOS | `APP` | Imagen |
 
 El estado `PENDING` en Metricool significa que la publicación está esperando su fecha programada. Todas usan publicación automática en las dos redes.

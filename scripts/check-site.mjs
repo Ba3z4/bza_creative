@@ -47,5 +47,5 @@ for (const file of pages) {
     assert.equal(match[1], 'https://wa.me/523342781554', `${relative}: correct contact number`);
   }
 }
-assert.equal(pages.length, 5, 'Home, campaign landing and three detail pages exist');
+assert.equal(pages.length, 6, 'Home, campaign landing and four detail pages exist');
 console.log(`Verified ${pages.length} pages and ${references} local links/assets; unique metadata and valid WhatsApp links.`);

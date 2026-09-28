@@ -1,6 +1,6 @@
 # BZA Creative
 
-Sitio web profesional de BZA Creative para presentar servicios de diseño web, desarrollo, Google Ads, Meta Ads, TikTok Ads y contenido digital.
+Sitio web profesional de BZA Creative para presentar servicios de diseño web, aplicaciones para Android, Windows y macOS, Google Ads, Meta Ads, TikTok Ads y contenido digital.
 
 ## Vista local
 
@@ -24,6 +24,7 @@ El flujo de GitHub Pages se conserva como una alternativa; no es necesario para 
 
 - `/`: presentación del estudio y resumen de las áreas.
 - `/servicios/`: servicios, alcances, entregables y preguntas frecuentes.
+- `/aplicaciones/`: estrategia, UX/UI y desarrollo de aplicaciones multiplataforma.
 - `/creatividad/`: conceptos creativos con intención, decisiones visuales y aplicaciones.
 - `/enfoque/`: proceso de trabajo, principios y preparación del proyecto.
 - `/campana/`: página de captación para anuncios y diagnóstico inicial.
@@ -42,4 +43,4 @@ node --check dist/campaign.js
 node scripts/check-site.mjs
 ```
 
-La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, atribución y el WhatsApp de contacto en las cinco páginas.
+La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, atribución y el WhatsApp de contacto en las seis páginas.
