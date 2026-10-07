@@ -13,12 +13,18 @@ async function walk(directory) {
   }
 }
 await walk(root);
+const siteUrl = 'https://www.bzacreative.com/';
 const titles = new Set();
+let pagesChecked = 0;
 const descriptions = new Set();
 let references = 0;
 for (const file of pages) {
   const html = await readFile(file, 'utf8');
   const relative = path.relative(root, file);
+  if (/name="robots" content="noindex/.test(html)) continue;
+  pagesChecked++;
+  const canonical = html.match(/rel="canonical" href="([^"]+)"/)?.[1];
+  assert.ok(canonical?.startsWith(siteUrl), `${relative}: canonical uses ${siteUrl}`);
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${relative}: one primary heading`);
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   assert.ok(title && !titles.has(title), `${relative}: unique title`);
@@ -47,5 +53,7 @@ for (const file of pages) {
     assert.equal(match[1], 'https://wa.me/523342781554', `${relative}: correct contact number`);
   }
 }
-assert.equal(pages.length, 6, 'Home, campaign landing and four detail pages exist');
-console.log(`Verified ${pages.length} pages and ${references} local links/assets; unique metadata and valid WhatsApp links.`);
+assert.equal(pagesChecked, 6, 'Home, campaign landing and four detail pages exist');
+const sitemap = await readFile(path.join(root, 'sitemap.xml'), 'utf8');
+assert.equal((sitemap.match(/<loc>/g) || []).length, (sitemap.match(new RegExp(`<loc>${siteUrl}`, 'g')) || []).length, 'sitemap uses the site domain');
+console.log(`Verified ${pagesChecked} pages and ${references} local links/assets; unique metadata and valid WhatsApp links.`);

@@ -14,7 +14,7 @@ Después abre `http://127.0.0.1:4173`.
 
 ## Publicación
 
-El sitio está publicado en Cloudflare Workers en https://bza-creative.ingluisbaeza.workers.dev/ y conectado a la rama `main` de este repositorio.
+El sitio está publicado en Cloudflare Workers con el dominio https://www.bzacreative.com/ y conectado a la rama `main` de este repositorio. Los enlaces canónicos, `sitemap.xml` y `robots.txt` usan ese dominio; la dirección temporal `bza-creative.ingluisbaeza.workers.dev` debe redirigir al dominio para que Google no indexe dos copias del sitio.
 
 `wrangler.jsonc` declara `dist` como carpeta de archivos estáticos. El comando de despliegue es `npx wrangler deploy`; no requiere compilación ni dependencias de ejecución. Las páginas usan carpetas con `index.html` y rutas con barra final.
 
