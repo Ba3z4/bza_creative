@@ -35,22 +35,27 @@ Conclusión: con cero casos de clientes y presupuesto limitado, **Google captura
 
 | Hallazgo | Estado |
 |---|---|
-| Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Le decían a Google que indexara la dirección temporal y no `bzacreative.com`. | **Corregido en este cambio.** |
-| La dirección `workers.dev` sigue respondiendo con el mismo sitio. | Pendiente: redirigirla a `www.bzacreative.com` (regla de redirección en Cloudflare). |
-| No hay Google Search Console. | Pendiente: verificar el dominio y enviar `https://www.bzacreative.com/sitemap.xml`. |
-| No hay GA4 ni etiqueta de Google Ads. | Pendiente: crear la propiedad y compartir los IDs `G-…` y `AW-…`; `campaign.js` ya prepara los eventos. |
-| No hay aviso de privacidad. | Pendiente antes de activar píxeles. |
-| No hay una página por servicio y ciudad (por ejemplo “diseño web en Guadalajara”). | Pendiente: crear al menos una landing por grupo de anuncios. |
+| Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Le decían a Google que indexara la dirección temporal y no `bzacreative.com`. | **Corregido.** |
+| La dirección `workers.dev` respondía con una copia del sitio. | **Corregido:** `src/worker.js` la redirige con 301 a `www.bzacreative.com`, conservando ruta y UTM para que los enlaces viejos sigan funcionando. |
+| No había una página por servicio y ciudad. | **Creadas:** `/diseno-web-guadalajara/` y `/publicidad-digital-guadalajara/`, con datos estructurados para Google. |
+| No había aviso de privacidad. | **Publicado** en `/privacidad/`. Falta agregar nombre legal, domicilio y correo del responsable. |
+| No había GA4 ni etiqueta de Google Ads. | **Listo para activar:** pegar los IDs en `dist/campaign.js` (`MEASUREMENT`). El sitio pide consentimiento antes de cargar cualquier etiqueta. |
+| Las páginas no tenían vista previa para compartir en Facebook y WhatsApp. | **Corregido:** etiquetas Open Graph e imagen `og-bza-creative.png` en todas las páginas. |
+| No hay Google Search Console. | Pendiente del dueño: verificar el dominio y enviar `https://www.bzacreative.com/sitemap.xml`. |
 | Perfil de Negocio de Google | Solo si atiendes en persona o visitas clientes; en ese caso, crear perfil de área de servicio ocultando el domicilio. No usar oficina virtual. |
 
 ## 4. Plan por fases
 
 ### Fase 0 — Bases, $0 MXN (6 al 25 de octubre)
 
-1. Redirigir `workers.dev` al dominio y dar de alta Search Console.
-2. Instalar GA4 y publicar el aviso de privacidad.
-3. Crear la landing “Diseño web y campañas para empresas en Guadalajara”.
-4. Conectar Metricool a Claude para que el agente lea métricas (ver `marketing/README.md`).
+Hecho en el sitio: dominio canónico, redirección de `workers.dev`, dos landings locales, aviso de privacidad, etiquetas para compartir y medición lista para activar.
+
+Pendiente del dueño (el reporte semanal del agente lo recuerda hasta marcarlo como hecho):
+
+1. Conectar Metricool a Claude para que el agente lea métricas (ver `marketing/README.md`).
+2. Verificar el dominio en Google Search Console y enviar el sitemap.
+3. Crear GA4 y pegar el ID en `dist/campaign.js`.
+4. Completar nombre legal, domicilio y correo en `/privacidad/`.
 5. Registrar cada conversación en `marketing/datos/conversaciones.csv`.
 
 ### Fase 1 — Validación pagada (26 de octubre al 22 de noviembre)
@@ -59,7 +64,7 @@ Requiere aprobar presupuesto. Propuesta mínima:
 
 | Canal | Diario | 4 semanas | Uso |
 |---|---:|---:|---|
-| Google Search | $200–250 MXN | $5,600–7,000 MXN | 3–4 grupos: diseño web Guadalajara, desarrollo de apps, agencia Google/Meta Ads, segmento elegido |
+| Google Search | $200–250 MXN | $5,600–7,000 MXN | 3–4 grupos: diseño web Guadalajara (→ `/diseno-web-guadalajara/`), desarrollo de apps (→ `/aplicaciones/`), agencia Google/Meta Ads (→ `/publicidad-digital-guadalajara/`), segmento elegido |
 | Meta | $50 MXN | $1,400 MXN | Retargeting y promoción de la mejor publicación orgánica en Guadalajara y Zapopan |
 
 Escenario de referencia, no pronóstico: con $6,000 MXN y un clic de $15–30 MXN se obtienen 200–400 clics. Si 5–10% escribe por WhatsApp y 30% de esas conversaciones califica, el resultado sería de 3 a 12 conversaciones calificadas. El dato real lo darán las primeras dos semanas; el Planificador de palabras clave de Google da el costo por clic estimado antes de lanzar.

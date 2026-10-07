@@ -24,6 +24,8 @@ El agente no puede leer WhatsApp. Cada vez que llegue una conversación, díctal
 
 O agrega la fila en `datos/conversaciones.csv`. **No escribas nombres, teléfonos ni correos**: este repositorio no es un CRM.
 
+> **El repositorio `Ba3z4/bza_creative` es público.** Todo lo que se guarde en `marketing/datos/` (sectores, etapas, montos de propuestas) lo puede ver cualquiera en GitHub. Si no quieres que el pipeline sea visible, cambia el repositorio a privado (GitHub → Settings → General → Danger Zone → Change visibility) o deja los montos en blanco. Cloudflare sigue publicando el sitio desde un repositorio privado.
+
 Una vez por semana, anota los contactos de prospección enviados y respondidos (fila `prospeccion` en `datos/metricas-semanales.csv`, columnas `contactos_enviados` y `mensajes`).
 
 ## Archivos
@@ -39,6 +41,10 @@ Una vez por semana, anota los contactos de prospección enviados y respondidos (
 Valores de `canal`: `facebook`, `instagram`, `google_ads`, `meta_ads`, `google_organico`, `sitio`, `prospeccion`, `referido`, `directo`.
 
 Valores de `etapa`: `nuevo`, `calificado`, `diagnostico`, `propuesta`, `negociacion`, `ganado`, `perdido`.
+
+## Vista previa de cada bloque
+
+Cada bloque de contenido tiene una vista previa para revisarlo antes de aprobarlo. Google no la indexa, pero cualquiera con el enlace puede abrirla: `https://www.bzacreative.com/campana-preview/bloque-02/`. El agente la regenera con `calendario.py preview`.
 
 ## Comandos útiles
 
