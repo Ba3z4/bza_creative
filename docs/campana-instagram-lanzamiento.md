@@ -21,7 +21,7 @@ La llamada a la acción será solicitar un diagnóstico inicial por mensaje dire
 **Enlace de la biografía:**
 
 ```text
-https://bza-creative.ingluisbaeza.workers.dev/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=lanzamiento_bza_2026&utm_content=bio
+https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=lanzamiento_bza_2026&utm_content=bio
 ```
 
 ## Secuencia aprobable de publicaciones

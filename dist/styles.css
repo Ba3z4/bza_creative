@@ -18,3 +18,5 @@
 @media(max-width:700px){.hero-topline .eyebrow{letter-spacing:.035em}.hero-buttons{flex-wrap:wrap}.hero-topline{align-items:flex-start}.hero-location{display:none}.header-actions>.button{font-size:.875rem;gap:8px}.hero-bottom>span{letter-spacing:.04em}.visual-top{letter-spacing:.055em}.contact .eyebrow{letter-spacing:.06em}}
 @media(max-width:370px){.header-actions>.button{display:none}.hero h1{font-size:2.1rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.motion-enabled .reveal:not(.is-visible){opacity:1;transform:none}}
+[hidden]{display:none!important}
+button.text-link{background:none;border:0;color:inherit;font-family:inherit;cursor:pointer;text-align:left}

@@ -48,6 +48,7 @@ El análisis de canales está en `docs/analisis-google-vs-facebook.md`. El agent
 ```powershell
 node --check dist/script.js
 node --check dist/campaign.js
+node --check src/worker.js
 node scripts/check-site.mjs
 node scripts/check-worker.mjs
 ```
