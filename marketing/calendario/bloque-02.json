@@ -1,0 +1,266 @@
+{
+  "bloque": "bloque-02",
+  "titulo": "Bloque 2 · Google, Facebook y conversión",
+  "inicio": "2026-10-26",
+  "fin": "2026-11-21",
+  "utm_campaign": "contenido_bza_2026",
+  "objetivo": "Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educativa sobre Google vs Facebook, páginas que convierten y medición, con temporada de Buen Fin y planeación de 2027. Doce publicaciones y dos Reels; cada pieza tiene una palabra clave distinta.",
+  "publicaciones": [
+    {
+      "id": "b2-01",
+      "fecha": "2026-10-26T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "carrusel",
+      "tema": "Google o Facebook",
+      "palabra_clave": "GOOGLE",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-01-1.png",
+        "dist/assets/brand-kit/bloque-02/b2-01-2.png",
+        "dist/assets/brand-kit/bloque-02/b2-01-3.png"
+      ],
+      "utm_content": "google_vs_facebook",
+      "objetivo": "Abrir la serie de canales con la pregunta que más hacen los dueños de negocio.",
+      "texto": "¿Google o Facebook? Es la pregunta que más escuchamos antes de invertir en anuncios.\n\nGoogle captura demanda: apareces cuando alguien ya está buscando lo que vendes.\nFacebook e Instagram crean demanda: llegas a personas que todavía no te buscan.\n\nPara un negocio de servicios que empieza, casi siempre conviene comenzar donde ya existe la búsqueda y usar las redes para generar confianza. Después, los datos deciden.\n\nEscríbenos GOOGLE por mensaje y te decimos por dónde empezaría tu negocio.\n\n#GoogleAds #MetaAds #MarketingDigital #Guadalajara #BZACreative",
+      "historia": "Encuesta: “¿Dónde anuncias hoy?” — Google / Redes / En ninguno todavía."
+    },
+    {
+      "id": "b2-02",
+      "fecha": "2026-10-28T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Después del clic",
+      "palabra_clave": "LANDING",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-02.png"
+      ],
+      "utm_content": "despues_del_clic",
+      "objetivo": "Conectar anuncios con la necesidad de una página que convierta.",
+      "texto": "Pagar por un clic que llega a una página confusa es pagar dos veces.\n\nEl anuncio solo trae la visita. La página decide si esa persona te escribe: necesita una promesa clara, pruebas de que sabes hacerlo y un siguiente paso evidente, como WhatsApp.\n\nEn BZA Creative diseñamos la página antes de encender los anuncios.\n\nEscríbenos LANDING y revisamos la página a la que hoy mandas tu tráfico.\n\n#LandingPage #DiseñoWeb #GoogleAds #Guadalajara #BZACreative",
+      "historia": "Pregunta: “¿A qué página mandas a quien da clic en tu anuncio?” con caja de respuesta."
+    },
+    {
+      "id": "b2-03",
+      "fecha": "2026-10-30T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Medir conversaciones",
+      "palabra_clave": "MEDIR",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-03.png"
+      ],
+      "utm_content": "medir_conversaciones",
+      "objetivo": "Posicionar la medición por conversaciones como diferencia de BZA.",
+      "texto": "Mil me gusta no pagan la renta. Una conversación con alguien que necesita tu servicio, sí.\n\nPor eso medimos en este orden: cuántas personas te escriben, cuántas tienen un proyecto real, cuántas reciben propuesta y cuántas se vuelven clientes.\n\nCuando sabes qué anuncio o publicación trajo cada conversación, decidir dónde invertir deja de ser intuición.\n\nEscríbenos MEDIR y te compartimos cómo etiquetamos el origen de cada mensaje.\n\n#MarketingDigital #Métricas #NegociosDeServicios #Guadalajara #BZACreative",
+      "historia": "Encuesta: “¿Sabes de dónde llegó tu último cliente?” — Sí / Más o menos / No."
+    },
+    {
+      "id": "b2-04",
+      "fecha": "2026-10-31T18:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "reel",
+      "tema": "Reel: dónde anunciar primero",
+      "palabra_clave": "EMPEZAR",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-04-reel-google-facebook.mp4"
+      ],
+      "utm_content": "reel_google_facebook",
+      "objetivo": "Alcance de descubrimiento con la idea central del bloque.",
+      "texto": "¿Dónde anuncio primero? Depende de una sola pregunta: ¿la gente ya busca lo que vendes?\n\nSi sí: Google. Si todavía no: Facebook e Instagram para darte a conocer.\n\nEscríbenos EMPEZAR y te decimos por dónde iniciaría tu negocio.\n\n#GoogleAds #MetaAds #Reels #Guadalajara #BZACreative",
+      "historia": "Compartir el Reel con sticker de pregunta: “¿Qué vendes? Te decimos dónde empezar”."
+    },
+    {
+      "id": "b2-05",
+      "fecha": "2026-11-03T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "carrusel",
+      "tema": "Señales de que tu sitio pierde clientes",
+      "palabra_clave": "REVISAR",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-05-1.png",
+        "dist/assets/brand-kit/bloque-02/b2-05-2.png",
+        "dist/assets/brand-kit/bloque-02/b2-05-3.png"
+      ],
+      "utm_content": "senales_sitio",
+      "objetivo": "Contenido guardable que abre conversaciones de diagnóstico web. Se publica el martes por Día de Muertos.",
+      "texto": "Tu sitio puede estar trabajando en tu contra sin que lo notes.\n\nCinco señales:\n1. No se entiende qué haces en cinco segundos.\n2. El contacto está escondido.\n3. En el celular se ve mal o tarda en cargar.\n4. No hay pruebas de tu trabajo.\n5. No sabes cuántas personas te escriben desde ahí.\n\nSi marcaste dos o más, hay oportunidades claras.\n\nEscríbenos REVISAR y te decimos cuáles vemos en tu sitio.\n\n#DiseñoWeb #SitioWeb #Empresas #Guadalajara #BZACreative",
+      "historia": "Encuesta: “¿Cuántas señales marcaste?” — 0–1 / 2–3 / 4–5."
+    },
+    {
+      "id": "b2-06",
+      "fecha": "2026-11-04T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Cuánto invertir al empezar",
+      "palabra_clave": "PRESUPUESTO",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-06.png"
+      ],
+      "utm_content": "presupuesto_inicial",
+      "objetivo": "Resolver la objeción de presupuesto con un método, sin prometer resultados.",
+      "texto": "¿Cuánto debo invertir en anuncios? La respuesta honesta: lo suficiente para aprender, sin apostar todo.\n\nNuestra regla para empezar:\n• Un canal, no cinco.\n• Cuatro semanas de prueba antes de juzgar.\n• Medir cuánto cuesta cada conversación con un cliente posible, no cada clic.\n\nCon eso sabes si conviene subir, ajustar o cambiar de canal.\n\nEscríbenos PRESUPUESTO y te ayudamos a calcular un monto de prueba para tu negocio.\n\n#PublicidadDigital #GoogleAds #Emprendedores #Guadalajara #BZACreative",
+      "historia": "Pregunta abierta: “¿Cuál es tu mayor duda antes de pagar anuncios?”."
+    },
+    {
+      "id": "b2-07",
+      "fecha": "2026-11-06T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Búsqueda local",
+      "palabra_clave": "LOCAL",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-07.png"
+      ],
+      "utm_content": "busqueda_local",
+      "objetivo": "Mostrar dominio de Google para negocios locales de Guadalajara y Zapopan.",
+      "texto": "“Diseño de interiores en Zapopan”. “Remodelaciones cerca de mí”. Así buscan tus clientes.\n\nAparecer en esas búsquedas depende de tres cosas: una página que diga claramente qué haces y dónde, información consistente en Google y, si quieres acelerar, anuncios de búsqueda bien segmentados.\n\nEscríbenos LOCAL y revisamos cómo apareces hoy cuando te buscan en tu ciudad.\n\n#SEO #GoogleAds #NegociosLocales #Guadalajara #BZACreative",
+      "historia": "Mostrar una búsqueda real en Google (sin datos de terceros) y preguntar: “¿Apareces aquí?”."
+    },
+    {
+      "id": "b2-08",
+      "fecha": "2026-11-09T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Buen Fin sin improvisar",
+      "palabra_clave": "BUENFIN",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-08.png"
+      ],
+      "utm_content": "buen_fin",
+      "objetivo": "Contenido de temporada útil para dueños que piensan anunciarse en Buen Fin.",
+      "texto": "En Buen Fin todos anuncian al mismo tiempo, y eso sube el costo de aparecer en redes.\n\nSi vas a participar:\n• Prepara la página antes de pagar el primer anuncio.\n• Ten una oferta clara y una fecha límite real.\n• Etiqueta cada enlace para saber qué anuncio trajo cada venta.\n\nY si vendes servicios, quizá tu mejor jugada sea preparar enero.\n\nEscríbenos BUENFIN y revisamos tu plan antes de invertir.\n\n#BuenFin #PublicidadDigital #MetaAds #Guadalajara #BZACreative",
+      "historia": "Encuesta: “¿Vas a participar en Buen Fin?” — Sí / Todavía no sé / No."
+    },
+    {
+      "id": "b2-09",
+      "fecha": "2026-11-11T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Retargeting",
+      "palabra_clave": "VOLVER",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-09.png"
+      ],
+      "utm_content": "retargeting",
+      "objetivo": "Explicar cómo Meta complementa a Google en el plan recomendado.",
+      "texto": "Casi nadie escribe en su primera visita a un sitio. Lo revisa, se va y compara.\n\nEl retargeting muestra tus anuncios a quienes ya visitaron tu página o interactuaron con tus redes. Es una audiencia pequeña, más barata y que ya te conoce.\n\nPor eso lo usamos como complemento de Google: una persona te busca, te visita y días después te vuelve a ver en Instagram.\n\nEscríbenos VOLVER y te explicamos cómo prepararlo con tu sitio.\n\n#Retargeting #MetaAds #MarketingDigital #Guadalajara #BZACreative",
+      "historia": "Pregunta: “¿Te ha pasado que ves un anuncio de algo que visitaste ayer?” — Sí / No."
+    },
+    {
+      "id": "b2-10",
+      "fecha": "2026-11-13T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Ordenar una oferta",
+      "palabra_clave": "OFERTA",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-10.png"
+      ],
+      "utm_content": "ordenar_oferta",
+      "objetivo": "Contenido de proceso: el antes y después de una oferta clara.",
+      "texto": "“Hacemos de todo” no ayuda a nadie a decidir.\n\nCuando ordenamos la oferta de un negocio buscamos tres cambios:\n• De una lista de servicios a un problema concreto que resuelves.\n• De “precios a consultar” a rangos de inversión claros.\n• De “contáctanos” a un siguiente paso específico.\n\nUna oferta clara mejora el sitio, los anuncios y las conversaciones.\n\nEscríbenos OFERTA y te ayudamos a ordenar la tuya.\n\n#Estrategia #MarketingDigital #NegociosDeServicios #Guadalajara #BZACreative",
+      "historia": "Pregunta abierta: “Describe tu negocio en una frase” para responder con una sugerencia."
+    },
+    {
+      "id": "b2-11",
+      "fecha": "2026-11-14T18:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "reel",
+      "tema": "Reel: errores de una landing",
+      "palabra_clave": "ERRORES",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-11-reel-errores-landing.mp4"
+      ],
+      "utm_content": "reel_errores_landing",
+      "objetivo": "Alcance de descubrimiento con un formato de lista rápida.",
+      "texto": "Tres errores que hacen que un anuncio no venda, aunque reciba clics:\n\n1. Enviarlo a la portada en lugar de una página específica.\n2. Pedir demasiados datos antes de iniciar la conversación.\n3. No saber qué anuncio trajo cada mensaje.\n\nEscríbenos ERRORES y revisamos la página de tus anuncios.\n\n#LandingPage #GoogleAds #Reels #Guadalajara #BZACreative",
+      "historia": "Compartir el Reel con encuesta: “¿Cuál de los tres te pasa?” — 1 / 2 / 3."
+    },
+    {
+      "id": "b2-12",
+      "fecha": "2026-11-17T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Apps que ordenan la operación",
+      "palabra_clave": "OPERAR",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-12.png"
+      ],
+      "utm_content": "apps_operacion",
+      "objetivo": "Mantener visible el servicio de aplicaciones. Se publica el martes por el descanso del lunes 16.",
+      "texto": "Pedidos por WhatsApp, inventario en una hoja de cálculo y avisos por correo. Funciona… hasta que el negocio crece.\n\nUna aplicación a la medida reúne esos pasos en un solo lugar: menos captura repetida, información disponible y procesos que no dependen de la memoria de alguien.\n\nDiseñamos y desarrollamos aplicaciones para Android, Windows y macOS.\n\nEscríbenos OPERAR y cuéntanos qué proceso te gustaría ordenar.\n\n#DesarrolloDeApps #Software #Empresas #Guadalajara #BZACreative",
+      "historia": "Pregunta: “¿Qué tarea repites todos los días en tu negocio?”."
+    },
+    {
+      "id": "b2-13",
+      "fecha": "2026-11-18T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Planear 2027 desde noviembre",
+      "palabra_clave": "2027",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-13.png"
+      ],
+      "utm_content": "planea_2027",
+      "objetivo": "Llenar el pipeline de enero antes de la pausa de diciembre.",
+      "texto": "Enero se gana en noviembre.\n\nSi quieres empezar 2027 con un sitio nuevo o campañas activas, este es el calendario realista:\n• Noviembre: diagnóstico y plan.\n• Diciembre: diseño, contenido y medición.\n• Enero: lanzamiento con todo listo.\n\nEsperar a enero para empezar suele significar lanzar en marzo.\n\nEscríbenos 2027 y agendamos tu diagnóstico.\n\n#Planeación2027 #MarketingDigital #DiseñoWeb #Guadalajara #BZACreative",
+      "historia": "Encuesta: “¿Ya tienes plan digital para 2027?” — Sí / A medias / No."
+    },
+    {
+      "id": "b2-14",
+      "fecha": "2026-11-20T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Diagnóstico de cierre de año",
+      "palabra_clave": "CIERRE",
+      "piezas": [
+        "dist/assets/brand-kit/bloque-02/b2-14.png"
+      ],
+      "utm_content": "diagnostico_cierre",
+      "objetivo": "Cerrar el bloque con la oferta de entrada.",
+      "texto": "Antes de cerrar el año conviene saber qué funcionó y qué no en tu presencia digital.\n\nEn el diagnóstico revisamos cuatro cosas: tu oferta, tu sitio, tu contenido y cómo mides los contactos. Recibes las tres prioridades que atacaríamos primero.\n\nEscríbenos CIERRE y agendamos una llamada de 30 minutos.\n\n#DiagnósticoDigital #MarketingDigital #Empresas #Guadalajara #BZACreative",
+      "historia": "Sticker de enlace a la landing con el UTM de esta publicación y texto “Agenda tu diagnóstico”."
+    }
+  ]
+}

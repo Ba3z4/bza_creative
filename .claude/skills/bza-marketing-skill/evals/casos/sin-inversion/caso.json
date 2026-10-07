@@ -1,0 +1,39 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-10-28",
+  "descripcion": "Solo orgánico: estado sin_inversion y reparto inicial 80/20.",
+  "esperado": {
+    "kpis": {
+      "semana_inicio": "2026-10-26",
+      "embudo": {
+        "semana": {
+          "conversaciones": 2,
+          "calificadas": 1,
+          "diagnosticos": 1
+        }
+      },
+      "contenido": {
+        "publicaciones_semana": 3,
+        "suficiente": true,
+        "repetir": [
+          "Google o Facebook"
+        ],
+        "revisar": [
+          "Después del clic"
+        ]
+      }
+    },
+    "decision": {
+      "estado": "sin_inversion",
+      "reparto_sugerido": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      },
+      "diario_sugerido_mxn": {
+        "google_ads": 240,
+        "meta_ads": 60
+      },
+      "alertas": []
+    }
+  }
+}

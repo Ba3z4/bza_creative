@@ -35,6 +35,10 @@ La navegación principal y el pie enlazan las cuatro páginas institucionales; `
 
 La primera secuencia editorial y la preparación para Meta Ads están en `docs/campana-instagram-lanzamiento.md`.
 
+## Agente de marketing
+
+El análisis de canales está en `docs/analisis-google-vs-facebook.md`. El agente de IA que mide, decide y prepara publicaciones es el skill `/bza-marketing-skill` (`.claude/skills/bza-marketing-skill/`); su operación semanal y la conexión con Metricool se explican en `marketing/README.md`. El bloque 2 de contenido está en `marketing/calendario/bloque-02.json` (versión legible en `docs/calendario-bloque-02.md`) y sus piezas se generan con `python scripts/create-block-02.py`.
+
 ## Verificación local
 
 ```powershell
@@ -43,4 +47,4 @@ node --check dist/campaign.js
 node scripts/check-site.mjs
 ```
 
-La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, atribución y el WhatsApp de contacto en las seis páginas.
+La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, dominio canónico, atribución y el WhatsApp de contacto en las seis páginas públicas. Las páginas internas marcadas con `noindex`, como `/campana-preview/`, se omiten.

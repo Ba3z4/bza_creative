@@ -1,0 +1,21 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-16",
+  "descripcion": "Google a $1,400 por calificada 2+ semanas: alerta de tope.",
+  "esperado": {
+    "decision": {
+      "estado": "aprendizaje",
+      "estados_canal": {
+        "google_ads": "evaluable",
+        "meta_ads": "sin_inversion"
+      },
+      "reparto_sugerido": {
+        "google_ads": 1.0,
+        "meta_ads": 0.0
+      }
+    }
+  },
+  "alertas_contienen": [
+    "Google Ads supera el CPCC máximo"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "tipo": "calendario",
+  "bloque": "bloque.json",
+  "descripcion": "Bloque correcto con una pieza pendiente: válido con avisos.",
+  "valido": true,
+  "avisos_contienen": [
+    "pieza pendiente de producir"
+  ]
+}
