@@ -35,13 +35,13 @@ El flujo de GitHub Pages se conserva como una alternativa; no es necesario para 
 
 La navegación principal enlaza las cuatro páginas institucionales; el pie agrega las landings locales y el aviso de privacidad. `/campana/` y las landings locales funcionan como destinos para anuncios. Todas las páginas públicas tienen etiquetas Open Graph con `assets/og-bza-creative.png` (generada con `scripts/create-og-image.py`). `dist/styles.css` contiene el estilo original; `dist/pages.css`, los estilos compartidos de las páginas interiores. La preferencia de pausar las animaciones se conserva en el navegador al navegar entre páginas.
 
-`dist/campaign.js` conserva parámetros UTM durante la sesión, prepara eventos en `dataLayer` y añade el origen de la visita al mensaje de WhatsApp. La guía de activación está en `docs/configuracion-campana.md` y el plan de lanzamiento en `docs/plan-mercadotecnia-90-dias.md`.
+`dist/campaign.js` conserva parámetros UTM durante la sesión, prepara eventos en `dataLayer` y añade el origen de la visita al mensaje de WhatsApp. También gestiona la medición con consentimiento: al pegar los IDs de GA4, Google Ads o el píxel de Meta en el objeto `MEASUREMENT` al inicio del archivo, muestra un aviso para aceptar o rechazar y solo carga las etiquetas aceptadas. Con los IDs vacíos no muestra nada ni carga nada. La guía de activación está en `docs/configuracion-campana.md` y el plan de lanzamiento en `docs/plan-mercadotecnia-90-dias.md`.
 
 La primera secuencia editorial y la preparación para Meta Ads están en `docs/campana-instagram-lanzamiento.md`.
 
 ## Agente de marketing
 
-El análisis de canales está en `docs/analisis-google-vs-facebook.md`. El agente de IA que mide, decide y prepara publicaciones es el skill `/bza-marketing-skill` (`.claude/skills/bza-marketing-skill/`); su operación semanal y la conexión con Metricool se explican en `marketing/README.md`. El bloque 2 de contenido está en `marketing/calendario/bloque-02.json` (versión legible en `docs/calendario-bloque-02.md`) y sus piezas se generan con `python scripts/create-block-02.py`.
+El análisis de canales está en `docs/analisis-google-vs-facebook.md`. El agente de IA que mide, decide y prepara publicaciones es el skill `/bza-marketing-skill` (`.claude/skills/bza-marketing-skill/`); su operación semanal y la conexión con Metricool se explican en `marketing/README.md`. El bloque 2 de contenido está en `marketing/calendario/bloque-02.json` (versión legible en `docs/calendario-bloque-02.md`) y sus piezas se generan con `python scripts/create-block-02.py`. La vista previa del bloque (`/campana-preview/bloque-02/`, sin indexar) se genera con `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview marketing/calendario/bloque-02.json`.
 
 ## Verificación local
 
@@ -51,6 +51,7 @@ node --check dist/campaign.js
 node --check src/worker.js
 node scripts/check-site.mjs
 node scripts/check-worker.mjs
+node scripts/check-campaign.mjs
 ```
 
-La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, dominio canónico, Open Graph, datos estructurados, sitemap, atribución y el WhatsApp de contacto en las nueve páginas públicas; `check-worker.mjs` prueba la redirección de `workers.dev`. Las páginas internas marcadas con `noindex`, como `/campana-preview/`, se omiten.
+La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, dominio canónico, Open Graph, datos estructurados, sitemap, atribución y el WhatsApp de contacto en las nueve páginas públicas; `check-worker.mjs` prueba la redirección de `workers.dev` y `check-campaign.mjs` prueba la atribución, el aviso de consentimiento y la carga de etiquetas (también indica si la medición está activa). Las páginas internas marcadas con `noindex`, como `/campana-preview/`, se omiten.

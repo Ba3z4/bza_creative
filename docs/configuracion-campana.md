@@ -8,6 +8,10 @@
 - Eventos `bza_page_view` y `whatsapp_click` preparados en `dataLayer`.
 - `robots.txt` y `sitemap.xml` para buscadores.
 - Mensajes diferenciados según la llamada a la acción.
+- Landings locales `/diseno-web-guadalajara/` y `/publicidad-digital-guadalajara/` para los grupos de Google Ads.
+- Aviso de privacidad en `/privacidad/`.
+- Aviso de consentimiento y carga de GA4, Google Ads y píxel de Meta, listos para activarse con sus IDs.
+- Redirección 301 de `bza-creative.ingluisbaeza.workers.dev` a `www.bzacreative.com`.
 
 ## Convención para enlaces de anuncios
 
@@ -26,15 +30,22 @@ Valores recomendados:
 | `utm_campaign` | `lanzamiento_servicios` | `lanzamiento_servicios` |
 | `utm_content` | grupo o anuncio | concepto creativo |
 
-## Datos necesarios para activar medición externa
+## Activar la medición externa
 
-1. Dominio definitivo comprado en Cloudflare.
-2. ID de medición de Google Analytics 4 (`G-...`).
-3. ID de Google Ads (`AW-...`) y etiqueta de conversión.
-4. ID del píxel de Meta si se lanzará Meta Ads.
-5. Nombre legal o fiscal, domicilio de privacidad y correo de contacto para publicar el aviso de privacidad.
+Pegar los IDs en el objeto `MEASUREMENT` al inicio de `dist/campaign.js`, ejecutar `node scripts/check-campaign.mjs` (debe decir `ACTIVE`) y publicar en `main`. Cada ID funciona por separado.
 
-No se deben añadir píxeles publicitarios antes de definir el aviso de privacidad y la gestión de consentimiento correspondiente.
+| Campo | Dónde se obtiene |
+|---|---|
+| `ga4Id` | Google Analytics → Administrar → Recopilación y modificación de datos → Flujos de datos → Web (`https://www.bzacreative.com`) → “ID de medición” (`G-…`). |
+| `googleAdsId` y `googleAdsWhatsappLabel` | Google Ads → Objetivos → Conversiones → Crear acción de conversión → Sitio web → configurarla manualmente con código, categoría Contacto, nombre “Clic WhatsApp”, contar “Una”. En el fragmento de evento, `send_to: 'AW-123456789/AbCdEf'`: la parte antes de la diagonal va en `googleAdsId` y la etiqueta en `googleAdsWhatsappLabel`. No pegar el fragmento en el HTML. |
+| `metaPixelId` | Meta Business → Administrador de eventos → Orígenes de datos → píxel de BZA Creative → ID numérico. No instalar el código base: `campaign.js` lo carga tras el consentimiento y envía `PageView` y `Contact`. |
+
+Después:
+
+1. Marcar `whatsapp_click` como evento clave en GA4 y vincular GA4 con Google Ads.
+2. Mantener activo el etiquetado automático (`gclid`) en Google Ads.
+3. Actualizar la sección 04 de `/privacidad/`, que hoy dice que el sitio no usa herramientas de analítica ni de publicidad, y su fecha de actualización.
+4. Completar en `/privacidad/` el nombre legal, domicilio y correo del responsable antes de invertir en anuncios.
 
 ## Conexiones de operación
 
