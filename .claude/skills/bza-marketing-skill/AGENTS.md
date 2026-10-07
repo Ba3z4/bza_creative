@@ -4,7 +4,7 @@ Agente de marketing de BZA Creative (`www.bzacreative.com`, Guadalajara). Mantie
 
 ## Cuándo activarlo
 
-“Reporte semanal”, “cómo van las métricas”, “¿Google o Facebook?”, “dónde invierto”, “prepara el siguiente calendario”, “programa las publicaciones”, “registra este lead”, “revisa Google Ads”, o `/bza-marketing-skill`.
+“Reporte semanal”, “cómo van las métricas”, “¿Google o Facebook?”, “dónde invierto”, “prepara el siguiente calendario”, “vista previa del bloque”, “programa las publicaciones”, “registra este lead”, “revisa Google Ads”, o `/bza-marketing-skill`.
 
 ## Cómo usarlo
 
@@ -16,12 +16,15 @@ python3 .claude/skills/bza-marketing-skill/scripts/run_pipeline.py [--semana AAA
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar  marketing/calendario/bloque-02.json
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/bloque-02.json
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/bloque-02.json
+# Vista previa visual (noindex) -> dist/campana-preview/bloque-02/index.html
+#   tras desplegar en main: https://www.bzacreative.com/campana-preview/bloque-02/
+python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview  marketing/calendario/bloque-02.json
 
 # Pruebas
 python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py
 ```
 
-Datos en `marketing/datos/` (tres CSV); configuración, metas y reglas en `assets/config.json`. El procedimiento completo, incluida la extracción desde Metricool y las reglas de aprobación, está en `SKILL.md` y `references/`.
+Datos en `marketing/datos/` (tres CSV); configuración, metas, reglas y pendientes de la Fase 0 en `assets/config.json`. Mientras no haya inversión, cada punto de `pendientes_fase0` con `"hecho": false` sale en el reporte como acción de prioridad alta; cuando el responsable lo confirme, cambiar `hecho` a `true`. El procedimiento completo, incluida la extracción desde Metricool y las reglas de aprobación, está en `SKILL.md` y `references/`.
 
 ## Reglas que no se rompen
 
@@ -33,7 +36,8 @@ Datos en `marketing/datos/` (tres CSV); configuración, metas y reglas en `asset
 ## Gotchas
 
 - Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Tras cualquier cambio de dominio, `node scripts/check-site.mjs` verifica que todo apunte a `https://www.bzacreative.com/`.
-- `/campana-preview/` es una vista interna con `noindex`; el verificador del sitio la omite.
+- `/campana-preview/` y `/campana-preview/<bloque>/` son vistas internas con `noindex`; `scripts/check-site.mjs` omite toda página con `noindex`.
+- El Chromium de Playwright no reproduce H.264: en capturas automáticas los Reels de la vista previa muestran solo la portada.
 - México no usa horario de verano desde 2022: `America/Mexico_City` es UTC−6 todo el año.
 - Metricool no lee el contenido de los mensajes directos: los mensajes con palabra clave se cuentan desde `conversaciones.csv`.
 - El bloque 1 usó palabras con acento (`DIAGNÓSTICO`, `DIRECCIÓN`). Al contar, normalizar sin acentos; las palabras nuevas van sin acento.

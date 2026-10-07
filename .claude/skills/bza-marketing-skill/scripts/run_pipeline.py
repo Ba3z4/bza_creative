@@ -58,6 +58,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     print(f"Estado de inversión: {decision['estado']}; reparto sugerido: "
           + ", ".join(f"{c} {v * 100:.0f}%" for c, v in decision["reparto_sugerido"].items()))
     print(f"Alertas: {len(decision['alertas'])}; acciones: {len(decision['acciones'])}; "
+          f"pendientes de la Fase 0: {len(decision['pendientes_fase0'])}; "
           f"datos faltantes: {len(decision['datos_faltantes'])}")
     return 0
 

@@ -1,9 +1,18 @@
 {
   "tipo": "calendario",
   "bloque": "bloque.json",
-  "descripcion": "Bloque correcto con una pieza pendiente: válido con avisos.",
+  "descripcion": "Bloque correcto con una pieza pendiente: válido con avisos; la vista previa no se indexa y enlaza las piezas con rutas relativas.",
   "valido": true,
   "avisos_contienen": [
     "pieza pendiente de producir"
+  ],
+  "preview_contiene": [
+    "<title>Vista previa — prueba</title>",
+    "src=\"../../assets/campaign-search.png\"",
+    "class=\"carrusel\"",
+    "<video src=\"../../assets/brand-kit/reels/reel-operacion-digital.mp4\"",
+    "Pieza pendiente: tarjeta de métricas",
+    "Gancho del tema 1.\n\nEscríbenos GOOGLE por mensaje.",
+    "utm_source=instagram&amp;utm_medium=organic_social"
   ]
 }

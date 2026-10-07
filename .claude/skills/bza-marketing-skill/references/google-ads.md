@@ -5,9 +5,9 @@ Leer este archivo cuando se apruebe presupuesto o se revise una campaña pagada.
 ## Requisitos antes de lanzar
 
 - Search Console verificado y sitemap enviado.
-- GA4 instalado y evento `whatsapp_click` marcado como conversión principal en Google Ads.
-- Aviso de privacidad publicado.
-- Landing específica por grupo de anuncios (al menos la de diseño web en Guadalajara).
+- IDs de GA4 y Google Ads pegados en `MEASUREMENT` de `dist/campaign.js` (ver `docs/configuracion-campana.md`) y `whatsapp_click` como conversión principal.
+- Aviso de privacidad publicado (`/privacidad/`) con nombre legal, domicilio y correo del responsable.
+- Landing específica por grupo de anuncios: `/diseno-web-guadalajara/`, `/aplicaciones/` y `/publicidad-digital-guadalajara/` (ya publicadas).
 
 ## Campaña de búsqueda
 
@@ -24,11 +24,11 @@ Leer este archivo cuando se apruebe presupuesto o se revise una campaña pagada.
 
 ### Grupos y palabras (frase o exacta)
 
-1. **Diseño web Guadalajara** → `/campana/` o landing de diseño web
+1. **Diseño web Guadalajara** → `/diseno-web-guadalajara/`
    - "diseño de páginas web guadalajara", [diseño web guadalajara], "agencia de diseño web guadalajara", "páginas web para empresas guadalajara"
 2. **Desarrollo de aplicaciones** → `/aplicaciones/`
    - "desarrollo de aplicaciones guadalajara", "desarrollo de apps para empresas", "crear una aplicación para mi negocio"
-3. **Agencia de anuncios** → `/servicios/`
+3. **Agencia de anuncios** → `/publicidad-digital-guadalajara/`
    - "agencia google ads guadalajara", "agencia de publicidad digital guadalajara", "agencia de marketing digital guadalajara", "agencia meta ads"
 4. **Segmento elegido** (cuando se defina): "diseño web para arquitectos", "páginas web para constructoras"…
 

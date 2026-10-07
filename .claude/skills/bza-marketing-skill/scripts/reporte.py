@@ -72,6 +72,9 @@ def generar(kpis: Dict[str, Any], decision: Dict[str, Any]) -> str:
     agregar(f"- **Pipeline abierto:** {bd.mxn(embudo['valor_pipeline_mxn'])} estimados; "
             f"{embudo['calificadas_totales']} conversaciones calificadas desde el inicio.")
     agregar(f"- **Inversión:** {ESTADOS[decision['estado']]}.")
+    if decision.get("pendientes_fase0"):
+        abiertos = len(decision["pendientes_fase0"])
+        agregar(f"- **Fase 0:** {abiertos} {'pendiente' if abiertos == 1 else 'pendientes'} (ver abajo).")
     if decision["alertas"]:
         agregar(f"- **Alertas:** {len(decision['alertas'])} (ver abajo).")
     agregar("")
@@ -159,6 +162,16 @@ def generar(kpis: Dict[str, Any], decision: Dict[str, Any]) -> str:
     else:
         agregar("Sin datos por publicación todavía.")
     agregar("")
+
+    pendientes = decision.get("pendientes_fase0") or []
+    if pendientes:
+        agregar("## Pendientes de la Fase 0")
+        agregar("")
+        for pendiente in pendientes:
+            agregar(f"- [ ] {pendiente['texto']}")
+        agregar("")
+        agregar("Cuando el responsable confirme un punto, marcar `\"hecho\": true` en `.claude/skills/bza-marketing-skill/assets/config.json` → `pendientes_fase0`.")
+        agregar("")
 
     agregar("## Acciones para esta semana")
     agregar("")

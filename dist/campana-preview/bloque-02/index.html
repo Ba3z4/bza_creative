@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23df3023'/%3E%3Cpath d='M28 10h8v15l11-11 6 6-11 12h15v8H42l11 11-6 6-11-11v15h-8V46L17 57l-6-6 11-11H7v-8h15L11 20l6-6 11 11z' transform='translate(0 -4)' fill='white'/%3E%3C/svg%3E">
+<title>Vista previa — Bloque 2 · Google, Facebook y conversión</title>
+<style>
+:root{--ink:#151515;--muted:#5f5e58;--paper:#f4f1e9;--white:#fff;--green:#073f39;--green-soft:#e2ebe8;--red:#df3023;--line:#dedbd2;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%}
+a{color:inherit}
+.wrap{width:min(1180px,calc(100% - 32px));margin:0 auto}
+.top{position:sticky;top:0;z-index:5;background:rgba(244,241,233,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.brand{font-size:20px;font-weight:800;letter-spacing:-.04em;white-space:nowrap}
+.brand::before{content:"\2733";color:var(--red);margin-right:8px}
+.top nav{display:flex;align-items:center;gap:18px;font-size:13px;font-weight:700}
+.top nav a{text-decoration:none}
+.top nav a:hover{color:var(--red)}
+.badge{padding:7px 12px;border-radius:100px;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:48px;align-items:end;padding:60px 0 36px}
+.eyebrow{margin:0;color:var(--red);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(36px,5.6vw,72px);line-height:1;letter-spacing:-.05em;margin:16px 0 20px;overflow-wrap:anywhere}
+.lead{max-width:680px;margin:0;color:var(--muted);font-size:18px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);margin:0;border:1px solid var(--line);background:var(--white)}
+.stats div{display:flex;flex-direction:column-reverse;justify-content:flex-end;padding:22px;border-bottom:1px solid var(--line)}
+.stats div:nth-child(odd){border-right:1px solid var(--line)}
+.stats div:nth-last-child(-n+2){border-bottom:0}
+.stats dd{margin:0;font-size:38px;font-weight:800;line-height:1;color:var(--green);letter-spacing:-.03em}
+.stats dt{margin-top:8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.resumen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:0;background:var(--line);border:1px solid var(--line)}
+.resumen div{background:var(--white);padding:16px 18px;min-width:0}
+.resumen dt,.campos dt{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.resumen dd{margin:6px 0 0;font-weight:700;overflow-wrap:anywhere}
+.palabras{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.palabras a{display:inline-block;padding:6px 11px;border-radius:100px;border:1px solid var(--green);color:var(--green);font-size:12px;font-weight:800;letter-spacing:.06em;text-decoration:none;background:var(--white)}
+.palabras a:hover{background:var(--green);color:#fff}
+.palabras-bloque{margin-top:18px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.palabras-bloque > span{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.avisos{margin-top:22px;padding:18px 22px;border-left:5px solid var(--red);background:var(--white)}
+.avisos strong{display:block;margin-bottom:6px}
+.avisos ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+.section{padding:48px 0;scroll-margin-top:24px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}
+.section-head h2{font-size:clamp(30px,4.4vw,52px);letter-spacing:-.045em;line-height:1;margin:10px 0 0}
+.section-head p{max-width:460px;margin:0;color:var(--muted);line-height:1.55}
+.semana{background:var(--green);color:#fff;margin-top:18px}
+.semana-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.16)}
+.semana-head h3{margin:0;font-size:18px;letter-spacing:-.01em}
+.semana-head span{color:#b9d1cc;font-size:13px;text-align:right}
+.dias{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:rgba(255,255,255,.14)}
+.dia{background:var(--green);padding:14px 12px 16px;min-height:150px;min-width:0}
+.dia.fuera{background:#0b302c;color:rgba(255,255,255,.4)}
+.dia-fecha{display:flex;align-items:baseline;gap:6px;font-size:11px;color:#b9d1cc;text-transform:uppercase;letter-spacing:.1em}
+.dia-fecha strong{font-size:22px;line-height:1;color:#ff7d70;letter-spacing:-.02em}
+.dia.fuera .dia-fecha strong,.dia.libre .dia-fecha strong{color:rgba(255,255,255,.45)}
+.entrada{display:block;margin-top:10px;padding:10px;background:rgba(255,255,255,.08);border-left:3px solid var(--red);text-decoration:none;font-size:13px;line-height:1.35;overflow-wrap:anywhere}
+.entrada:hover,.entrada:focus-visible{background:rgba(255,255,255,.18)}
+.entrada small{display:block;color:#b9d1cc;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.entrada span{display:block;margin-top:5px}
+.entrada b{display:block;margin-top:6px;font-size:11px;letter-spacing:.08em}
+.pubs{display:grid;gap:24px}
+.pub{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);background:var(--white);border:1px solid var(--line);scroll-margin-top:84px}
+.pub-media{background:#e9e5da;border-right:1px solid var(--line);min-width:0}
+.marco{position:sticky;top:72px}
+.marco img{display:block;width:100%;height:auto}
+.etiqueta{display:flex;justify-content:space-between;gap:12px;margin:0;padding:11px 14px;background:var(--green);color:#fff;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.etiqueta span:last-child{color:#b9d1cc}
+.carrusel{display:flex;align-items:flex-start;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--green) transparent;outline-offset:-3px}
+.slide{position:relative;flex:0 0 88%;margin:0;scroll-snap-align:start}
+.slide figcaption{position:absolute;right:10px;bottom:10px;background:rgba(21,21,21,.78);color:#fff;font-size:11px;font-weight:700;padding:4px 9px;border-radius:100px}
+.pista{margin:0;padding:10px 14px 14px;font-size:12px;color:var(--muted)}
+.reel{display:flex;flex-direction:column;align-items:center;gap:16px;background:var(--green);padding:8px 24px 24px}
+.reel video{display:block;width:100%;max-width:300px;aspect-ratio:9/16;background:#000;border-radius:12px}
+.pendiente{display:grid;place-items:center;aspect-ratio:4/5;margin:16px;padding:28px;border:2px dashed var(--red);color:var(--red);font-weight:700;text-align:center;background:var(--white)}
+.pub-body{padding:26px 30px 28px;min-width:0}
+.pub-fecha{margin:0;color:var(--red);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.pub h3{margin:10px 0 14px;font-size:clamp(22px,2.4vw,28px);line-height:1.1;letter-spacing:-.03em}
+.ficha{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:0 0 22px;background:var(--line);border:1px solid var(--line)}
+.ficha div{background:var(--white);padding:12px 14px;min-width:0}
+.ficha dt{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ficha dd{margin:4px 0 0;font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.clave{display:inline-block;padding:3px 9px;border-radius:100px;background:var(--green);color:#fff;font-size:12px;letter-spacing:.06em}
+.campos{margin:0}
+.campos dt{margin-top:18px}
+.campos dt:first-child{margin-top:0}
+.campos dd{margin:6px 0 0;overflow-wrap:anywhere}
+.texto{margin:0;padding:16px 18px;background:var(--paper);border-left:4px solid var(--red);white-space:pre-wrap;overflow-wrap:anywhere;font:15px/1.55 Arial,Helvetica,sans-serif}
+.texto-meta{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.utm{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.utm li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;align-items:start;font-size:12px;font-weight:700}
+code{font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere;word-break:break-all}
+.utm code{display:block;padding:6px 8px;background:var(--paper);font-weight:400;user-select:all}
+.archivos{margin:0;padding:0;list-style:none;color:var(--muted)}
+.footer{padding:36px 0 64px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:24px}
+.footer p{margin:0}
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;gap:32px}
+  .resumen{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dias{grid-template-columns:1fr}
+  .dia{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 12px;min-height:0;padding:12px 16px}
+  .dia-fecha{flex-direction:column;gap:4px;white-space:nowrap}
+  .dia .entrada{grid-column:2;margin-top:0}
+  .dia .entrada + .entrada{margin-top:8px}
+  .dia.libre,.dia.fuera{display:none}
+  .pub{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
+  .ficha{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .top nav a{display:none}
+  .hero{padding:40px 0 28px}
+  .lead{font-size:16px}
+  .section-head{display:block}
+  .section-head p{margin-top:14px}
+  .pub{grid-template-columns:1fr}
+  .pub-media{border-right:0;border-bottom:1px solid var(--line)}
+  .marco{position:relative;top:auto}
+  .pub-body{padding:22px 18px 24px}
+  .palabras-bloque{grid-template-columns:1fr;gap:10px}
+  .utm li{grid-template-columns:1fr;gap:4px}
+  .footer{display:block}
+  .footer p + p{margin-top:8px}
+}
+@media (max-width:440px){
+  .resumen{grid-template-columns:1fr}
+  .stats div{padding:18px}
+  .stats dd{font-size:32px}
+  .semana-head{display:block}
+  .semana-head span{display:block;margin-top:4px;text-align:left}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><span class="brand">BZA Creative</span><nav aria-label="Secciones"><a href="#calendario">Calendario</a><a href="#publicaciones">Publicaciones</a><span class="badge">VISTA PREVIA INTERNA</span></nav></div></header>
+<main>
+<section class="hero wrap" aria-labelledby="titulo-bloque"><div>
+<p class="eyebrow">bloque-02 · contenido orgánico · 26 oct – 21 nov</p>
+<h1 id="titulo-bloque">Bloque 2 · Google, Facebook y conversión</h1>
+<p class="lead">Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educativa sobre Google vs Facebook, páginas que convierten y medición, con temporada de Buen Fin y planeación de 2027. Doce publicaciones y dos Reels; cada pieza tiene una palabra clave distinta.</p>
+</div>
+<dl class="stats"><div><dt>Publicaciones</dt><dd>12</dd></div><div><dt>Reels</dt><dd>2</dd></div><div><dt>Semanas</dt><dd>4</dd></div><div><dt>Palabras clave</dt><dd>14</dd></div></dl></section>
+<section class="wrap" aria-label="Resumen del bloque">
+<dl class="resumen"><div><dt>Periodo</dt><dd>lunes 26 oct 2026 a sábado 21 nov 2026</dd></div><div><dt>Total</dt><dd>14 en el calendario: 12 publicaciones y 2 Reels</dd></div><div><dt>Redes y horario</dt><dd>Facebook, Instagram · America/Mexico_City</dd></div><div><dt>Campaña UTM</dt><dd><code>contenido_bza_2026</code></dd></div></dl>
+<div class="palabras-bloque"><span>Palabras clave</span><ul class="palabras"><li><a href="#b2-01">GOOGLE</a></li><li><a href="#b2-02">LANDING</a></li><li><a href="#b2-03">MEDIR</a></li><li><a href="#b2-04">EMPEZAR</a></li><li><a href="#b2-05">REVISAR</a></li><li><a href="#b2-06">PRESUPUESTO</a></li><li><a href="#b2-07">LOCAL</a></li><li><a href="#b2-08">BUENFIN</a></li><li><a href="#b2-09">VOLVER</a></li><li><a href="#b2-10">OFERTA</a></li><li><a href="#b2-11">ERRORES</a></li><li><a href="#b2-12">OPERAR</a></li><li><a href="#b2-13">2027</a></li><li><a href="#b2-14">CIERRE</a></li></ul></div>
+</section>
+<section class="section wrap" id="calendario" aria-labelledby="titulo-calendario">
+<div class="section-head"><div><p class="eyebrow">Calendario</p><h2 id="titulo-calendario">Semana por semana</h2></div><p>Horario de America/Mexico_City. Cada entrada lleva a su publicación.</p></div>
+<article class="semana"><div class="semana-head"><h3>Semana 1 · 26 oct – 1 nov</h3><span>3 publicaciones · 1 Reel</span></div><ol class="dias">
+<li class="dia"><span class="dia-fecha"><strong>26</strong>lun · oct</span><a class="entrada" href="#b2-01"><small>10:00 · carrusel</small><span>Google o Facebook</span><b>GOOGLE</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>27</strong>mar · oct</span></li>
+<li class="dia"><span class="dia-fecha"><strong>28</strong>mié · oct</span><a class="entrada" href="#b2-02"><small>10:00 · imagen</small><span>Después del clic</span><b>LANDING</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>29</strong>jue · oct</span></li>
+<li class="dia"><span class="dia-fecha"><strong>30</strong>vie · oct</span><a class="entrada" href="#b2-03"><small>10:00 · imagen</small><span>Medir conversaciones</span><b>MEDIR</b></a></li>
+<li class="dia"><span class="dia-fecha"><strong>31</strong>sáb · oct</span><a class="entrada" href="#b2-04"><small>18:00 · reel</small><span>Reel: dónde anunciar primero</span><b>EMPEZAR</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>1</strong>dom · nov</span></li>
+</ol></article>
+<article class="semana"><div class="semana-head"><h3>Semana 2 · 2 – 8 nov</h3><span>3 publicaciones</span></div><ol class="dias">
+<li class="dia libre"><span class="dia-fecha"><strong>2</strong>lun · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>3</strong>mar · nov</span><a class="entrada" href="#b2-05"><small>10:00 · carrusel</small><span>Señales de que tu sitio pierde clientes</span><b>REVISAR</b></a></li>
+<li class="dia"><span class="dia-fecha"><strong>4</strong>mié · nov</span><a class="entrada" href="#b2-06"><small>10:00 · imagen</small><span>Cuánto invertir al empezar</span><b>PRESUPUESTO</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>5</strong>jue · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>6</strong>vie · nov</span><a class="entrada" href="#b2-07"><small>10:00 · imagen</small><span>Búsqueda local</span><b>LOCAL</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>7</strong>sáb · nov</span></li>
+<li class="dia libre"><span class="dia-fecha"><strong>8</strong>dom · nov</span></li>
+</ol></article>
+<article class="semana"><div class="semana-head"><h3>Semana 3 · 9 – 15 nov</h3><span>3 publicaciones · 1 Reel</span></div><ol class="dias">
+<li class="dia"><span class="dia-fecha"><strong>9</strong>lun · nov</span><a class="entrada" href="#b2-08"><small>10:00 · imagen</small><span>Buen Fin sin improvisar</span><b>BUENFIN</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>10</strong>mar · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>11</strong>mié · nov</span><a class="entrada" href="#b2-09"><small>10:00 · imagen</small><span>Retargeting</span><b>VOLVER</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>12</strong>jue · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>13</strong>vie · nov</span><a class="entrada" href="#b2-10"><small>10:00 · imagen</small><span>Ordenar una oferta</span><b>OFERTA</b></a></li>
+<li class="dia"><span class="dia-fecha"><strong>14</strong>sáb · nov</span><a class="entrada" href="#b2-11"><small>18:00 · reel</small><span>Reel: errores de una landing</span><b>ERRORES</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>15</strong>dom · nov</span></li>
+</ol></article>
+<article class="semana"><div class="semana-head"><h3>Semana 4 · 16 – 22 nov</h3><span>3 publicaciones</span></div><ol class="dias">
+<li class="dia libre"><span class="dia-fecha"><strong>16</strong>lun · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>17</strong>mar · nov</span><a class="entrada" href="#b2-12"><small>10:00 · imagen</small><span>Apps que ordenan la operación</span><b>OPERAR</b></a></li>
+<li class="dia"><span class="dia-fecha"><strong>18</strong>mié · nov</span><a class="entrada" href="#b2-13"><small>10:00 · imagen</small><span>Planear 2027 desde noviembre</span><b>2027</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>19</strong>jue · nov</span></li>
+<li class="dia"><span class="dia-fecha"><strong>20</strong>vie · nov</span><a class="entrada" href="#b2-14"><small>10:00 · imagen</small><span>Diagnóstico de cierre de año</span><b>CIERRE</b></a></li>
+<li class="dia libre"><span class="dia-fecha"><strong>21</strong>sáb · nov</span></li>
+<li class="dia fuera"><span class="dia-fecha"><strong>22</strong>dom · nov</span></li>
+</ol></article>
+</section>
+<section class="section wrap" id="publicaciones" aria-labelledby="titulo-publicaciones">
+<div class="section-head"><div><p class="eyebrow">Publicaciones</p><h2 id="titulo-publicaciones">Pieza por pieza</h2></div><p>Texto completo, historia y enlace con UTM de cada publicación, tal como se programará.</p></div>
+<div class="pubs">
+<article class="pub" id="b2-01">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Carrusel · 3 piezas</span><span>4:5</span></p><div class="carrusel" role="region" tabindex="0" aria-label="Carrusel de 3 piezas: Google o Facebook"><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-01-1.png" width="1080" height="1350" alt="Google o Facebook: diapositiva 1 de 3" loading="lazy"><figcaption>1/3</figcaption></figure><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-01-2.png" width="1080" height="1350" alt="Google o Facebook: diapositiva 2 de 3" loading="lazy"><figcaption>2/3</figcaption></figure><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-01-3.png" width="1080" height="1350" alt="Google o Facebook: diapositiva 3 de 3" loading="lazy"><figcaption>3/3</figcaption></figure></div><p class="pista">Desliza para ver las 3 piezas →</p></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-01 · semana 1</p>
+<h3>Google o Facebook</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>lunes 26 oct, 10:00</dd></div><div><dt>Formato</dt><dd>Carrusel · 3 piezas</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">GOOGLE</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Abrir la serie de canales con la pregunta que más hacen los dueños de negocio.</dd>
+<dt>Texto</dt><dd><p class="texto">¿Google o Facebook? Es la pregunta que más escuchamos antes de invertir en anuncios.
+
+Google captura demanda: apareces cuando alguien ya está buscando lo que vendes.
+Facebook e Instagram crean demanda: llegas a personas que todavía no te buscan.
+
+Para un negocio de servicios que empieza, casi siempre conviene comenzar donde ya existe la búsqueda y usar las redes para generar confianza. Después, los datos deciden.
+
+Escríbenos GOOGLE por mensaje y te decimos por dónde empezaría tu negocio.
+
+#GoogleAds #MetaAds #MarketingDigital #Guadalajara #BZACreative</p><span class="texto-meta">557 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Encuesta: “¿Dónde anuncias hoy?” — Google / Redes / En ninguno todavía.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=google_vs_facebook</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=google_vs_facebook</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-01-1.png</code></li><li><code>dist/assets/brand-kit/bloque-02/b2-01-2.png</code></li><li><code>dist/assets/brand-kit/bloque-02/b2-01-3.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-02">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-02.png" width="1080" height="1350" alt="Después del clic" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-02 · semana 1</p>
+<h3>Después del clic</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>miércoles 28 oct, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">LANDING</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Conectar anuncios con la necesidad de una página que convierta.</dd>
+<dt>Texto</dt><dd><p class="texto">Pagar por un clic que llega a una página confusa es pagar dos veces.
+
+El anuncio solo trae la visita. La página decide si esa persona te escribe: necesita una promesa clara, pruebas de que sabes hacerlo y un siguiente paso evidente, como WhatsApp.
+
+En BZA Creative diseñamos la página antes de encender los anuncios.
+
+Escríbenos LANDING y revisamos la página a la que hoy mandas tu tráfico.
+
+#LandingPage #DiseñoWeb #GoogleAds #Guadalajara #BZACreative</p><span class="texto-meta">452 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Pregunta: “¿A qué página mandas a quien da clic en tu anuncio?” con caja de respuesta.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=despues_del_clic</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=despues_del_clic</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-02.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-03">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-03.png" width="1080" height="1350" alt="Medir conversaciones" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-03 · semana 1</p>
+<h3>Medir conversaciones</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>viernes 30 oct, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">MEDIR</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Posicionar la medición por conversaciones como diferencia de BZA.</dd>
+<dt>Texto</dt><dd><p class="texto">Mil me gusta no pagan la renta. Una conversación con alguien que necesita tu servicio, sí.
+
+Por eso medimos en este orden: cuántas personas te escriben, cuántas tienen un proyecto real, cuántas reciben propuesta y cuántas se vuelven clientes.
+
+Cuando sabes qué anuncio o publicación trajo cada conversación, decidir dónde invertir deja de ser intuición.
+
+Escríbenos MEDIR y te compartimos cómo etiquetamos el origen de cada mensaje.
+
+#MarketingDigital #Métricas #NegociosDeServicios #Guadalajara #BZACreative</p><span class="texto-meta">508 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Encuesta: “¿Sabes de dónde llegó tu último cliente?” — Sí / Más o menos / No.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=medir_conversaciones</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=medir_conversaciones</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-03.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-04">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Reel · 1 pieza</span><span>9:16</span></p><div class="reel"><video src="../../assets/brand-kit/bloque-02/b2-04-reel-google-facebook.mp4" poster="../../assets/brand-kit/bloque-02/b2-04-reel-google-facebook-1.png" controls muted playsinline preload="metadata" aria-label="Reel: Reel: dónde anunciar primero"></video></div></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-04 · semana 1</p>
+<h3>Reel: dónde anunciar primero</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>sábado 31 oct, 18:00</dd></div><div><dt>Formato</dt><dd>Reel · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">EMPEZAR</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Alcance de descubrimiento con la idea central del bloque.</dd>
+<dt>Texto</dt><dd><p class="texto">¿Dónde anuncio primero? Depende de una sola pregunta: ¿la gente ya busca lo que vendes?
+
+Si sí: Google. Si todavía no: Facebook e Instagram para darte a conocer.
+
+Escríbenos EMPEZAR y te decimos por dónde iniciaría tu negocio.
+
+#GoogleAds #MetaAds #Reels #Guadalajara #BZACreative</p><span class="texto-meta">280 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Compartir el Reel con sticker de pregunta: “¿Qué vendes? Te decimos dónde empezar”.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=reel_google_facebook</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=reel_google_facebook</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-04-reel-google-facebook.mp4</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-05">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Carrusel · 3 piezas</span><span>4:5</span></p><div class="carrusel" role="region" tabindex="0" aria-label="Carrusel de 3 piezas: Señales de que tu sitio pierde clientes"><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-05-1.png" width="1080" height="1350" alt="Señales de que tu sitio pierde clientes: diapositiva 1 de 3" loading="lazy"><figcaption>1/3</figcaption></figure><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-05-2.png" width="1080" height="1350" alt="Señales de que tu sitio pierde clientes: diapositiva 2 de 3" loading="lazy"><figcaption>2/3</figcaption></figure><figure class="slide"><img src="../../assets/brand-kit/bloque-02/b2-05-3.png" width="1080" height="1350" alt="Señales de que tu sitio pierde clientes: diapositiva 3 de 3" loading="lazy"><figcaption>3/3</figcaption></figure></div><p class="pista">Desliza para ver las 3 piezas →</p></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-05 · semana 2</p>
+<h3>Señales de que tu sitio pierde clientes</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>martes 3 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Carrusel · 3 piezas</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">REVISAR</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Contenido guardable que abre conversaciones de diagnóstico web. Se publica el martes por Día de Muertos.</dd>
+<dt>Texto</dt><dd><p class="texto">Tu sitio puede estar trabajando en tu contra sin que lo notes.
+
+Cinco señales:
+1. No se entiende qué haces en cinco segundos.
+2. El contacto está escondido.
+3. En el celular se ve mal o tarda en cargar.
+4. No hay pruebas de tu trabajo.
+5. No sabes cuántas personas te escriben desde ahí.
+
+Si marcaste dos o más, hay oportunidades claras.
+
+Escríbenos REVISAR y te decimos cuáles vemos en tu sitio.
+
+#DiseñoWeb #SitioWeb #Empresas #Guadalajara #BZACreative</p><span class="texto-meta">454 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Encuesta: “¿Cuántas señales marcaste?” — 0–1 / 2–3 / 4–5.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=senales_sitio</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=senales_sitio</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-05-1.png</code></li><li><code>dist/assets/brand-kit/bloque-02/b2-05-2.png</code></li><li><code>dist/assets/brand-kit/bloque-02/b2-05-3.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-06">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-06.png" width="1080" height="1350" alt="Cuánto invertir al empezar" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-06 · semana 2</p>
+<h3>Cuánto invertir al empezar</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>miércoles 4 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">PRESUPUESTO</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Resolver la objeción de presupuesto con un método, sin prometer resultados.</dd>
+<dt>Texto</dt><dd><p class="texto">¿Cuánto debo invertir en anuncios? La respuesta honesta: lo suficiente para aprender, sin apostar todo.
+
+Nuestra regla para empezar:
+• Un canal, no cinco.
+• Cuatro semanas de prueba antes de juzgar.
+• Medir cuánto cuesta cada conversación con un cliente posible, no cada clic.
+
+Con eso sabes si conviene subir, ajustar o cambiar de canal.
+
+Escríbenos PRESUPUESTO y te ayudamos a calcular un monto de prueba para tu negocio.
+
+#PublicidadDigital #GoogleAds #Emprendedores #Guadalajara #BZACreative</p><span class="texto-meta">495 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Pregunta abierta: “¿Cuál es tu mayor duda antes de pagar anuncios?”.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=presupuesto_inicial</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=presupuesto_inicial</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-06.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-07">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-07.png" width="1080" height="1350" alt="Búsqueda local" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-07 · semana 2</p>
+<h3>Búsqueda local</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>viernes 6 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">LOCAL</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Mostrar dominio de Google para negocios locales de Guadalajara y Zapopan.</dd>
+<dt>Texto</dt><dd><p class="texto">“Diseño de interiores en Zapopan”. “Remodelaciones cerca de mí”. Así buscan tus clientes.
+
+Aparecer en esas búsquedas depende de tres cosas: una página que diga claramente qué haces y dónde, información consistente en Google y, si quieres acelerar, anuncios de búsqueda bien segmentados.
+
+Escríbenos LOCAL y revisamos cómo apareces hoy cuando te buscan en tu ciudad.
+
+#SEO #GoogleAds #NegociosLocales #Guadalajara #BZACreative</p><span class="texto-meta">426 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Mostrar una búsqueda real en Google (sin datos de terceros) y preguntar: “¿Apareces aquí?”.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=busqueda_local</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=busqueda_local</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-07.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-08">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-08.png" width="1080" height="1350" alt="Buen Fin sin improvisar" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-08 · semana 3</p>
+<h3>Buen Fin sin improvisar</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>lunes 9 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">BUENFIN</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Contenido de temporada útil para dueños que piensan anunciarse en Buen Fin.</dd>
+<dt>Texto</dt><dd><p class="texto">En Buen Fin todos anuncian al mismo tiempo, y eso sube el costo de aparecer en redes.
+
+Si vas a participar:
+• Prepara la página antes de pagar el primer anuncio.
+• Ten una oferta clara y una fecha límite real.
+• Etiqueta cada enlace para saber qué anuncio trajo cada venta.
+
+Y si vendes servicios, quizá tu mejor jugada sea preparar enero.
+
+Escríbenos BUENFIN y revisamos tu plan antes de invertir.
+
+#BuenFin #PublicidadDigital #MetaAds #Guadalajara #BZACreative</p><span class="texto-meta">462 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Encuesta: “¿Vas a participar en Buen Fin?” — Sí / Todavía no sé / No.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=buen_fin</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=buen_fin</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-08.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-09">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-09.png" width="1080" height="1350" alt="Retargeting" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-09 · semana 3</p>
+<h3>Retargeting</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>miércoles 11 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">VOLVER</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Explicar cómo Meta complementa a Google en el plan recomendado.</dd>
+<dt>Texto</dt><dd><p class="texto">Casi nadie escribe en su primera visita a un sitio. Lo revisa, se va y compara.
+
+El retargeting muestra tus anuncios a quienes ya visitaron tu página o interactuaron con tus redes. Es una audiencia pequeña, más barata y que ya te conoce.
+
+Por eso lo usamos como complemento de Google: una persona te busca, te visita y días después te vuelve a ver en Instagram.
+
+Escríbenos VOLVER y te explicamos cómo prepararlo con tu sitio.
+
+#Retargeting #MetaAds #MarketingDigital #Guadalajara #BZACreative</p><span class="texto-meta">493 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Pregunta: “¿Te ha pasado que ves un anuncio de algo que visitaste ayer?” — Sí / No.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=retargeting</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=retargeting</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-09.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-10">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-10.png" width="1080" height="1350" alt="Ordenar una oferta" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-10 · semana 3</p>
+<h3>Ordenar una oferta</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>viernes 13 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">OFERTA</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Contenido de proceso: el antes y después de una oferta clara.</dd>
+<dt>Texto</dt><dd><p class="texto">“Hacemos de todo” no ayuda a nadie a decidir.
+
+Cuando ordenamos la oferta de un negocio buscamos tres cambios:
+• De una lista de servicios a un problema concreto que resuelves.
+• De “precios a consultar” a rangos de inversión claros.
+• De “contáctanos” a un siguiente paso específico.
+
+Una oferta clara mejora el sitio, los anuncios y las conversaciones.
+
+Escríbenos OFERTA y te ayudamos a ordenar la tuya.
+
+#Estrategia #MarketingDigital #NegociosDeServicios #Guadalajara #BZACreative</p><span class="texto-meta">484 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Pregunta abierta: “Describe tu negocio en una frase” para responder con una sugerencia.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=ordenar_oferta</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=ordenar_oferta</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-10.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-11">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Reel · 1 pieza</span><span>9:16</span></p><div class="reel"><video src="../../assets/brand-kit/bloque-02/b2-11-reel-errores-landing.mp4" poster="../../assets/brand-kit/bloque-02/b2-11-reel-errores-landing-1.png" controls muted playsinline preload="metadata" aria-label="Reel: Reel: errores de una landing"></video></div></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-11 · semana 3</p>
+<h3>Reel: errores de una landing</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>sábado 14 nov, 18:00</dd></div><div><dt>Formato</dt><dd>Reel · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">ERRORES</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Alcance de descubrimiento con un formato de lista rápida.</dd>
+<dt>Texto</dt><dd><p class="texto">Tres errores que hacen que un anuncio no venda, aunque reciba clics:
+
+1. Enviarlo a la portada en lugar de una página específica.
+2. Pedir demasiados datos antes de iniciar la conversación.
+3. No saber qué anuncio trajo cada mensaje.
+
+Escríbenos ERRORES y revisamos la página de tus anuncios.
+
+#LandingPage #GoogleAds #Reels #Guadalajara #BZACreative</p><span class="texto-meta">350 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Compartir el Reel con encuesta: “¿Cuál de los tres te pasa?” — 1 / 2 / 3.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=reel_errores_landing</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=reel_errores_landing</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-11-reel-errores-landing.mp4</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-12">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-12.png" width="1080" height="1350" alt="Apps que ordenan la operación" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-12 · semana 4</p>
+<h3>Apps que ordenan la operación</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>martes 17 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">OPERAR</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Mantener visible el servicio de aplicaciones. Se publica el martes por el descanso del lunes 16.</dd>
+<dt>Texto</dt><dd><p class="texto">Pedidos por WhatsApp, inventario en una hoja de cálculo y avisos por correo. Funciona… hasta que el negocio crece.
+
+Una aplicación a la medida reúne esos pasos en un solo lugar: menos captura repetida, información disponible y procesos que no dependen de la memoria de alguien.
+
+Diseñamos y desarrollamos aplicaciones para Android, Windows y macOS.
+
+Escríbenos OPERAR y cuéntanos qué proceso te gustaría ordenar.
+
+#DesarrolloDeApps #Software #Empresas #Guadalajara #BZACreative</p><span class="texto-meta">477 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Pregunta: “¿Qué tarea repites todos los días en tu negocio?”.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=apps_operacion</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=apps_operacion</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-12.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-13">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-13.png" width="1080" height="1350" alt="Planear 2027 desde noviembre" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-13 · semana 4</p>
+<h3>Planear 2027 desde noviembre</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>miércoles 18 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">2027</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Llenar el pipeline de enero antes de la pausa de diciembre.</dd>
+<dt>Texto</dt><dd><p class="texto">Enero se gana en noviembre.
+
+Si quieres empezar 2027 con un sitio nuevo o campañas activas, este es el calendario realista:
+• Noviembre: diagnóstico y plan.
+• Diciembre: diseño, contenido y medición.
+• Enero: lanzamiento con todo listo.
+
+Esperar a enero para empezar suele significar lanzar en marzo.
+
+Escríbenos 2027 y agendamos tu diagnóstico.
+
+#Planeación2027 #MarketingDigital #DiseñoWeb #Guadalajara #BZACreative</p><span class="texto-meta">417 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Encuesta: “¿Ya tienes plan digital para 2027?” — Sí / A medias / No.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=planea_2027</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=planea_2027</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-13.png</code></li></ul></dd>
+</dl></div></article>
+<article class="pub" id="b2-14">
+<div class="pub-media"><div class="marco"><p class="etiqueta"><span>Imagen · 1 pieza</span><span>4:5</span></p><img src="../../assets/brand-kit/bloque-02/b2-14.png" width="1080" height="1350" alt="Diagnóstico de cierre de año" loading="lazy"></div></div>
+<div class="pub-body">
+<p class="pub-fecha">b2-14 · semana 4</p>
+<h3>Diagnóstico de cierre de año</h3>
+<dl class="ficha"><div><dt>Fecha</dt><dd>viernes 20 nov, 10:00</dd></div><div><dt>Formato</dt><dd>Imagen · 1 pieza</dd></div><div><dt>Palabra clave</dt><dd><span class="clave">CIERRE</span></dd></div><div><dt>Redes</dt><dd>Facebook, Instagram</dd></div></dl>
+<dl class="campos">
+<dt>Objetivo</dt><dd>Cerrar el bloque con la oferta de entrada.</dd>
+<dt>Texto</dt><dd><p class="texto">Antes de cerrar el año conviene saber qué funcionó y qué no en tu presencia digital.
+
+En el diagnóstico revisamos cuatro cosas: tu oferta, tu sitio, tu contenido y cómo mides los contactos. Recibes las tres prioridades que atacaríamos primero.
+
+Escríbenos CIERRE y agendamos una llamada de 30 minutos.
+
+#DiagnósticoDigital #MarketingDigital #Empresas #Guadalajara #BZACreative</p><span class="texto-meta">376 caracteres · 5 hashtags</span></dd>
+<dt>Historia (17:00–18:00)</dt><dd>Sticker de enlace a la landing con el UTM de esta publicación y texto “Agenda tu diagnóstico”.</dd>
+<dt>Enlace con UTM</dt><dd><ul class="utm"><li>Facebook<code>https://www.bzacreative.com/campana/?utm_source=facebook&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=diagnostico_cierre</code></li><li>Instagram<code>https://www.bzacreative.com/campana/?utm_source=instagram&amp;utm_medium=organic_social&amp;utm_campaign=contenido_bza_2026&amp;utm_content=diagnostico_cierre</code></li></ul></dd>
+<dt>Archivos</dt><dd><ul class="archivos"><li><code>dist/assets/brand-kit/bloque-02/b2-14.png</code></li></ul></dd>
+</dl></div></article>
+</div></section>
+</main>
+<footer class="footer wrap"><p><strong>BZA Creative</strong> · Vista previa interna de Bloque 2 · Google, Facebook y conversión. No se indexa.</p><p>Generada con <code>calendario.py preview</code> desde <code>marketing/calendario/bloque-02.json</code>.</p></footer>
+</body>
+</html>

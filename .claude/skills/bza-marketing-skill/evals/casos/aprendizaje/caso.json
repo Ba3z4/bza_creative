@@ -19,5 +19,8 @@
   "acciones_contienen": [
     "Google Ads sigue en aprendizaje",
     "Meta Ads sigue en aprendizaje"
+  ],
+  "acciones_no_contienen": [
+    "Fase 0 pendiente"
   ]
 }

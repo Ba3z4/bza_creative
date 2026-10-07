@@ -5,7 +5,8 @@ Uso:
     python3 decidir.py kpis.json [--config config.json] [--salida decision.json]
 
 Las reglas viven en `assets/config.json` -> `reglas` y están explicadas en
-`references/reglas-decision.md`.
+`references/reglas-decision.md`. `pendientes_fase0` lista los puntos de la Fase 0
+sin `hecho: true`; mientras no hay inversión, cada uno es una acción de prioridad alta.
 """
 from __future__ import annotations
 
@@ -49,6 +50,12 @@ def _transferir(reparto: Dict[str, float], hacia: str, desde: str, reglas: Dict[
     return monto
 
 
+def pendientes_fase0(config: Dict[str, Any]) -> List[Dict[str, str]]:
+    """Puntos de `config["pendientes_fase0"]` que todavía no tienen `hecho: true`."""
+    return [{"id": p["id"], "texto": p["texto"]}
+            for p in config.get("pendientes_fase0", []) if not p.get("hecho")]
+
+
 def decidir(kpis: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
     reglas = config["reglas"]
     presupuesto = config["presupuesto"]
@@ -60,6 +67,7 @@ def decidir(kpis: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
 
     hay_inversion = any(p["inversion_acumulada"] > 0 for p in pagados.values())
     reparto_actual = _reparto_actual(pagados)
+    pendientes = pendientes_fase0(config)
 
     if not hay_inversion:
         estado = "sin_inversion"
@@ -69,6 +77,8 @@ def decidir(kpis: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
             "Completar la Fase 0 (Search Console, GA4, aviso de privacidad, landing por servicio) y aprobar "
             f"el presupuesto de validación: {bd.mxn(diario * reparto_sugerido['google_ads'])} diarios en Google Search y "
             f"{bd.mxn(diario * reparto_sugerido['meta_ads'])} diarios en retargeting de Meta.")})
+        for pendiente in pendientes:
+            acciones.append({"prioridad": "alta", "texto": f"Fase 0 pendiente: {pendiente['texto']}"})
         for canal in pagados:
             estados[canal] = "sin_inversion"
     else:
@@ -161,6 +171,7 @@ def decidir(kpis: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
         "reparto_sugerido": reparto_sugerido,
         "diario_sugerido_mxn": {c: round(diario * v, 2) for c, v in reparto_sugerido.items()},
         "alertas": alertas,
+        "pendientes_fase0": pendientes,
         "acciones": acciones,
         "datos_faltantes": kpis["datos_faltantes"],
     }
