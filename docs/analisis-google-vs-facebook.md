@@ -84,7 +84,7 @@ Estas reglas también están en `.claude/skills/bza-marketing-skill/assets/confi
 3. **Tope:** CPCC máximo de **$858 MXN**, derivado del plan de 90 días: CAC máximo de $4,290 MXN × 20% de cierre. Un canal que lo supere dos semanas seguidas se pausa o se rehace.
 4. **Mover presupuesto:** si un canal tiene un CPCC al menos 30% menor que el otro durante dos semanas, se le transfiere 20% del presupuesto del otro canal. Ningún canal baja de 10% mientras se prueba.
 5. **Orgánico:** se repiten los temas cuya tasa de señales fuertes (guardados + compartidos + mensajes con palabra clave) ÷ alcance esté en el tercio superior. Los “me gusta” no deciden.
-6. **Señal de alarma:** con más de 150 contactos o 6 semanas de contenido y menos de 5 conversaciones calificadas, el problema es la oferta o el segmento, no el canal. Se corrige eso antes de invertir más.
+6. **Señal de alarma:** con 150 contactos o más **y** 6 semanas de contenido o más, pero menos de 5 conversaciones calificadas, el problema es la oferta o el segmento, no el canal. Se corrige eso antes de invertir más.
 
 ## 6. Cómo saber de dónde vino cada cliente
 
