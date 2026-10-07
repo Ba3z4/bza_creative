@@ -1,8 +1,12 @@
 {
   "name": "bza-creative",
+  "main": "src/worker.js",
   "compatibility_date": "2026-09-24",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    // El Worker recibe cada solicitud para redirigir workers.dev; las demás pasan a dist.
+    "run_worker_first": true,
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   }
