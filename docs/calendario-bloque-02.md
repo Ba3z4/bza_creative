@@ -32,7 +32,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 
 **Texto:**
 
-> ¿Google o Facebook? Es la pregunta que más escuchamos antes de invertir en anuncios.
+> ¿Google o Facebook? Es una de las preguntas más comunes antes de invertir en anuncios.
 >
 > Google captura demanda: apareces cuando alguien ya está buscando lo que vendes.
 > Facebook e Instagram crean demanda: llegas a personas que todavía no te buscan.
@@ -149,7 +149,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 > ¿Cuánto debo invertir en anuncios? La respuesta honesta: lo suficiente para aprender, sin apostar todo.
 >
 > Nuestra regla para empezar:
-> • Un canal, no cinco.
+> • Un canal principal, no cinco.
 > • Cuatro semanas de prueba antes de juzgar.
 > • Medir cuánto cuesta cada conversación con un cliente posible, no cada clic.
 >
@@ -242,7 +242,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 >
 > Cuando ordenamos la oferta de un negocio buscamos tres cambios:
 > • De una lista de servicios a un problema concreto que resuelves.
-> • De “precios a consultar” a rangos de inversión claros.
+> • De “precios a consultar” a explicar de qué depende la inversión.
 > • De “contáctanos” a un siguiente paso específico.
 >
 > Una oferta clara mejora el sitio, los anuncios y las conversaciones.

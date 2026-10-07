@@ -28,8 +28,8 @@ Conclusión: con cero casos de clientes y presupuesto limitado, **Google captura
 - **Google Search (pagado):** canal principal de conversaciones. Palabras de intención comercial por servicio y ciudad, con negativas estrictas.
 - **Google orgánico (gratis):** Search Console, sitemap, páginas por servicio y ciudad. Tarda semanas, pero es el canal más barato a largo plazo.
 - **Facebook e Instagram orgánico (Metricool):** credibilidad, autoridad y red local. Mantener 3 publicaciones por semana y un Reel cada dos semanas.
-- **Meta pagado, fase 1:** retargeting a visitantes del sitio y a quienes interactuaron con la página, y promoción de la publicación orgánica con mejores señales.
-- **Meta pagado, fase 2:** campaña en frío de mensajes o clientes potenciales, solo cuando existan al menos dos creativos con señales orgánicas y un caso o testimonio.
+- **Meta pagado, fase 1:** solo cuando el píxel esté activo y el sitio ya tenga visitas de Google: retargeting a visitantes y a quienes interactuaron con la página, y promoción de la publicación orgánica con mejores señales. Google sigue siendo el canal principal.
+- **Meta pagado, fase 2:** campaña en frío de mensajes o clientes potenciales, como en las semanas 7–8 del plan de 90 días: solo cuando existan al menos dos creativos con señales orgánicas y un caso o testimonio.
 
 ## 3. Lo que frenaba a Google (revisado en el repositorio)
 
@@ -55,9 +55,10 @@ Pendiente del dueño (el reporte semanal del agente lo recuerda hasta marcarlo c
 
 1. Conectar Metricool a Claude para que el agente lea métricas (ver `marketing/README.md`).
 2. Verificar el dominio en Google Search Console y enviar el sitemap.
-3. Crear GA4 y pegar el ID en `dist/campaign.js`.
-4. Completar nombre legal, domicilio y correo en `/privacidad/`.
-5. Registrar cada conversación en `marketing/datos/conversaciones.csv`.
+3. Completar nombre legal, domicilio y correo en `/privacidad/`.
+4. Crear GA4, actualizar la sección 04 de `/privacidad/` y después pegar el ID en `dist/campaign.js` (orden en `docs/configuracion-campana.md`).
+5. Antes del retargeting en Meta: crear el píxel y pegar `metaPixelId` de la misma forma.
+6. Registrar cada conversación en `marketing/datos/conversaciones.csv`.
 
 ### Fase 1 — Validación pagada (26 de octubre al 22 de noviembre)
 

@@ -352,7 +352,7 @@ def main():
 
     # b2-06 · presupuesto inicial
     card_steps("b2-06", ["¿Cuánto invertir", "al empezar?"],
-               [("Un canal", "No dividas poco presupuesto en cinco"),
+               [("Un canal principal", "No dividas poco presupuesto en cinco"),
                 ("Cuatro semanas", "Tiempo mínimo antes de juzgar"),
                 ("Costo por conversación", "La métrica que decide, no el clic")], "PRESUPUESTO")
 
@@ -374,7 +374,7 @@ def main():
     # b2-10 · ordenar una oferta
     card_compare("b2-10", ["Una oferta clara", "decide más que un buen diseño."],
                  ("Antes", ["“Hacemos de todo”", "“Precios a consultar”", "“Contáctanos”"]),
-                 ("Después", ["El problema que resuelves", "Rangos de inversión claros", "Un siguiente paso concreto"]),
+                 ("Después", ["El problema que resuelves", "Qué define la inversión", "Un siguiente paso concreto"]),
                  "OFERTA")
 
     # b2-11 · Reel errores de landing

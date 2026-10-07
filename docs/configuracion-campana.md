@@ -32,7 +32,14 @@ Valores recomendados:
 
 ## Activar la medición externa
 
-Pegar los IDs en el objeto `MEASUREMENT` al inicio de `dist/campaign.js`, ejecutar `node scripts/check-campaign.mjs` (debe decir `ACTIVE`) y publicar en `main`. Cada ID funciona por separado.
+Orden obligatorio:
+
+1. Completar en `/privacidad/` el nombre legal, domicilio y correo del responsable.
+2. Actualizar la sección 04 de `/privacidad/` («Este sitio y la medición») para decir qué herramientas quedan activas, y cambiar la fecha de actualización en sus tres lugares. Google Ads y el píxel de Meta se usan para medir anuncios y para remarketing; el aviso de consentimiento del sitio ya lo dice.
+3. Pegar los IDs en el objeto `MEASUREMENT` al inicio de `dist/campaign.js` y ejecutar `node scripts/check-campaign.mjs`. Debe decir `ACTIVE`; falla si `/privacidad/` todavía dice que el sitio no usa herramientas de analítica.
+4. Publicar en `main`.
+
+Cada ID funciona por separado.
 
 | Campo | Dónde se obtiene |
 |---|---|
@@ -40,12 +47,10 @@ Pegar los IDs en el objeto `MEASUREMENT` al inicio de `dist/campaign.js`, ejecut
 | `googleAdsId` y `googleAdsWhatsappLabel` | Google Ads → Objetivos → Conversiones → Crear acción de conversión → Sitio web → configurarla manualmente con código, categoría Contacto, nombre “Clic WhatsApp”, contar “Una”. En el fragmento de evento, `send_to: 'AW-123456789/AbCdEf'`: la parte antes de la diagonal va en `googleAdsId` y la etiqueta en `googleAdsWhatsappLabel`. No pegar el fragmento en el HTML. |
 | `metaPixelId` | Meta Business → Administrador de eventos → Orígenes de datos → píxel de BZA Creative → ID numérico. No instalar el código base: `campaign.js` lo carga tras el consentimiento y envía `PageView` y `Contact`. |
 
-Después:
+Después de publicar:
 
 1. Marcar `whatsapp_click` como evento clave en GA4 y vincular GA4 con Google Ads.
 2. Mantener activo el etiquetado automático (`gclid`) en Google Ads.
-3. Actualizar la sección 04 de `/privacidad/`, que hoy dice que el sitio no usa herramientas de analítica ni de publicidad, y su fecha de actualización.
-4. Completar en `/privacidad/` el nombre legal, domicilio y correo del responsable antes de invertir en anuncios.
 
 ## Conexiones de operación
 
