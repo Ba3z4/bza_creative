@@ -1,7 +1,7 @@
 # Google o Facebook: dónde conviene invertir primero
 
 Fecha: 6 de octubre de 2026  
-Contexto: BZA Creative tiene sitio en `www.bzacreative.com`, página de Facebook e Instagram nuevas, 18 publicaciones orgánicas programadas en Metricool hasta el 23 de octubre y $0 MXN en anuncios.
+Contexto: BZA Creative tiene sitio en `bzacreative.com`, página de Facebook e Instagram nuevas, 18 publicaciones orgánicas programadas en Metricool hasta el 23 de octubre y $0 MXN en anuncios.
 
 ## Respuesta corta
 
@@ -36,12 +36,13 @@ Conclusión: con cero casos de clientes y presupuesto limitado, **Google captura
 | Hallazgo | Estado |
 |---|---|
 | Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Le decían a Google que indexara la dirección temporal y no `bzacreative.com`. | **Corregido.** |
-| La dirección `workers.dev` respondía con una copia del sitio. | **Corregido:** `src/worker.js` la redirige con 301 a `www.bzacreative.com`, conservando ruta y UTM para que los enlaces viejos sigan funcionando. |
+| La dirección `workers.dev` respondía con una copia del sitio. | **Corregido:** `src/worker.js` la redirige con 301 a `bzacreative.com`, conservando ruta y UTM para que los enlaces viejos sigan funcionando. |
 | No había una página por servicio y ciudad. | **Creadas:** `/diseno-web-guadalajara/` y `/publicidad-digital-guadalajara/`, con datos estructurados para Google. |
 | No había aviso de privacidad. | **Publicado** en `/privacidad/`. Falta agregar nombre legal, domicilio y correo del responsable. |
 | No había GA4 ni etiqueta de Google Ads. | **Listo para activar:** pegar los IDs en `dist/campaign.js` (`MEASUREMENT`). El sitio pide consentimiento antes de cargar cualquier etiqueta. |
 | Las páginas no tenían vista previa para compartir en Facebook y WhatsApp. | **Corregido:** etiquetas Open Graph e imagen `og-bza-creative.png` en todas las páginas. |
-| No hay Google Search Console. | Pendiente del dueño: verificar el dominio y enviar `https://www.bzacreative.com/sitemap.xml`. |
+| `www.bzacreative.com` no existe en DNS; el sitio vive en `bzacreative.com`. | **Corregido:** URL canónicas, sitemap y redirecciones usan `https://bzacreative.com/`. |
+| No hay Google Search Console. | Pendiente del dueño: verificar el dominio y enviar `https://bzacreative.com/sitemap.xml`. |
 | Perfil de Negocio de Google | Solo si atiendes en persona o visitas clientes; en ese caso, crear perfil de área de servicio ocultando el domicilio. No usar oficina virtual. |
 
 ## 4. Plan por fases

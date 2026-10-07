@@ -44,7 +44,7 @@ Valores de `etapa`: `nuevo`, `calificado`, `diagnostico`, `propuesta`, `negociac
 
 ## Vista previa de cada bloque
 
-Cada bloque de contenido tiene una vista previa para revisarlo antes de aprobarlo. Google no la indexa, pero cualquiera con el enlace puede abrirla: `https://www.bzacreative.com/campana-preview/bloque-02/`. El agente la regenera con `calendario.py preview`.
+Cada bloque de contenido tiene una vista previa para revisarlo antes de aprobarlo. Google no la indexa, pero cualquiera con el enlace puede abrirla: `https://bzacreative.com/campana-preview/bloque-02/`. El agente la regenera con `calendario.py preview`.
 
 ## Comandos útiles
 

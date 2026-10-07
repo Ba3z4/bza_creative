@@ -27,7 +27,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** lunes 26 oct, 10:00
 - **Formato:** carrusel · **Palabra clave:** `GOOGLE`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-01-1.png`, `dist/assets/brand-kit/bloque-02/b2-01-2.png`, `dist/assets/brand-kit/bloque-02/b2-01-3.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=google_vs_facebook`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=google_vs_facebook`
 - **Objetivo:** Abrir la serie de canales con la pregunta que más hacen los dueños de negocio.
 
 **Texto:**
@@ -50,7 +50,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** miércoles 28 oct, 10:00
 - **Formato:** imagen · **Palabra clave:** `LANDING`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-02.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=despues_del_clic`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=despues_del_clic`
 - **Objetivo:** Conectar anuncios con la necesidad de una página que convierta.
 
 **Texto:**
@@ -72,7 +72,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** viernes 30 oct, 10:00
 - **Formato:** imagen · **Palabra clave:** `MEDIR`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-03.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=medir_conversaciones`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=medir_conversaciones`
 - **Objetivo:** Posicionar la medición por conversaciones como diferencia de BZA.
 
 **Texto:**
@@ -94,7 +94,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** sábado 31 oct, 18:00
 - **Formato:** reel · **Palabra clave:** `EMPEZAR`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-04-reel-google-facebook.mp4`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=reel_google_facebook`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=reel_google_facebook`
 - **Objetivo:** Alcance de descubrimiento con la idea central del bloque.
 
 **Texto:**
@@ -114,7 +114,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** martes 3 nov, 10:00
 - **Formato:** carrusel · **Palabra clave:** `REVISAR`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-05-1.png`, `dist/assets/brand-kit/bloque-02/b2-05-2.png`, `dist/assets/brand-kit/bloque-02/b2-05-3.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=senales_sitio`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=senales_sitio`
 - **Objetivo:** Contenido guardable que abre conversaciones de diagnóstico web. Se publica el martes por Día de Muertos.
 
 **Texto:**
@@ -141,7 +141,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** miércoles 4 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `PRESUPUESTO`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-06.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=presupuesto_inicial`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=presupuesto_inicial`
 - **Objetivo:** Resolver la objeción de presupuesto con un método, sin prometer resultados.
 
 **Texto:**
@@ -166,7 +166,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** viernes 6 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `LOCAL`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-07.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=busqueda_local`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=busqueda_local`
 - **Objetivo:** Mostrar dominio de Google para negocios locales de Guadalajara y Zapopan.
 
 **Texto:**
@@ -186,7 +186,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** lunes 9 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `BUENFIN`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-08.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=buen_fin`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=buen_fin`
 - **Objetivo:** Contenido de temporada útil para dueños que piensan anunciarse en Buen Fin.
 
 **Texto:**
@@ -211,7 +211,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** miércoles 11 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `VOLVER`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-09.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=retargeting`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=retargeting`
 - **Objetivo:** Explicar cómo Meta complementa a Google en el plan recomendado.
 
 **Texto:**
@@ -233,7 +233,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** viernes 13 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `OFERTA`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-10.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=ordenar_oferta`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=ordenar_oferta`
 - **Objetivo:** Contenido de proceso: el antes y después de una oferta clara.
 
 **Texto:**
@@ -258,7 +258,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** sábado 14 nov, 18:00
 - **Formato:** reel · **Palabra clave:** `ERRORES`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-11-reel-errores-landing.mp4`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=reel_errores_landing`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=reel_errores_landing`
 - **Objetivo:** Alcance de descubrimiento con un formato de lista rápida.
 
 **Texto:**
@@ -280,7 +280,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** martes 17 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `OPERAR`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-12.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=apps_operacion`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=apps_operacion`
 - **Objetivo:** Mantener visible el servicio de aplicaciones. Se publica el martes por el descanso del lunes 16.
 
 **Texto:**
@@ -302,7 +302,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** miércoles 18 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `2027`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-13.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=planea_2027`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=planea_2027`
 - **Objetivo:** Llenar el pipeline de enero antes de la pausa de diciembre.
 
 **Texto:**
@@ -327,7 +327,7 @@ Continúa el ritmo después del bloque 1 (termina el 23 de octubre). Serie educa
 - **Fecha:** viernes 20 nov, 10:00
 - **Formato:** imagen · **Palabra clave:** `CIERRE`
 - **Piezas:** `dist/assets/brand-kit/bloque-02/b2-14.png`
-- **Enlace para historia:** `https://www.bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=diagnostico_cierre`
+- **Enlace para historia:** `https://bzacreative.com/campana/?utm_source=instagram&utm_medium=organic_social&utm_campaign=contenido_bza_2026&utm_content=diagnostico_cierre`
 - **Objetivo:** Cerrar el bloque con la oferta de entrada.
 
 **Texto:**

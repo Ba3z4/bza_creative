@@ -1,6 +1,6 @@
 # AGENTS.md — bza-marketing-skill
 
-Agente de marketing de BZA Creative (`www.bzacreative.com`, Guadalajara). Mantiene el ritmo de publicaciones en Facebook e Instagram (Metricool), mide conversaciones calificadas y decide con reglas fijas cuánto invertir en Google Ads frente a Meta Ads. Responde en español de México.
+Agente de marketing de BZA Creative (`bzacreative.com`, Guadalajara). Mantiene el ritmo de publicaciones en Facebook e Instagram (Metricool), mide conversaciones calificadas y decide con reglas fijas cuánto invertir en Google Ads frente a Meta Ads. Responde en español de México.
 
 ## Cuándo activarlo
 
@@ -17,7 +17,7 @@ python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar  market
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/bloque-02.json
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/bloque-02.json
 # Vista previa visual (noindex) -> dist/campana-preview/bloque-02/index.html
-#   tras desplegar en main: https://www.bzacreative.com/campana-preview/bloque-02/
+#   tras desplegar en main: https://bzacreative.com/campana-preview/bloque-02/
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview  marketing/calendario/bloque-02.json
 
 # Pruebas
@@ -35,9 +35,10 @@ Datos en `marketing/datos/` (tres CSV); configuración, metas, reglas y pendient
 
 ## Gotchas
 
-- Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Tras cualquier cambio de dominio, `node scripts/check-site.mjs` verifica que todo apunte a `https://www.bzacreative.com/`.
+- Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev`. Tras cualquier cambio de dominio, `node scripts/check-site.mjs` verifica que todo apunte a `https://bzacreative.com/`.
 - `/campana-preview/` y `/campana-preview/<bloque>/` son vistas internas con `noindex`; `scripts/check-site.mjs` omite toda página con `noindex`.
 - El Chromium de Playwright no reproduce H.264: en capturas automáticas los Reels de la vista previa muestran solo la portada.
+- `www.bzacreative.com` no existe en DNS (NXDOMAIN en 8.8.8.8 y 1.1.1.1, 7 de octubre de 2026). El dominio canónico es `https://bzacreative.com/`, sin `www`; `src/worker.js` redirige `workers.dev` y `www` (si algún día se agrega) a ese dominio. No crear una regla de Cloudflare que redirija el dominio a `www`: haría un ciclo.
 - México no usa horario de verano desde 2022: `America/Mexico_City` es UTC−6 todo el año.
 - Metricool no lee el contenido de los mensajes directos: los mensajes con palabra clave se cuentan desde `conversaciones.csv`.
 - El bloque 1 usó palabras con acento (`DIAGNÓSTICO`, `DIRECCIÓN`). Al contar, normalizar sin acentos; las palabras nuevas van sin acento.

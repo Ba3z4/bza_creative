@@ -43,7 +43,7 @@ La primera meta es construir una red de 100 cuentas relevantes, no conseguir seg
 **Proyectos ambiciosos para empresas**  
 **↓ Cuéntanos qué quieres construir**
 
-Enlace recomendado: `https://www.bzacreative.com/`
+Enlace recomendado: `https://bzacreative.com/`
 
 ## Respuesta inicial por mensaje
 

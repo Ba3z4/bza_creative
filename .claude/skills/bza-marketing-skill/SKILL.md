@@ -78,7 +78,7 @@ También se activa con frases como “reporte de la semana”, “cómo van las 
 3. Para las piezas nuevas, extiende el generador del bloque (`scripts/create-block-02.py` en la raíz del repo) o márcalas como `PENDIENTE: descripción`.
 4. Run `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar marketing/calendario/<bloque>.json` hasta que diga `VÁLIDO`.
 5. Run `... calendario.py markdown <bloque>.json --salida docs/calendario-<bloque>.md` para la versión legible.
-6. Run `... calendario.py preview marketing/calendario/<bloque>.json` para la vista previa visual. Escribe `dist/campana-preview/<bloque>/index.html` (con `noindex`): resumen, calendario semana por semana y una tarjeta por publicación con sus piezas (carrusel completo, Reel con controles), texto, historia y enlace UTM. Las piezas se enlazan con rutas relativas, así que funciona en local (`python3 -m http.server 8000 --directory dist` → `http://localhost:8000/campana-preview/<bloque>/`) y en el sitio. Después de desplegar en `main`, la URL para que el responsable apruebe es `https://www.bzacreative.com/campana-preview/<bloque>/`. Regenérala cada vez que cambie el bloque; solo se genera si el bloque es válido.
+6. Run `... calendario.py preview marketing/calendario/<bloque>.json` para la vista previa visual. Escribe `dist/campana-preview/<bloque>/index.html` (con `noindex`): resumen, calendario semana por semana y una tarjeta por publicación con sus piezas (carrusel completo, Reel con controles), texto, historia y enlace UTM. Las piezas se enlazan con rutas relativas, así que funciona en local (`python3 -m http.server 8000 --directory dist` → `http://localhost:8000/campana-preview/<bloque>/`) y en el sitio. Después de desplegar en `main`, la URL para que el responsable apruebe es `https://bzacreative.com/campana-preview/<bloque>/`. Regenérala cada vez que cambie el bloque; solo se genera si el bloque es válido.
 
 ## Programar
 
@@ -117,9 +117,10 @@ node scripts/check-site.mjs
 
 ## Gotchas
 
-- Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev` aunque el sitio vive en `www.bzacreative.com`. Tras cualquier cambio de dominio, `node scripts/check-site.mjs` verifica que todo apunte a `https://www.bzacreative.com/`.
+- Las etiquetas canónicas, `sitemap.xml` y `robots.txt` apuntaban a `bza-creative.ingluisbaeza.workers.dev` aunque el sitio vive en `bzacreative.com`. Tras cualquier cambio de dominio, `node scripts/check-site.mjs` verifica que todo apunte a `https://bzacreative.com/`.
 - `/campana-preview/` y `/campana-preview/<bloque>/` son vistas internas con `noindex`; `scripts/check-site.mjs` omite toda página con `noindex` y no las incluye en `sitemap.xml`.
 - El Chromium de Playwright no reproduce H.264: en capturas automáticas de la vista previa los Reels muestran solo la portada (`<nombre>-1.png` junto al `.mp4`). En Chrome, Safari o el celular sí se reproducen.
+- `www.bzacreative.com` no existe en DNS (NXDOMAIN en 8.8.8.8 y 1.1.1.1, 7 de octubre de 2026). El dominio canónico es `https://bzacreative.com/`, sin `www`; `src/worker.js` redirige `workers.dev` y `www` (si algún día se agrega) a ese dominio. No crear una regla de Cloudflare que redirija el dominio a `www`: haría un ciclo.
 - México no usa horario de verano desde 2022: `America/Mexico_City` es UTC−6 todo el año.
 - Metricool no lee el contenido de los mensajes directos: los mensajes con palabra clave se cuentan desde `conversaciones.csv`.
 - El bloque 1 usó palabras con acento (`DIAGNÓSTICO`, `DIRECCIÓN`). Al contar, normaliza sin acentos; las palabras nuevas van sin acento.

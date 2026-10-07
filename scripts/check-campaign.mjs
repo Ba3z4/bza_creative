@@ -43,7 +43,7 @@ class FakeElement {
   querySelectorAll(selector) { return selector === '[data-consent-choice]' ? this.choices : []; }
 }
 
-function run({ ids = {}, url = 'https://www.bzacreative.com/campana/?utm_source=google&utm_medium=cpc&utm_campaign=test', local = {}, session = {}, links = 2, resets = 0, cookies = {} } = {}) {
+function run({ ids = {}, url = 'https://bzacreative.com/campana/?utm_source=google&utm_medium=cpc&utm_campaign=test', local = {}, session = {}, links = 2, resets = 0, cookies = {} } = {}) {
   const log = [];
   const storage = (name, initial) => {
     const map = new Map(Object.entries(initial));
@@ -118,7 +118,7 @@ const origin = encodeURIComponent('Origen de la consulta: google / cpc / test');
   env.document.links[0].click();
   assert.deepEqual(plain(env.sandbox.dataLayer.at(-1)), { event: 'whatsapp_click', link_text: 'WhatsApp 0', page_path: '/campana/', campaign_source: 'google', campaign_medium: 'cpc', campaign_name: 'test' });
   assert.equal(env.sandbox.dataLayer.filter(isArgs).length, 0, 'IDs vacíos: sin comandos gtag');
-  const direct = run({ url: 'https://www.bzacreative.com/servicios/' });
+  const direct = run({ url: 'https://bzacreative.com/servicios/' });
   assert.ok(direct.document.links[1].href.endsWith(encodeURIComponent('Origen de la consulta: directo / sitio / servicios')), 'origen directo');
 }
 
@@ -172,7 +172,7 @@ const origin = encodeURIComponent('Origen de la consulta: google / cpc / test');
 
 // 4. Aceptar en otra página: Google recibe el origen de la sesión.
 {
-  const env = run({ ids: testIds, url: 'https://www.bzacreative.com/servicios/', session: { bza_campaign: JSON.stringify({ utm_source: 'google', utm_medium: 'cpc', utm_campaign: 'test', gclid: 'abc' }) } });
+  const env = run({ ids: testIds, url: 'https://bzacreative.com/servicios/', session: { bza_campaign: JSON.stringify({ utm_source: 'google', utm_medium: 'cpc', utm_campaign: 'test', gclid: 'abc' }) } });
   env.choose('Aceptar');
   const location = new URL(env.gtagCalls('config')[0][2].page_location);
   assert.deepEqual([location.pathname, location.searchParams.get('utm_campaign'), location.searchParams.get('gclid')], ['/servicios/', 'test', 'abc']);

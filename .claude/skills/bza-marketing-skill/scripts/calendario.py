@@ -226,6 +226,7 @@ a{color:inherit}
 .top nav a{text-decoration:none}
 .top nav a:hover{color:var(--red)}
 .badge{padding:7px 12px;border-radius:100px;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;white-space:nowrap}
+@media (max-width:360px){.badge{font-size:9px;letter-spacing:.03em;padding:6px 8px}.brand{font-size:17px}}
 .hero{display:grid;grid-template-columns:1.3fr .7fr;gap:48px;align-items:end;padding:60px 0 36px}
 .eyebrow{margin:0;color:var(--red);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
 h1{font-size:clamp(36px,5.6vw,72px);line-height:1;letter-spacing:-.05em;margin:16px 0 20px;overflow-wrap:anywhere}
@@ -410,7 +411,7 @@ def _medios(pub: Dict[str, Any], raiz: Path, salida: Path) -> str:
             portada = _portada(pieza, raiz)
             poster = f' poster="{_src(portada, raiz, salida)}"' if portada else ""
             partes.append(f'<video src="{_src(pieza, raiz, salida)}"{poster} controls muted playsinline '
-                          f'preload="metadata" aria-label="{_esc("Reel: " + tema)}"></video>')
+                          f'preload="metadata" aria-label="{_esc(tema if tema.lower().startswith("reel") else "Reel: " + tema)}"></video>')
         return f'<div class="marco">{etiqueta}<div class="reel">{"".join(partes)}</div></div>'
 
     if formato == "carrusel" or len(piezas) > 1:

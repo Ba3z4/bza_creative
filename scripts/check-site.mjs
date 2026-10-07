@@ -13,7 +13,7 @@ async function walk(directory) {
   }
 }
 await walk(root);
-const siteUrl = 'https://www.bzacreative.com/';
+const siteUrl = 'https://bzacreative.com/';
 const titles = new Set();
 const canonicals = new Set();
 let pagesChecked = 0;

@@ -14,7 +14,7 @@ Después abre `http://127.0.0.1:4173`.
 
 ## Publicación
 
-El sitio está publicado en Cloudflare Workers con el dominio https://www.bzacreative.com/ y conectado a la rama `main` de este repositorio. Los enlaces canónicos, `sitemap.xml` y `robots.txt` usan ese dominio; la dirección temporal `bza-creative.ingluisbaeza.workers.dev` redirige con 301 al dominio, conservando ruta y parámetros UTM, mediante `src/worker.js` (el Worker se ejecuta antes de servir `dist`).
+El sitio está publicado en Cloudflare Workers con el dominio https://bzacreative.com/ y conectado a la rama `main` de este repositorio. Los enlaces canónicos, `sitemap.xml` y `robots.txt` usan ese dominio; la dirección temporal `bza-creative.ingluisbaeza.workers.dev` redirige con 301 al dominio, conservando ruta y parámetros UTM, mediante `src/worker.js` (el Worker se ejecuta antes de servir `dist`). `www.bzacreative.com` no existe en DNS; si se agrega como dominio del Worker, también redirige al dominio sin `www`. No crear una regla de Cloudflare que mande el dominio a `www`, porque haría un ciclo de redirecciones.
 
 `wrangler.jsonc` declara `src/worker.js` como Worker y `dist` como carpeta de archivos estáticos (binding `ASSETS`). El comando de despliegue es `npx wrangler deploy`; no requiere compilación ni dependencias de ejecución. Las páginas usan carpetas con `index.html` y rutas con barra final.
 

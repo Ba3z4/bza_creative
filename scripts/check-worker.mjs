@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import worker from '../src/worker.js';
 
 const oldHost = 'https://bza-creative.ingluisbaeza.workers.dev';
-const site = 'https://www.bzacreative.com';
+const site = 'https://bzacreative.com';
 const calls = [];
 const env = { ASSETS: { fetch: async request => { calls.push(request); return new Response('asset'); } } };
 let cases = 0;
@@ -35,12 +35,14 @@ await expectRedirect(`${oldHost}/servicios?utm_content=post%20uno&ref=%C3%B1#faq
 await expectRedirect(`${oldHost}/assets/og-bza-creative.png`, `${site}/assets/og-bza-creative.png`);
 await expectRedirect('https://BZA-Creative.ingluisbaeza.workers.dev/enfoque/', `${site}/enfoque/`);
 await expectRedirect(`${oldHost}${campaign}`, `${site}${campaign}`, 'HEAD');
+await expectRedirect(`https://www.bzacreative.com${campaign}`, `${site}${campaign}`);
+await expectRedirect('https://WWW.bzacreative.com/servicios/', `${site}/servicios/`);
 
 await expectAssets(`${site}/`);
 await expectAssets(`${site}${campaign}`);
-await expectAssets('https://bzacreative.com/servicios/');
+await expectAssets(`${site}/servicios/`, 'POST');
 await expectAssets('https://abc123-bza-creative.ingluisbaeza.workers.dev/campana/');
 await expectAssets('http://localhost:8787/');
 await expectAssets(`${site}/`, 'HEAD');
 
-console.log(`Verified ${cases} worker cases: workers.dev redirects 301 to ${site} with path and query; other hosts are served from dist.`);
+console.log(`Verified ${cases} worker cases: workers.dev and www redirect 301 to ${site} with path and query; other hosts are served from dist.`);

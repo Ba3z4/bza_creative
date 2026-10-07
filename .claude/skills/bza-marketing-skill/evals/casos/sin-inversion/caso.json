@@ -51,7 +51,7 @@
       },
       {
         "id": "search_console",
-        "texto": "Verificar www.bzacreative.com en Google Search Console y enviar el sitemap",
+        "texto": "Verificar bzacreative.com en Google Search Console y enviar el sitemap",
         "hecho": true
       }
     ]
@@ -61,7 +61,7 @@
     "Completar la Fase 0"
   ],
   "acciones_no_contienen": [
-    "Fase 0 pendiente: Verificar www.bzacreative.com"
+    "Fase 0 pendiente: Verificar bzacreative.com"
   ],
   "reporte_contiene": [
     "## Pendientes de la Fase 0",

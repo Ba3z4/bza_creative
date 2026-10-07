@@ -52,10 +52,10 @@ Los nombres exactos de métricas salen de `getAnalyticsAvailableMetrics`. Si una
 1. `getScheduledPosts` para los próximos 21 días. Si hay menos de 3 publicaciones por semana, falta contenido.
 2. Generar las cargas: `python3 scripts/calendario.py metricool marketing/calendario/<bloque>.json --salida /tmp/cargas.json`. Solo se generan si el bloque es válido.
 3. Ajustar cada carga al esquema real de `createScheduledPost` (fecha ISO con zona `America/Mexico_City`, `providers` con cada red, `media` con URLs públicas, texto).
-4. **Aprobación:** con `aprobacion_requerida: true` en la configuración, mostrar la lista (fecha, tema, palabra, pieza) con el enlace a la vista previa (`https://www.bzacreative.com/campana-preview/<bloque>/`, generada con `calendario.py preview`) y esperar un “sí” explícito antes de crear publicaciones. En una Routine sin persona presente, no programar: dejar la propuesta en el reporte.
+4. **Aprobación:** con `aprobacion_requerida: true` en la configuración, mostrar la lista (fecha, tema, palabra, pieza) con el enlace a la vista previa (`https://bzacreative.com/campana-preview/<bloque>/`, generada con `calendario.py preview`) y esperar un “sí” explícito antes de crear publicaciones. En una Routine sin persona presente, no programar: dejar la propuesta en el reporte.
 5. Después de crear, volver a llamar `getScheduledPosts` y confirmar fecha, redes y medios de cada una.
 6. Nunca borrar ni reemplazar publicaciones existentes sin aprobación.
 
 ## Medios públicos
 
-`createScheduledPost` necesita URLs accesibles. Las piezas viven en `dist/assets/...` y se publican en `https://www.bzacreative.com/assets/...` **solo después de que el cambio llegue a `main` y Cloudflare despliegue**. Antes de programar, comprobar que la URL responde; si no, subir la pieza manualmente en Metricool.
+`createScheduledPost` necesita URLs accesibles. Las piezas viven en `dist/assets/...` y se publican en `https://bzacreative.com/assets/...` **solo después de que el cambio llegue a `main` y Cloudflare despliegue**. Antes de programar, comprobar que la URL responde; si no, subir la pieza manualmente en Metricool.

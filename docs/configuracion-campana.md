@@ -11,7 +11,7 @@
 - Landings locales `/diseno-web-guadalajara/` y `/publicidad-digital-guadalajara/` para los grupos de Google Ads.
 - Aviso de privacidad en `/privacidad/`.
 - Aviso de consentimiento y carga de GA4, Google Ads y píxel de Meta, listos para activarse con sus IDs.
-- Redirección 301 de `bza-creative.ingluisbaeza.workers.dev` a `www.bzacreative.com`.
+- Redirección 301 de `bza-creative.ingluisbaeza.workers.dev` a `bzacreative.com`.
 
 ## Convención para enlaces de anuncios
 
@@ -36,7 +36,7 @@ Pegar los IDs en el objeto `MEASUREMENT` al inicio de `dist/campaign.js`, ejecut
 
 | Campo | Dónde se obtiene |
 |---|---|
-| `ga4Id` | Google Analytics → Administrar → Recopilación y modificación de datos → Flujos de datos → Web (`https://www.bzacreative.com`) → “ID de medición” (`G-…`). |
+| `ga4Id` | Google Analytics → Administrar → Recopilación y modificación de datos → Flujos de datos → Web (`https://bzacreative.com`) → “ID de medición” (`G-…`). |
 | `googleAdsId` y `googleAdsWhatsappLabel` | Google Ads → Objetivos → Conversiones → Crear acción de conversión → Sitio web → configurarla manualmente con código, categoría Contacto, nombre “Clic WhatsApp”, contar “Una”. En el fragmento de evento, `send_to: 'AW-123456789/AbCdEf'`: la parte antes de la diagonal va en `googleAdsId` y la etiqueta en `googleAdsWhatsappLabel`. No pegar el fragmento en el HTML. |
 | `metaPixelId` | Meta Business → Administrador de eventos → Orígenes de datos → píxel de BZA Creative → ID numérico. No instalar el código base: `campaign.js` lo carga tras el consentimiento y envía `PageView` y `Contact`. |
 
