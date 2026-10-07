@@ -1,8 +1,8 @@
 name: Publicar en GitHub Pages
 
+# El sitio se publica en Cloudflare Workers desde main. GitHub Pages no está activado en el repositorio,
+# así que este flujo queda solo como alternativa manual.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

@@ -18,7 +18,7 @@ El sitio está publicado en Cloudflare Workers con el dominio https://bzacreativ
 
 `wrangler.jsonc` declara `src/worker.js` como Worker y `dist` como carpeta de archivos estáticos (binding `ASSETS`). El comando de despliegue es `npx wrangler deploy`; no requiere compilación ni dependencias de ejecución. Las páginas usan carpetas con `index.html` y rutas con barra final.
 
-El flujo de GitHub Pages se conserva como una alternativa; no es necesario para el despliegue actual en Cloudflare.
+El flujo de GitHub Pages se conserva solo como alternativa manual (GitHub Pages no está activado); no es necesario para el despliegue actual en Cloudflare.
 
 ## Páginas
 
@@ -55,3 +55,5 @@ node scripts/check-campaign.mjs
 ```
 
 La verificación comprueba enlaces internos, imágenes, anclas, metadatos únicos, dominio canónico, Open Graph, datos estructurados, sitemap, atribución y el WhatsApp de contacto en las nueve páginas públicas; `check-worker.mjs` prueba la redirección de `workers.dev` y `check-campaign.mjs` prueba la atribución, el aviso de consentimiento y la carga de etiquetas (también indica si la medición está activa). Las páginas internas marcadas con `noindex`, como `/campana-preview/`, se omiten.
+
+GitHub Actions ejecuta estas mismas verificaciones, las pruebas del agente de marketing y la validación del bloque de contenido en cada pull request y en cada push a `main` (`.github/workflows/verificar.yml`).
