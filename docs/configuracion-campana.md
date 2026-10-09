@@ -10,7 +10,7 @@
 - Mensajes diferenciados según la llamada a la acción.
 - Landings locales `/diseno-web-guadalajara/` y `/publicidad-digital-guadalajara/` para los grupos de Google Ads.
 - Aviso de privacidad en `/privacidad/`.
-- Aviso de cookies con «Rechazar todo», «Aceptar todo» y «Configurar» por categoría (analítica: GA4; publicidad: Google Ads y píxel de Meta). Cada categoría carga, mide y conserva cookies solo si se acepta; «Preferencias de cookies» en el pie de cada página permite cambiar la elección. Todo queda oculto e inactivo mientras los IDs estén vacíos.
+- Aviso de cookies que aparece al entrar por primera vez y bloquea el sitio (sin desplazamiento ni clics) hasta elegir «Solo necesarias» o «Aceptar todas». Solo hay dos categorías: necesarias (siempre activas) y publicidad y medición (GA4, Google Ads y píxel de Meta), que se cargan solo al aceptar. En `/privacidad/` (`<body data-consent-readable>`) el aviso va al pie sin bloquear, para poder leerlo antes de decidir. «Preferencias de cookies» en el pie de cada página permite cambiar la elección. Con los IDs vacíos el aviso aparece igual, pero no se carga ninguna etiqueta.
 - Redirección 301 de `bza-creative.ingluisbaeza.workers.dev` a `bzacreative.com`.
 
 ## Convención para enlaces de anuncios
