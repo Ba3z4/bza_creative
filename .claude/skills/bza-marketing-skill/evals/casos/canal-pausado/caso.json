@@ -1,0 +1,28 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-09",
+  "descripcion": "Meta gastó la semana 1 y $0 la semana 2: el reparto actual es 100/0, pero la sugerencia le deja el piso de 10% y pide confirmar la pausa.",
+  "esperado": {
+    "decision": {
+      "estado": "aprendizaje",
+      "reparto_actual": {
+        "google_ads": 1.0,
+        "meta_ads": 0.0
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.9,
+        "meta_ads": 0.1
+      },
+      "diario_sugerido_mxn": {
+        "google_ads": 128.57,
+        "meta_ads": 14.29
+      }
+    }
+  },
+  "acciones_contienen": [
+    "Meta Ads no tuvo inversión esta semana: confirmar si la campaña está pausada o rechazada."
+  ],
+  "acciones_no_contienen": [
+    "Google Ads no tuvo inversión"
+  ]
+}

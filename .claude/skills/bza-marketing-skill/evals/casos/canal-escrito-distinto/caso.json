@@ -1,0 +1,49 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "'Google Ads', 'google-ads', 'GOOGLE_ADS', 'Meta Ads' y 'Prospección' se normalizan; '$1,400.50', '350 MXN' y '1,200' se leen; 'Sí' cuenta como calificada.",
+  "esperado": {
+    "kpis": {
+      "pagados": {
+        "google_ads": {
+          "inversion_acumulada": 1400.5,
+          "calificadas_acumuladas": 2
+        },
+        "meta_ads": {
+          "inversion_acumulada": 350,
+          "calificadas_acumuladas": 1
+        }
+      },
+      "embudo": {
+        "por_canal": {
+          "google_ads": {
+            "conversaciones": 4,
+            "calificadas": 2
+          },
+          "meta_ads": {
+            "conversaciones": 1,
+            "calificadas": 1
+          }
+        }
+      },
+      "canales": {
+        "instagram": {
+          "semana": {
+            "alcance": 1200
+          }
+        },
+        "prospeccion": {
+          "semana": {
+            "contactos_enviados": 20
+          }
+        }
+      }
+    },
+    "decision": {
+      "reparto_actual": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      }
+    }
+  }
+}

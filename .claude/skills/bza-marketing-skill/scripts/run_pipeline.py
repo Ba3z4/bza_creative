@@ -6,6 +6,10 @@ Uso:
 
 Escribe `<reportes>/<lunes>.json` (KPI + decisión) y `<reportes>/<lunes>.md`.
 Sin `--semana` reporta la última semana completa (hora de Ciudad de México).
+
+Códigos de salida: 0 = reporte generado; 2 = datos inválidos. Cada línea del error
+dice archivo y fila (`conversaciones.csv fila 4: canal 'tiktok' no es válido …`):
+corregir esa fila y repetir.
 """
 from __future__ import annotations
 
@@ -44,14 +48,21 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--reportes", type=Path, default=None)
     parser.add_argument("--config", type=Path, default=None)
     args = parser.parse_args(argv)
+    bd.preparar_consola()
 
-    semana = bd.fecha(args.semana) if args.semana else bd.semana_reporte()
     datos = args.datos or bd.datos_por_defecto()
     reportes = args.reportes or bd.raiz_repo() / "marketing" / "reportes"
     try:
+        semana = bd.fecha(args.semana) if args.semana else bd.semana_reporte()
+    except ValueError as error:
+        print(f"--semana inválida: {error}", file=sys.stderr)
+        return 2
+    try:
         salida = ejecutar(datos, reportes, semana, args.config)
     except ValueError as error:
-        print(f"Error en los datos: {error}", file=sys.stderr)
+        print(f"Error en los datos de {datos} (corregir y repetir):", file=sys.stderr)
+        for linea in str(error).splitlines():
+            print(f"  {linea}", file=sys.stderr)
         return 2
     decision = salida["decision"]
     print(f"Reporte: {salida['markdown']}")

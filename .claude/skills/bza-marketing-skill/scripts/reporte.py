@@ -24,7 +24,8 @@ ESTADOS = {
 NOMBRES_CANAL = {
     "facebook": "Facebook", "instagram": "Instagram", "google_ads": "Google Ads",
     "meta_ads": "Meta Ads", "google_organico": "Google orgánico", "sitio": "Sitio (GA4)",
-    "prospeccion": "Prospección",
+    "prospeccion": "Prospección", "referido": "Referido", "directo": "Directo",
+    "sin_canal": "Sin origen registrado",
 }
 NOMBRES_META = {
     "publicaciones": "Publicaciones", "contactos_personalizados": "Contactos personalizados",
@@ -66,9 +67,9 @@ def generar(kpis: Dict[str, Any], decision: Dict[str, Any]) -> str:
     agregar("")
     agregar("## Resumen")
     agregar("")
-    agregar(f"- **Conversaciones:** {semana['conversaciones']} nuevas, {semana['calificadas']} calificadas, "
-            f"{semana['propuestas']} con propuesta y {semana['ganados']} ganadas "
-            f"({bd.mxn(semana['valor_ganado_mxn'])}).")
+    agregar(f"- **Conversaciones:** {semana['conversaciones']} nuevas y {semana['calificadas']} calificadas.")
+    agregar(f"- **Avance en la semana:** {semana['diagnosticos']} diagnósticos, {semana['propuestas']} propuestas "
+            f"y {semana['ganados']} ganadas ({bd.mxn(semana['valor_ganado_mxn'])}), según la fecha de cada etapa.")
     agregar(f"- **Pipeline abierto:** {bd.mxn(embudo['valor_pipeline_mxn'])} estimados; "
             f"{embudo['calificadas_totales']} conversaciones calificadas desde el inicio.")
     agregar(f"- **Inversión:** {ESTADOS[decision['estado']]}.")
@@ -197,6 +198,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("decision", type=Path)
     parser.add_argument("--salida", type=Path, default=None)
     args = parser.parse_args(argv)
+    bd.preparar_consola()
     texto = generar(json.loads(args.kpis.read_text(encoding="utf-8")),
                     json.loads(args.decision.read_text(encoding="utf-8")))
     if args.salida:

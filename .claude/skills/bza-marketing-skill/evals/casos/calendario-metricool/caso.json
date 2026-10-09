@@ -1,0 +1,20 @@
+{
+  "tipo": "calendario",
+  "bloque": "bloque.json",
+  "descripcion": "Un carrusel con una lámina PENDIENTE no genera carga (aviso EXCLUIDA en stderr); las demás llevan URLs https://bzacreative.com/assets/... absolutas.",
+  "valido": true,
+  "avisos_contienen": [
+    "m-02: pieza pendiente de producir — segunda lámina"
+  ],
+  "cargas_excluidas": [
+    "m-02"
+  ],
+  "cargas_medios": {
+    "m-01": [
+      "https://bzacreative.com/assets/campaign-search.png"
+    ],
+    "m-03": [
+      "https://bzacreative.com/assets/brand-kit/reels/reel-operacion-digital.mp4"
+    ]
+  }
+}

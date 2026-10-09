@@ -6,6 +6,7 @@ Uso:
 
 La semana es de lunes a domingo; cualquier fecha dentro de ella sirve. Sin
 `--semana` se usa la última semana completa en hora de Ciudad de México.
+Termina con código 2 si algún CSV tiene datos inválidos (el mensaje dice archivo y fila).
 """
 from __future__ import annotations
 
@@ -19,11 +20,7 @@ from typing import Any, Dict, List, Optional
 
 import bza_datos as bd
 
-METRICAS_SUMABLES = [
-    "inversion_mxn", "impresiones", "alcance", "clics", "interacciones", "guardados",
-    "compartidos", "visitas_perfil", "seguidores_nuevos", "mensajes", "clics_whatsapp",
-    "contactos_enviados",
-]
+METRICAS_SUMABLES = bd.NUMERICAS["metricas"]
 
 
 def _sumar(filas: List[Dict[str, str]]) -> Dict[str, float]:
@@ -48,8 +45,7 @@ def _tasas(total: Dict[str, float]) -> Dict[str, Optional[float]]:
 def _metricas_por_canal(metricas, semana, previa) -> Dict[str, Any]:
     agrupado: Dict[str, Dict[dt.date, List[Dict[str, str]]]] = defaultdict(lambda: defaultdict(list))
     for fila in metricas:
-        canal = bd.normalizar(fila["canal"])
-        agrupado[canal][bd.lunes(bd.fecha(fila["semana_inicio"]))].append(fila)
+        agrupado[fila["canal"]][bd.lunes(bd.fecha(fila["semana_inicio"]))].append(fila)
     canales = {}
     for canal, por_semana in sorted(agrupado.items()):
         actual = _sumar(por_semana.get(semana, []))
@@ -71,7 +67,7 @@ def _historial_pagado(canal, agrupado, conversaciones, semana) -> Dict[str, Any]
     con_gasto = sorted(s for s, v in inversion_por_semana.items() if v > 0)
     calificadas_por_semana: Dict[dt.date, int] = defaultdict(int)
     for conv in conversaciones:
-        if bd.normalizar(conv["canal"]) == canal and bd.es_si(conv["calificada"]):
+        if conv["canal"] == canal and bd.es_si(conv["calificada"]):
             calificadas_por_semana[bd.lunes(bd.fecha(conv["fecha"]))] += 1
 
     resultado: Dict[str, Any] = {
@@ -105,12 +101,19 @@ def _embudo(conversaciones, semana) -> Dict[str, Any]:
     fin = semana + dt.timedelta(days=6)
     de_semana = [c for c in conversaciones if semana <= bd.fecha(c["fecha"]) <= fin]
 
-    def contar(filas, minima: str) -> int:
-        return sum(1 for c in filas if bd.indice_etapa(c["etapa"]) >= bd.ETAPAS.index(minima))
+    def en_semana(etapa: str) -> List[Dict[str, str]]:
+        """Conversaciones (iniciadas en cualquier semana) que llegaron a `etapa` en esta."""
+        filas = []
+        for conv in conversaciones:
+            dia = bd.fecha_etapa(conv, etapa)
+            if dia is not None and semana <= dia <= fin:
+                filas.append(conv)
+        return filas
 
+    ganadas = en_semana("ganado")
     por_canal: Dict[str, Dict[str, int]] = defaultdict(lambda: {"conversaciones": 0, "calificadas": 0})
     for conv in de_semana:
-        canal = bd.normalizar(conv["canal"]) or "sin_canal"
+        canal = conv["canal"] or "sin_canal"
         por_canal[canal]["conversaciones"] += 1
         por_canal[canal]["calificadas"] += int(bd.es_si(conv["calificada"]))
 
@@ -118,25 +121,26 @@ def _embudo(conversaciones, semana) -> Dict[str, Any]:
     valor_pipeline = 0.0
     hasta_fin = [c for c in conversaciones if bd.fecha(c["fecha"]) <= fin]
     for conv in hasta_fin:
-        etapa = bd.normalizar(conv["etapa"]) or "nuevo"
+        etapa = conv["etapa"] or "nuevo"
         pipeline[etapa] += 1
         if etapa not in ("ganado", "perdido"):
             valor_pipeline += bd.numero(conv["valor_estimado_mxn"])
 
+    # Sin acentos: DIAGNÓSTICO (bloque 1) y diagnostico cuentan juntas como DIAGNOSTICO.
     palabras: Dict[str, int] = defaultdict(int)
     for conv in de_semana:
-        if conv["palabra_clave"]:
-            palabras[conv["palabra_clave"].upper()] += 1
+        palabra = bd.normalizar(conv["palabra_clave"]).upper()
+        if palabra:
+            palabras[palabra] += 1
 
     return {
         "semana": {
             "conversaciones": len(de_semana),
             "calificadas": sum(1 for c in de_semana if bd.es_si(c["calificada"])),
-            "diagnosticos": contar(de_semana, "diagnostico"),
-            "propuestas": contar(de_semana, "propuesta"),
-            "ganados": contar(de_semana, "ganado"),
-            "valor_ganado_mxn": sum(bd.numero(c["valor_cerrado_mxn"]) for c in de_semana
-                                    if bd.normalizar(c["etapa"]) == "ganado"),
+            "diagnosticos": len(en_semana("diagnostico")),
+            "propuestas": len(en_semana("propuesta")),
+            "ganados": len(ganadas),
+            "valor_ganado_mxn": sum(bd.numero(c["valor_cerrado_mxn"]) for c in ganadas),
         },
         "por_canal": dict(por_canal),
         "palabras_clave": dict(sorted(palabras.items(), key=lambda kv: -kv[1])),
@@ -197,6 +201,7 @@ def calcular(directorio: Path, semana: dt.date, config: Dict[str, Any]) -> Dict[
     semana = bd.lunes(semana)
     previa = semana - dt.timedelta(days=7)
     datos = bd.cargar_datos(directorio)
+    bd.validar_datos(datos)  # DatosInvalidos (ValueError) con '<archivo> fila <n>: …'
     reglas = config["reglas"]
 
     canales, agrupado = _metricas_por_canal(datos["metricas"], semana, previa)
@@ -264,9 +269,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--config", type=Path, default=None)
     parser.add_argument("--salida", type=Path, default=None, help="Archivo JSON de salida")
     args = parser.parse_args(argv)
+    bd.preparar_consola()
 
-    semana = bd.fecha(args.semana) if args.semana else bd.semana_reporte()
-    resultado = calcular(args.datos or bd.datos_por_defecto(), semana, bd.cargar_config(args.config))
+    try:
+        semana = bd.fecha(args.semana) if args.semana else bd.semana_reporte()
+        resultado = calcular(args.datos or bd.datos_por_defecto(), semana, bd.cargar_config(args.config))
+    except ValueError as error:
+        print(f"Error en los datos:\n{error}", file=sys.stderr)
+        return 2
     texto = json.dumps(resultado, ensure_ascii=False, indent=2)
     if args.salida:
         args.salida.write_text(texto + "\n", encoding="utf-8")

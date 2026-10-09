@@ -1,0 +1,22 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-16",
+  "descripcion": "Meta con CPCC $560 vs Google $800 (exactamente 30% menor) dos semanas: se transfiere 20% del reparto de Google a Meta.",
+  "esperado": {
+    "decision": {
+      "estado": "decision",
+      "reparto_actual": {
+        "google_ads": 0.588,
+        "meta_ads": 0.412
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.47,
+        "meta_ads": 0.53
+      },
+      "alertas": []
+    }
+  },
+  "acciones_contienen": [
+    "Mover 11.8 puntos del presupuesto de Google Ads a Meta Ads"
+  ]
+}

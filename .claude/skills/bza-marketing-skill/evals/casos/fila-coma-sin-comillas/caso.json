@@ -1,0 +1,9 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "1,400 sin comillas agrega una columna: error con archivo y fila, y la pista de usar comillas.",
+  "error_contiene": [
+    "metricas-semanales.csv fila 3: tiene 1 valor(es) más que el encabezado",
+    "entre comillas"
+  ]
+}

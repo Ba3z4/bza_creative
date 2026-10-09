@@ -1,0 +1,20 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "DIAGNÓSTICO (bloque 1), diagnostico y Diagnóstico cuentan juntas como DIAGNOSTICO; DIRECCIÓN se muestra como DIRECCION.",
+  "esperado": {
+    "kpis": {
+      "embudo": {
+        "palabras_clave": {
+          "DIAGNOSTICO": 3,
+          "DIRECCION": 1,
+          "WEB": 1
+        }
+      }
+    }
+  },
+  "reporte_contiene": [
+    "`DIAGNOSTICO` (3)",
+    "`DIRECCION` (1)"
+  ]
+}

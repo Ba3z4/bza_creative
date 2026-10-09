@@ -2,15 +2,17 @@
 """Valida un bloque de contenido y lo convierte a Markdown, a cargas para Metricool
 o a una vista previa en HTML.
 
-Uso:
-    python3 calendario.py validar  marketing/calendario/bloque-02.json
-    python3 calendario.py markdown marketing/calendario/bloque-02.json [--salida docs/x.md]
-    python3 calendario.py metricool marketing/calendario/bloque-02.json [--publicar] [--salida x.json]
-    python3 calendario.py preview  marketing/calendario/bloque-02.json [--salida ruta/index.html]
+Uso (desde la raíz del repositorio):
+    python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar  marketing/calendario/bloque-02.json
+    python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/bloque-02.json [--salida docs/x.md]
+    python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/bloque-02.json [--publicar] [--salida x.json]
+    python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview  marketing/calendario/bloque-02.json [--salida ruta/index.html]
 
 `validar` termina con código 1 si hay errores. `markdown`, `metricool` y `preview`
-solo generan salida si el bloque es válido; las cargas de `metricool` salen como
-borrador por defecto. `preview` escribe por defecto
+solo generan salida si el bloque es válido y escriben los avisos en stderr. Las cargas
+de `metricool` salen como borrador por defecto, con URLs públicas absolutas
+(`https://bzacreative.com/assets/...`), y excluyen toda publicación con una pieza
+`PENDIENTE:` (se avisa en stderr). `preview` escribe por defecto
 `dist/campana-preview/<bloque>/index.html` (con `noindex`), con rutas relativas a
 las piezas de `dist/` para que funcione en local y en el sitio desplegado.
 """
@@ -185,13 +187,33 @@ def markdown(bloque: Dict[str, Any], config: Dict[str, Any]) -> str:
     return "\n".join(lineas)
 
 
+def piezas_pendientes(pub: Dict[str, Any]) -> List[str]:
+    """Descripciones de las piezas `PENDIENTE: …` de una publicación."""
+    return [p[len("PENDIENTE:"):].strip() for p in pub["piezas"] if p.startswith("PENDIENTE:")]
+
+
+def excluidas_metricool(bloque: Dict[str, Any]) -> List[Tuple[str, List[str]]]:
+    """(id, piezas pendientes) de las publicaciones que no pueden programarse todavía."""
+    return [(pub["id"], piezas_pendientes(pub)) for pub in bloque["publicaciones"] if piezas_pendientes(pub)]
+
+
+def url_publica(pieza: str, config: Dict[str, Any]) -> str:
+    """dist/assets/x.png -> https://bzacreative.com/assets/x.png (Metricool necesita URL absoluta)."""
+    return config["assets_publicos"].rstrip("/") + "/" + quote(pieza[len("dist/"):])
+
+
 def cargas_metricool(bloque: Dict[str, Any], config: Dict[str, Any], publicar: bool) -> List[Dict[str, Any]]:
     """Cargas en el formato de `createScheduledPost`. El agente debe ajustarlas al
-    esquema real de la herramienta que exponga el conector (ver references/metricool.md)."""
+    esquema real de la herramienta que exponga el conector (ver references/metricool.md).
+
+    Una publicación con alguna pieza `PENDIENTE:` no genera carga: se programaría sin
+    su imagen. `excluidas_metricool` dice cuáles quedaron fuera."""
     cargas = []
     for pub in bloque["publicaciones"]:
+        if piezas_pendientes(pub):
+            continue
         momento = dt.datetime.fromisoformat(pub["fecha"])
-        medios = [config["assets_publicos"] + p[len("dist/"):] for p in pub["piezas"] if p.startswith("dist/")]
+        medios = [url_publica(p, config) for p in pub["piezas"] if p.startswith("dist/")]
         cargas.append({
             "id_bza": pub["id"],
             "publicationDate": {"dateTime": momento.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -367,8 +389,15 @@ def _rango_corto(desde: dt.date, hasta: dt.date) -> str:
 
 
 def _src(pieza: str, raiz: Path, salida: Path) -> str:
-    """Ruta relativa desde el HTML de salida hasta la pieza de dist/, lista para un atributo."""
-    relativa = os.path.relpath((raiz / pieza).resolve(), salida.resolve().parent)
+    """Ruta relativa desde el HTML de salida hasta la pieza de dist/, lista para un atributo.
+
+    En Windows no hay ruta relativa entre unidades distintas (C: y D:): entonces se usa
+    un URI file:// absoluto, que solo funciona en esa máquina."""
+    destino = (raiz / pieza).resolve()
+    try:
+        relativa = os.path.relpath(destino, salida.resolve().parent)
+    except ValueError:
+        return _esc(destino.as_uri())
     return _esc(quote(relativa.replace(os.sep, "/")))
 
 
@@ -588,22 +617,32 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--salida", type=Path, default=None)
     parser.add_argument("--publicar", action="store_true", help="Marcar las cargas como publicación, no borrador")
     args = parser.parse_args(argv)
+    bd.preparar_consola()
 
     config = bd.cargar_config(args.config)
-    bloque = cargar(args.bloque)
+    try:
+        bloque = cargar(args.bloque)
+    except (OSError, ValueError) as error:
+        print(f"ERROR  no se pudo leer {args.bloque}: {error}", file=sys.stderr)
+        return 1
     raiz = args.raiz or bd.raiz_repo(args.bloque.resolve().parent)
     errores, avisos = validar(bloque, config, raiz)
 
     if args.accion == "validar" or errores:
+        # Con `validar` el resultado es la salida; en las demás acciones va a stderr.
+        flujo = sys.stdout if args.accion == "validar" else sys.stderr
         for aviso in avisos:
-            print(f"AVISO  {aviso}")
+            print(f"AVISO  {aviso}", file=flujo)
         for error in errores:
-            print(f"ERROR  {error}")
+            print(f"ERROR  {error}", file=flujo)
         total = len(bloque.get("publicaciones", []))
         print(f"{'VÁLIDO' if not errores else 'INVÁLIDO'}: {total} publicaciones, "
-              f"{len(errores)} errores, {len(avisos)} avisos")
-        if args.accion == "validar" or errores:
-            return 1 if errores else 0
+              f"{len(errores)} errores, {len(avisos)} avisos", file=flujo)
+        return 1 if errores else 0
+
+    # Los avisos no se pierden aunque la salida (JSON o Markdown) vaya a stdout.
+    for aviso in avisos:
+        print(f"AVISO  {aviso}", file=sys.stderr)
 
     if args.accion == "preview":
         destino = args.salida or raiz / "dist" / "campana-preview" / args.bloque.stem / "index.html"
@@ -619,7 +658,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"Escrito {destino} ({len(bloque['publicaciones'])} publicaciones, {len(avisos)} avisos)")
         dist = (Path(raiz) / "dist").resolve()
         carpeta = destino.resolve().parent
-        if not carpeta.is_relative_to(dist):
+        if not bd.dentro_de(carpeta, dist):
             print("AVISO  la salida está fuera de dist/: las rutas a las piezas solo funcionan en esta máquina")
         elif destino.name == "index.html":
             print(f"URL después del despliegue: {config['sitio']}{carpeta.relative_to(dist).as_posix()}/")
@@ -628,7 +667,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.accion == "markdown":
         salida = markdown(bloque, config)
     else:
-        salida = json.dumps(cargas_metricool(bloque, config, args.publicar), ensure_ascii=False, indent=2)
+        cargas = cargas_metricool(bloque, config, args.publicar)
+        excluidas = excluidas_metricool(bloque)
+        for ref, pendientes in excluidas:
+            print(f"EXCLUIDA  {ref}: pieza pendiente: {'; '.join(pendientes)}. No se generó su carga: "
+                  "producir la pieza, actualizar el bloque y volver a generar.", file=sys.stderr)
+        print(f"{len(cargas)} cargas generadas ({'publicación' if args.publicar else 'borrador'}), "
+              f"{len(excluidas)} excluidas por piezas pendientes", file=sys.stderr)
+        salida = json.dumps(cargas, ensure_ascii=False, indent=2)
     if args.salida:
         args.salida.write_text(salida + ("\n" if not salida.endswith("\n") else ""), encoding="utf-8")
         print(f"Escrito {args.salida}")

@@ -1,0 +1,32 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-23",
+  "descripcion": "Meta tiene 12% del reparto y pierde dos semanas (gasto sin calificadas): baja solo hasta el piso de 10%, no a 9.6%.",
+  "esperado": {
+    "kpis": {
+      "pagados": {
+        "meta_ads": {
+          "calificadas_acumuladas": 3,
+          "dias_activo": 28
+        }
+      }
+    },
+    "decision": {
+      "estado": "decision",
+      "reparto_actual": {
+        "google_ads": 0.88,
+        "meta_ads": 0.12
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.9,
+        "meta_ads": 0.1
+      }
+    }
+  },
+  "alertas_contienen": [
+    "Meta Ads supera el CPCC máximo"
+  ],
+  "acciones_contienen": [
+    "Mover 2 puntos del presupuesto de Meta Ads a Google Ads"
+  ]
+}
