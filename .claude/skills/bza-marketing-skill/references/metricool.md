@@ -26,7 +26,7 @@ Los nombres cambian entre versiones del conector. **Primero listar las herramien
 
 1. `getBrandSettings` → `blogId`.
 2. Para cada red (`facebook`, `instagram`) pedir el rango lunes 00:00 a domingo 23:59 de las **últimas 6 semanas**. Reconstruir esas filas cada vez: Metricool es la fuente de verdad y el CSV es una copia.
-3. Escribir una fila por `semana_inicio` + `canal` en `metricas-semanales.csv`. **Reemplazar** la fila si ya existe; nunca duplicar.
+3. Escribir una fila por `semana_inicio` + `canal` en `metricas-semanales.csv`. **Reemplazar** la fila si ya existe; nunca duplicar (dos filas de la misma semana y canal son error). `canal` en su forma canónica (`facebook`, `instagram`, `google_ads`, `meta_ads`); números sin separador de miles o con coma para miles y punto para decimales (`1400.50` o `"1,400.50"`), nunca `1.400` ni `858,50`.
 
 | Columna | Facebook (página) | Instagram (cuenta) |
 |---|---|---|
@@ -43,14 +43,15 @@ Los nombres cambian entre versiones del conector. **Primero listar las herramien
 Los nombres exactos de métricas salen de `getAnalyticsAvailableMetrics`. Si una métrica no existe, dejar 0 y anotarlo en “Datos faltantes” del reporte, nunca estimarla.
 
 4. **Por publicación** (`publicaciones.csv`): una fila por publicación y red con alcance, interacciones, guardados, compartidos y clics. `tema` y `palabra_clave` se obtienen comparando fecha y texto con el bloque de contenido (`marketing/calendario/*.json`) o con `docs/calendario-feed-inicial.md`.
-5. `mensajes_palabra_clave`: Metricool no lee el contenido de los mensajes directos. Contar las filas de `conversaciones.csv` con esa palabra clave en los 7 días posteriores a la publicación.
+5. `mensajes_palabra_clave`: Metricool no lee el contenido de los mensajes directos. Contar las filas de `conversaciones.csv` con esa palabra clave en los 7 días posteriores a la publicación, sin distinguir acentos ni mayúsculas (`DIAGNÓSTICO` = `diagnostico`).
 6. **Anuncios**: si hay campañas, escribir filas `google_ads` y `meta_ads` con `tipo=pagado`, `inversion_mxn`, `impresiones`, `clics` y `clics_whatsapp` (conversión `whatsapp_click`).
 7. `prospeccion` (contactos personalizados enviados y respuestas) y `conversaciones.csv` los captura el responsable de la cuenta o se agregan cuando los dicta en la conversación; no vienen de Metricool.
+8. Validar lo escrito: `python3 .claude/skills/bza-marketing-skill/scripts/kpis.py --salida /tmp/kpis.json`. Código 2 = cada línea dice archivo y fila del dato inválido; corregir y repetir antes de generar el reporte.
 
 ## Programación
 
 1. `getScheduledPosts` para los próximos 21 días. Si hay menos de 3 publicaciones por semana, falta contenido.
-2. Generar las cargas: `python3 scripts/calendario.py metricool marketing/calendario/<bloque>.json --salida /tmp/cargas.json`. Solo se generan si el bloque es válido.
+2. Generar las cargas desde la raíz del repositorio: `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/<bloque>.json --salida /tmp/cargas-<bloque>.json` (en Windows, `--salida $env:TEMP/cargas-<bloque>.json`). Solo se generan si el bloque es válido; salen como borrador y con `media` en URLs absolutas `https://bzacreative.com/assets/...`. Una publicación con alguna pieza `PENDIENTE:` no tiene carga: stderr la lista como `EXCLUIDA <id>: pieza pendiente: …`. No programarla hasta producir la pieza, actualizar el bloque y volver a generar; mencionarla en la lista de aprobación.
 3. Ajustar cada carga al esquema real de `createScheduledPost` (fecha ISO con zona `America/Mexico_City`, `providers` con cada red, `media` con URLs públicas, texto).
 4. **Aprobación:** con `aprobacion_requerida: true` en la configuración, mostrar la lista (fecha, tema, palabra, pieza) con el enlace a la vista previa (`https://bzacreative.com/campana-preview/<bloque>/`, generada con `calendario.py preview`) y esperar un “sí” explícito antes de crear publicaciones. En una Routine sin persona presente, no programar: dejar la propuesta en el reporte.
 5. Después de crear, volver a llamar `getScheduledPosts` y confirmar fecha, redes y medios de cada una.

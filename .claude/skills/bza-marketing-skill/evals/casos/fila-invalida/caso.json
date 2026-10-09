@@ -1,16 +1,18 @@
 {
   "tipo": "pipeline",
   "semana": "2026-11-02",
-  "descripcion": "Fecha, número (formato con punto de miles, coma decimal, nan, inf), canal, etapa, calificada y fecha de etapa inválidos: código 2 y cada error con archivo y fila.",
+  "descripcion": "Fecha, número (formato con punto de miles, coma decimal, nan, inf), canal (desconocido en métricas y en conversaciones, vacío en métricas), etapa, calificada y fecha de etapa inválidos: código 2 y cada error con archivo y fila.",
   "error_contiene": [
     "metricas-semanales.csv fila 3: inversion_mxn '1.400' no es un número válido",
     "metricas-semanales.csv fila 4: semana_inicio '2026-13-01' no es una fecha válida",
     "metricas-semanales.csv fila 5: canal 'tiktok' no es válido",
+    "metricas-semanales.csv fila 6: canal '' no es válido",
     "conversaciones.csv fila 3: etapa 'cotizado' no es válida",
     "conversaciones.csv fila 4: calificada 'quizás' no es válida",
     "conversaciones.csv fila 5: fecha_propuesta '05/11/2026' no es una fecha válida",
     "conversaciones.csv fila 6: valor_estimado_mxn '858,50' no es un número válido",
     "conversaciones.csv fila 7: valor_cerrado_mxn 'nan' no es un número válido",
+    "conversaciones.csv fila 8: canal 'WhatsApp' no es válido",
     "publicaciones.csv fila 2: alcance 'inf' no es un número válido"
   ]
 }

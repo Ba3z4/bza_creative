@@ -13,9 +13,9 @@ description: >-
 license: MIT
 metadata:
   author: BZA Creative
-  version: 1.1.0
+  version: 1.2.0
   created: 2026-10-06
-  last_reviewed: 2026-10-07
+  last_reviewed: 2026-10-09
   review_interval_days: 90
   dependencies:
     - url: https://metricool.com/how-to-use-metricool-mcp-with-claude/
@@ -64,7 +64,7 @@ También se activa con frases como “reporte de la semana”, “cómo van las 
    ```bash
    python3 .claude/skills/bza-marketing-skill/scripts/run_pipeline.py --semana AAAA-MM-DD
    ```
-   Sin `--semana` usa la última semana completa. Genera `marketing/reportes/<lunes>.md` y `.json`. Código 2 = error en los datos: corrige el CSV que indica y repite.
+   Todos los comandos de este skill se corren desde la raíz del repositorio. Sin `--semana` usa la última semana completa. Genera `marketing/reportes/<lunes>.md` y `.json`. Código 2 = datos inválidos: cada línea dice archivo y fila (`conversaciones.csv fila 4: canal 'tiktok' no es válido …`); corrige esas filas (pregunta al responsable si no sabes el valor correcto) y repite. No se escribe ningún reporte mientras haya errores.
 4. **Leer el reporte y agregar criterio.** El script da números y reglas; tú agregas al inicio del reporte un párrafo “Lectura” de 3–5 líneas: qué cambió, la hipótesis más probable y la decisión. No inventes causas que los datos no muestren.
 5. **Revisar el calendario.** Con Metricool, consulta lo programado en los próximos 21 días. Si alguna semana tiene menos de 3 publicaciones o el bloque termina en menos de 10 días, prepara el siguiente bloque (ver “Calendario”) usando los temas a repetir del reporte.
 6. **Entregar.** Responde con: la “Lectura”, la tabla de metas, la decisión Google vs Meta, las 3 acciones más importantes, los pendientes de la Fase 0 y lo que necesita aprobación. Si la sesión puede hacer commit, guarda reporte y CSV en la rama de trabajo.
@@ -77,24 +77,27 @@ También se activa con frases como “reporte de la semana”, “cómo van las 
 2. Copia la estructura de `marketing/calendario/bloque-02.json`: 4 semanas, lunes/miércoles/viernes 10:00 y un Reel cada dos sábados 18:00.
 3. Para las piezas nuevas, extiende el generador del bloque (`scripts/create-block-02.py` en la raíz del repo) o márcalas como `PENDIENTE: descripción`.
 4. Run `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar marketing/calendario/<bloque>.json` hasta que diga `VÁLIDO`.
-5. Run `... calendario.py markdown <bloque>.json --salida docs/calendario-<bloque>.md` para la versión legible.
-6. Run `... calendario.py preview marketing/calendario/<bloque>.json` para la vista previa visual. Escribe `dist/campana-preview/<bloque>/index.html` (con `noindex`): resumen, calendario semana por semana y una tarjeta por publicación con sus piezas (carrusel completo, Reel con controles), texto, historia y enlace UTM. Las piezas se enlazan con rutas relativas, así que funciona en local (`python3 -m http.server 8000 --directory dist` → `http://localhost:8000/campana-preview/<bloque>/`) y en el sitio. Después de desplegar en `main`, la URL para que el responsable apruebe es `https://bzacreative.com/campana-preview/<bloque>/`. Regenérala cada vez que cambie el bloque; solo se genera si el bloque es válido.
+5. Run `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/<bloque>.json --salida docs/calendario-<bloque>.md` para la versión legible.
+6. Run `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview marketing/calendario/<bloque>.json` para la vista previa visual. Escribe `dist/campana-preview/<bloque>/index.html` (con `noindex`): resumen, calendario semana por semana y una tarjeta por publicación con sus piezas (carrusel completo, Reel con controles), texto, historia y enlace UTM. Las piezas se enlazan con rutas relativas, así que funciona en local (`python3 -m http.server 8000 --directory dist` → `http://localhost:8000/campana-preview/<bloque>/`) y en el sitio. Después de desplegar en `main`, la URL para que el responsable apruebe es `https://bzacreative.com/campana-preview/<bloque>/`. Regenérala cada vez que cambie el bloque; solo se genera si el bloque es válido.
 
 ## Programar
 
 1. El bloque debe estar validado, aprobado por el responsable de la cuenta (con la vista previa de `/campana-preview/<bloque>/`) y desplegado en `main` (las piezas necesitan URL pública).
-2. Read `references/metricool.md` → “Programación”. Run `calendario.py metricool <bloque>.json --salida <scratch>/cargas.json` y crea cada publicación con la herramienta de Metricool.
+2. Read `references/metricool.md` → “Programación”. Run `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/<bloque>.json --salida /tmp/cargas-<bloque>.json` y crea cada publicación con la herramienta de Metricool. Las publicaciones con una pieza `PENDIENTE:` no tienen carga (stderr: `EXCLUIDA <id>`): no las programes hasta producir la pieza y volver a generar.
 3. Con `aprobacion_requerida: true`, muestra la lista y espera un “sí” explícito antes de crear. Después, verifica con la lista de programadas.
 
 ## Registrar
 
-Cuando el responsable dicte una conversación, agrega una fila a `conversaciones.csv`:
+Cuando el responsable dicte una conversación, agrega una fila a `marketing/datos/conversaciones.csv`, en el orden del encabezado:
 
-- `id`: `C` + fecha + consecutivo (`C20261027-1`).
-- `canal`: `google_ads`, `meta_ads`, `facebook`, `instagram`, `google_organico`, `referido`, `prospeccion` o `directo`. Sale del texto de origen que agrega `campaign.js` al WhatsApp.
+- `id`: `C` + fecha + consecutivo (`C20261027-1`). No se repite: cuando la conversación avance, actualiza la misma fila.
+- `fecha`: día en que empezó la conversación, `AAAA-MM-DD`.
+- `canal`: `google_ads`, `meta_ads`, `facebook`, `instagram`, `google_organico`, `referido`, `prospeccion` o `directo`. Sale del texto de origen que agrega `campaign.js` al WhatsApp. WhatsApp no es un canal; si nadie sabe el origen, déjalo vacío.
 - `calificada`: `si` solo si respondió las cinco preguntas de calificación y encaja con la oferta; si falta información, `pendiente`.
 - `etapa`: `nuevo`, `calificado`, `diagnostico`, `propuesta`, `negociacion`, `ganado` o `perdido`. Actualiza la misma fila cuando avance.
-- Valores en MXN sin signos. Nunca escribas nombre, teléfono, correo ni nombre de la empresa.
+- `fecha_diagnostico`, `fecha_propuesta`, `fecha_cierre` (opcionales, `AAAA-MM-DD`): el día de la llamada de diagnóstico, el día en que se envió la propuesta y el día en que se ganó o se perdió. Anótalas al actualizar la etapa: así el reporte cuenta cada avance en la semana en que ocurrió. Si quedan vacías, se usa `fecha` para toda etapa ya alcanzada. Nunca antes de `fecha` ni para una etapa que la fila no ha alcanzado (es error). En una `perdido`, anota la fecha de cada etapa a la que sí llegó: sin fecha no cuentan; su `fecha_cierre` no cuenta como ganada.
+- Valores en MXN sin signos (`30000`). Nunca escribas nombre, teléfono, correo ni nombre de la empresa.
+- Después de editar, valida sin tocar el repositorio con `python3 .claude/skills/bza-marketing-skill/scripts/kpis.py --salida /tmp/kpis.json`: código 2 = corrige la fila que indica.
 
 ## Pendientes de la Fase 0
 
@@ -111,7 +114,9 @@ Read `references/google-ads.md`. Prepara la configuración o la revisión semana
 ## Verificación
 
 ```bash
-python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py
+python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py             # casos dorados: todos deben decir PASA
+python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py --validate  # solo revisa que los casos estén bien formados
+python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar marketing/calendario/bloque-02.json
 node scripts/check-site.mjs
 ```
 
@@ -127,3 +132,9 @@ node scripts/check-site.mjs
 - Las piezas de `dist/assets/` solo tienen URL pública después de llegar a `main` y desplegarse en Cloudflare.
 - En sesiones en la nube la política de red puede bloquear `bzacreative.com` y `metricool.com`: usa el conector de Metricool, no `curl`.
 - Los nombres de herramientas del conector de Metricool cambian entre versiones: lista las disponibles antes de llamarlas.
+- `canal` se normaliza: `Google Ads`, `google-ads` y `GOOGLE_ADS` son `google_ads`; `Meta Ads` es `meta_ads`; `Prospección` es `prospeccion` (igual `Sí` → `si`, `Diagnóstico` → `diagnostico`). Un valor fuera de la lista (`tiktok`, `WhatsApp`) es error, y en `metricas-semanales.csv` también el canal vacío. Al escribir, usa la forma canónica.
+- Números: coma para miles y punto para decimales (`1400`, `1,400.50`, `$1,400.50`, `350 MXN`). `1.400`, `858,50`, `nan` e `inf` se rechazan en lugar de adivinar el formato. En el CSV, un número con coma va entre comillas (`"1,400"`); sin comillas agrega una columna y también es error.
+- Los errores de datos dicen archivo y fila (`metricas-semanales.csv fila 3: …`; el encabezado es la fila 1, igual que en Excel) y `run_pipeline.py` termina con código 2 sin escribir reporte. Corrige todas las filas de la lista; nunca borres filas para que pase.
+- Diagnósticos, propuestas y ganados cuentan en la semana de `fecha_diagnostico`, `fecha_propuesta` y `fecha_cierre`; sin esas fechas, en la semana de `fecha`.
+- `calendario.py metricool` no genera carga para una publicación con alguna pieza `PENDIENTE:` (se programaría sin imagen): avisa `EXCLUIDA <id>` en stderr y el resumen dice cuántas quedaron fuera. Cuéntalas en la lista para aprobación.
+- Windows (PowerShell): `py` o `python` en lugar de `python3` y `$env:TEMP` en lugar de `/tmp`; las rutas con `/` funcionan igual. Si la `--salida` de `preview` queda en otra unidad que el repositorio (`D:` y `C:`), las piezas se enlazan con `file://` y la página solo funciona en esa máquina.

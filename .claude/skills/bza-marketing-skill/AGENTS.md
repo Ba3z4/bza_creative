@@ -8,23 +8,28 @@ Agente de marketing de BZA Creative (`bzacreative.com`, Guadalajara). Mantiene e
 
 ## Cómo usarlo
 
+Todos los comandos se corren desde la raíz del repositorio (en Windows/PowerShell, `py` o `python` en lugar de `python3`).
+
 ```bash
 # Ciclo semanal: KPI -> decisión Google vs Meta -> reporte en marketing/reportes/
+# Código 2 = datos inválidos; cada línea dice archivo y fila
 python3 .claude/skills/bza-marketing-skill/scripts/run_pipeline.py [--semana AAAA-MM-DD]
 
 # Bloques de contenido
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar  marketing/calendario/bloque-02.json
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/bloque-02.json
-python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/bloque-02.json
+# Cargas para Metricool (borrador; omite publicaciones con piezas PENDIENTE y lo avisa en stderr)
+python3 .claude/skills/bza-marketing-skill/scripts/calendario.py metricool marketing/calendario/bloque-02.json --salida /tmp/cargas-bloque-02.json
 # Vista previa visual (noindex) -> dist/campana-preview/bloque-02/index.html
 #   tras desplegar en main: https://bzacreative.com/campana-preview/bloque-02/
 python3 .claude/skills/bza-marketing-skill/scripts/calendario.py preview  marketing/calendario/bloque-02.json
 
 # Pruebas
 python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py
+python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py --validate
 ```
 
-Datos en `marketing/datos/` (tres CSV); configuración, metas, reglas y pendientes de la Fase 0 en `assets/config.json`. Mientras no haya inversión, cada punto de `pendientes_fase0` con `"hecho": false` sale en el reporte como acción de prioridad alta; cuando el responsable lo confirme, cambiar `hecho` a `true`. El procedimiento completo, incluida la extracción desde Metricool y las reglas de aprobación, está en `SKILL.md` y `references/`.
+Datos en `marketing/datos/` (tres CSV; reglas de llenado en `marketing/README.md`). `conversaciones.csv` acepta las columnas opcionales `fecha_diagnostico`, `fecha_propuesta` y `fecha_cierre` (`AAAA-MM-DD`) para contar cada avance en la semana en que ocurrió. Configuración, metas, reglas y pendientes de la Fase 0 en `assets/config.json`. Mientras no haya inversión, cada punto de `pendientes_fase0` con `"hecho": false` sale en el reporte como acción de prioridad alta; cuando el responsable lo confirme, cambiar `hecho` a `true`. El procedimiento completo, incluida la extracción desde Metricool y las reglas de aprobación, está en `SKILL.md` y `references/`.
 
 ## Reglas que no se rompen
 
@@ -45,3 +50,7 @@ Datos en `marketing/datos/` (tres CSV); configuración, metas, reglas y pendient
 - Las piezas de `dist/assets/` solo tienen URL pública después de llegar a `main` y desplegarse en Cloudflare.
 - En sesiones en la nube la política de red puede bloquear `bzacreative.com` y `metricool.com`: usar el conector de Metricool, no `curl`.
 - Los nombres de herramientas del conector de Metricool cambian entre versiones: listar las disponibles antes de llamarlas.
+- `canal` se normaliza (`Google Ads`, `google-ads` y `GOOGLE_ADS` son `google_ads`; `Prospección` es `prospeccion`); un valor fuera de la lista (`tiktok`, `WhatsApp`) es error.
+- Números con coma para miles y punto para decimales (`1,400.50`); `1.400` y `858,50` se rechazan en lugar de adivinar el formato.
+- Los errores de datos dicen archivo y fila (`conversaciones.csv fila 4: …`, encabezado = fila 1) y no se escribe reporte hasta corregirlos todos.
+- `calendario.py metricool` no genera carga para una publicación con alguna pieza `PENDIENTE:`; la avisa como `EXCLUIDA <id>` en stderr.

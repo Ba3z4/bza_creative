@@ -37,7 +37,7 @@ Tono: cercano, claro y profesional; tú (no usted); sin promesas de ventas garan
 
 ## Enlaces
 
-Instagram no vuelve clicables los enlaces en el texto: la llamada a la acción remite al mensaje directo o al enlace del perfil. Las historias usan el sticker de enlace con el UTM que genera `calendario.py markdown` (`utm_medium=organic_social`, `utm_content` del tema).
+Instagram no vuelve clicables los enlaces en el texto: la llamada a la acción remite al mensaje directo o al enlace del perfil. Las historias usan el sticker de enlace con el UTM que genera `python3 .claude/skills/bza-marketing-skill/scripts/calendario.py markdown marketing/calendario/<bloque>.json` (`utm_medium=organic_social`, `utm_content` del tema).
 
 ## Producción de piezas
 
