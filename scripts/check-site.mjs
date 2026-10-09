@@ -13,12 +13,27 @@ async function walk(directory) {
   }
 }
 await walk(root);
+const siteUrl = 'https://bzacreative.com/';
 const titles = new Set();
+const canonicals = new Set();
+let pagesChecked = 0;
+const decode = value => value?.replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 const descriptions = new Set();
 let references = 0;
 for (const file of pages) {
   const html = await readFile(file, 'utf8');
   const relative = path.relative(root, file);
+  if (/name="robots" content="noindex/.test(html)) continue;
+  pagesChecked++;
+  const canonical = html.match(/rel="canonical" href="([^"]+)"/)?.[1];
+  assert.ok(canonical?.startsWith(siteUrl), `${relative}: canonical uses ${siteUrl}`);
+  canonicals.add(canonical);
+  const meta = property => decode(html.match(new RegExp(`property="${property}" content="([^"]*)"`))?.[1]);
+  assert.equal(meta('og:url'), canonical, `${relative}: og:url matches canonical`);
+  assert.equal(meta('og:image'), `${siteUrl}assets/og-bza-creative.png`, `${relative}: og:image`);
+  for (const match of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    assert.doesNotThrow(() => JSON.parse(match[1]), `${relative}: valid JSON-LD`);
+  }
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${relative}: one primary heading`);
   const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
   assert.ok(title && !titles.has(title), `${relative}: unique title`);
@@ -26,6 +41,8 @@ for (const file of pages) {
   const description = html.match(/name="description" content="([^"]+)"/)?.[1];
   assert.ok(description && !descriptions.has(description), `${relative}: unique description`);
   descriptions.add(description);
+  assert.equal(meta('og:title'), decode(title), `${relative}: og:title matches title`);
+  assert.equal(meta('og:description'), decode(description), `${relative}: og:description matches description`);
   assert.match(html, /aria-current="page"/, `${relative}: current page indicator`);
   assert.match(html, /campaign\.js/, `${relative}: campaign attribution script`);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
@@ -47,5 +64,8 @@ for (const file of pages) {
     assert.equal(match[1], 'https://wa.me/523342781554', `${relative}: correct contact number`);
   }
 }
-assert.equal(pages.length, 6, 'Home, campaign landing and four detail pages exist');
-console.log(`Verified ${pages.length} pages and ${references} local links/assets; unique metadata and valid WhatsApp links.`);
+assert.equal(pagesChecked, 9, 'Home, campaign landing, four detail pages, two local landings and privacy notice exist');
+const sitemap = await readFile(path.join(root, 'sitemap.xml'), 'utf8');
+const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]).sort();
+assert.deepEqual(listed, [...canonicals].sort(), 'sitemap lists exactly the canonical URL of every public page');
+console.log(`Verified ${pagesChecked} pages and ${references} local links/assets; unique metadata, Open Graph, sitemap and valid WhatsApp links.`);

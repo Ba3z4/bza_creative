@@ -1,0 +1,70 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-10-28",
+  "descripcion": "Solo orgánico: estado sin_inversion, reparto inicial 80/20 y una acción de prioridad alta por cada pendiente de la Fase 0 sin hecho.",
+  "esperado": {
+    "kpis": {
+      "semana_inicio": "2026-10-26",
+      "embudo": {
+        "semana": {
+          "conversaciones": 2,
+          "calificadas": 1,
+          "diagnosticos": 1
+        }
+      },
+      "contenido": {
+        "publicaciones_semana": 3,
+        "suficiente": true,
+        "repetir": [
+          "Google o Facebook"
+        ],
+        "revisar": [
+          "Después del clic"
+        ]
+      }
+    },
+    "decision": {
+      "estado": "sin_inversion",
+      "reparto_sugerido": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      },
+      "diario_sugerido_mxn": {
+        "google_ads": 240,
+        "meta_ads": 60
+      },
+      "alertas": [],
+      "pendientes_fase0": [
+        {
+          "id": "metricool",
+          "texto": "Conectar el conector de Metricool en claude.ai (Configuración → Conectores)"
+        }
+      ]
+    }
+  },
+  "config": {
+    "pendientes_fase0": [
+      {
+        "id": "metricool",
+        "texto": "Conectar el conector de Metricool en claude.ai (Configuración → Conectores)",
+        "hecho": false
+      },
+      {
+        "id": "search_console",
+        "texto": "Verificar bzacreative.com en Google Search Console y enviar el sitemap",
+        "hecho": true
+      }
+    ]
+  },
+  "acciones_contienen": [
+    "Fase 0 pendiente: Conectar el conector de Metricool",
+    "Completar la Fase 0"
+  ],
+  "acciones_no_contienen": [
+    "Fase 0 pendiente: Verificar bzacreative.com"
+  ],
+  "reporte_contiene": [
+    "## Pendientes de la Fase 0",
+    "- [ ] Conectar el conector de Metricool en claude.ai (Configuración → Conectores)"
+  ]
+}

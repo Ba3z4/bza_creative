@@ -1,0 +1,16 @@
+{
+  "tipo": "calendario",
+  "bloque": "bloque.json",
+  "descripcion": "Texto y tema con <, & y \" se muestran escapados en la vista previa; ninguna etiqueta del texto llega al HTML.",
+  "valido": true,
+  "preview_contiene": [
+    "Precio &lt;b&gt;fijo&lt;/b&gt; &amp; &quot;sin sorpresas&quot;",
+    "&lt;script&gt;alert(1)&lt;/script&gt;",
+    "<h3>Antes &lt; después &amp; &quot;comillas&quot;</h3>"
+  ],
+  "preview_no_contiene": [
+    "<b>fijo</b>",
+    "<script>alert(1)</script>",
+    "\"sin sorpresas\""
+  ]
+}

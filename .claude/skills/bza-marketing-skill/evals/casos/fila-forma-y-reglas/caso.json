@@ -1,0 +1,16 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "Errores de forma y de reglas reportados juntos con la fila de hoja de cálculo: fila larga y corta, id repetido, semana y canal repetidos ('Google Ads' en otro día de la misma semana), número negativo, fecha de etapa anterior a la conversación, fecha de etapa sin la etapa y numeración correcta tras una nota de varias líneas.",
+  "error_contiene": [
+    "metricas-semanales.csv fila 3: semana 2026-11-02 y canal google_ads repetidos",
+    "metricas-semanales.csv fila 4: inversion_mxn '-1400' no puede ser negativo",
+    "metricas-semanales.csv fila 5: tiene 1 valor(es) más que el encabezado",
+    "metricas-semanales.csv fila 6: tiene 12 valor(es) menos que el encabezado",
+    "conversaciones.csv fila 3: canal 'tiktok' no es válido",
+    "conversaciones.csv fila 4: id C1 repetido (ya está en la fila 2)",
+    "conversaciones.csv fila 5: tiene 1 valor(es) menos que el encabezado",
+    "conversaciones.csv fila 6: fecha_diagnostico 2026-11-01 es anterior a la fecha de la conversación",
+    "conversaciones.csv fila 7: fecha_propuesta tiene fecha pero la etapa es 'calificado'"
+  ]
+}

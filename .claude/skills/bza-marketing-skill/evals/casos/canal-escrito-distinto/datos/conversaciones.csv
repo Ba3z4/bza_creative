@@ -1,0 +1,6 @@
+id,fecha,canal,palabra_clave,servicio,sector,calificada,etapa,valor_estimado_mxn,valor_cerrado_mxn,notas
+C20261103-1,2026-11-03,Google Ads,WEB,web,servicios,Sí,calificado,,,
+C20261103-2,2026-11-03,google-ads,WEB,web,servicios,SI,calificado,,,
+C20261104-3,2026-11-04,google ads,WEB,web,servicios,no,nuevo,,,
+C20261104-4,2026-11-04,GOOGLE_ADS,WEB,web,servicios,Pendiente,nuevo,,,
+C20261105-5,2026-11-05,Meta Ads,WEB,web,servicios,sí,calificado,,,

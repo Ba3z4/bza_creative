@@ -1,0 +1,40 @@
+name: Verificar sitio y agente
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sintaxis de JavaScript
+        run: |
+          node --check dist/script.js
+          node --check dist/campaign.js
+          node --check src/worker.js
+      - name: Páginas, enlaces y metadatos
+        run: node scripts/check-site.mjs
+      - name: Redirección del Worker
+        run: node scripts/check-worker.mjs
+      - name: Atribución y consentimiento
+        run: node scripts/check-campaign.mjs
+      - name: Pruebas del agente de marketing
+        run: python3 .claude/skills/bza-marketing-skill/scripts/run_evals.py
+      - name: Bloque de contenido vigente
+        run: python3 .claude/skills/bza-marketing-skill/scripts/calendario.py validar marketing/calendario/bloque-02.json

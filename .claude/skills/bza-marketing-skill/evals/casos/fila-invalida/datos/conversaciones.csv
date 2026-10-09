@@ -1,0 +1,8 @@
+id,fecha,canal,palabra_clave,servicio,sector,calificada,etapa,fecha_diagnostico,fecha_propuesta,fecha_cierre,valor_estimado_mxn,valor_cerrado_mxn,notas
+C20261103-1,2026-11-03,google_ads,WEB,web,servicios,si,calificado,,,,,,
+C20261103-2,2026-11-03,google_ads,WEB,web,servicios,si,cotizado,,,,,,
+C20261103-3,2026-11-03,google_ads,WEB,web,servicios,quizás,nuevo,,,,,,
+C20261103-4,2026-11-03,google_ads,WEB,web,servicios,si,propuesta,,05/11/2026,,,,
+C20261103-5,2026-11-03,google_ads,WEB,web,servicios,si,calificado,,,,"858,50",,
+C20261103-6,2026-11-03,google_ads,WEB,web,servicios,si,ganado,,,,,nan,
+C20261103-7,2026-11-03,WhatsApp,WEB,web,servicios,si,calificado,,,,,,

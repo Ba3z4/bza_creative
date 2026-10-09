@@ -1,0 +1,71 @@
+{
+  "bloque": "prueba-mala",
+  "inicio": "2026-10-26",
+  "fin": "2026-10-31",
+  "publicaciones": [
+    {
+      "id": "t-01",
+      "fecha": "2026-10-26T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema 1",
+      "palabra_clave": "DIAGNÓSTICO",
+      "piezas": [
+        "dist/assets/campaign-search.png"
+      ],
+      "texto": "Gancho del tema 1.\n\nEscríbenos DIAGNÓSTICO por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-02",
+      "fecha": "2026-10-28T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema 2",
+      "palabra_clave": "WEB",
+      "piezas": [
+        "dist/assets/no-existe.png"
+      ],
+      "texto": "Escríbenos WEB.\n#a #b #c #d #e #f",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-03",
+      "fecha": "2026-10-30T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema 3",
+      "palabra_clave": "WEB",
+      "piezas": [
+        "dist/assets/campaign-web.png"
+      ],
+      "texto": "Gancho del tema 3.\n\nEscríbenos WEB por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-04",
+      "fecha": "2026-11-02T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "reel",
+      "tema": "Tema 4",
+      "palabra_clave": "REEL",
+      "piezas": [
+        "dist/assets/campaign-web.png"
+      ],
+      "texto": "Gancho del tema 4.\n\nEscríbenos REEL por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "Mal Valor"
+    }
+  ]
+}

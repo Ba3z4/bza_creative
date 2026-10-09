@@ -1,0 +1,73 @@
+{
+  "bloque": "prueba",
+  "inicio": "2026-10-26",
+  "fin": "2026-10-31",
+  "utm_campaign": "contenido_bza_2026",
+  "publicaciones": [
+    {
+      "id": "t-01",
+      "fecha": "2026-10-26T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema 1",
+      "palabra_clave": "GOOGLE",
+      "piezas": [
+        "dist/assets/campaign-search.png"
+      ],
+      "texto": "Gancho del tema 1.\n\nEscríbenos GOOGLE por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-02",
+      "fecha": "2026-10-28T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "carrusel",
+      "tema": "Tema 2",
+      "palabra_clave": "LANDING",
+      "piezas": [
+        "dist/assets/campaign-web.png",
+        "dist/assets/creative-web-v2.png"
+      ],
+      "texto": "Gancho del tema 2.\n\nEscríbenos LANDING por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-03",
+      "fecha": "2026-10-30T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema 3",
+      "palabra_clave": "MEDIR",
+      "piezas": [
+        "PENDIENTE: tarjeta de métricas"
+      ],
+      "texto": "Gancho del tema 3.\n\nEscríbenos MEDIR por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    },
+    {
+      "id": "t-04",
+      "fecha": "2026-10-31T18:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "reel",
+      "tema": "Tema 4",
+      "palabra_clave": "SISTEMA",
+      "piezas": [
+        "dist/assets/brand-kit/reels/reel-operacion-digital.mp4"
+      ],
+      "texto": "Gancho del tema 4.\n\nEscríbenos SISTEMA por mensaje.\n\n#DiseñoWeb #Guadalajara #BZACreative",
+      "utm_content": "tema"
+    }
+  ]
+}

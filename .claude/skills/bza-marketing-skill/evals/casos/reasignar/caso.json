@@ -1,0 +1,41 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-23",
+  "descripcion": "Meta con CPCC ≥30% menor 2 semanas seguidas: 16 puntos de Google a Meta.",
+  "esperado": {
+    "kpis": {
+      "pagados": {
+        "google_ads": {
+          "dias_activo": 28,
+          "calificadas_acumuladas": 9,
+          "inversion_acumulada": 5600
+        },
+        "meta_ads": {
+          "dias_activo": 28,
+          "calificadas_acumuladas": 3,
+          "cpcc_acumulado": 466.67
+        }
+      }
+    },
+    "decision": {
+      "estado": "decision",
+      "estados_canal": {
+        "google_ads": "evaluable",
+        "meta_ads": "evaluable"
+      },
+      "reparto_actual": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.64,
+        "meta_ads": 0.36
+      },
+      "alertas": [],
+      "diario_sugerido_mxn": {
+        "google_ads": 160,
+        "meta_ads": 90
+      }
+    }
+  }
+}

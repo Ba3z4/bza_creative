@@ -1,0 +1,8 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "Un CSV guardado en Windows-1252 (no UTF-8) se rechaza con instrucciones para guardarlo como CSV UTF-8.",
+  "error_contiene": [
+    "conversaciones.csv: no está en UTF-8"
+  ]
+}

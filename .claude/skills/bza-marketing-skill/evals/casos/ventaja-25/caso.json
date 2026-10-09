@@ -1,0 +1,41 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-16",
+  "descripcion": "Ambos evaluables (21 días); Meta con CPCC $300 vs Google $400 (25% menor) dos semanas: no se mueve presupuesto.",
+  "esperado": {
+    "kpis": {
+      "pagados": {
+        "google_ads": {
+          "calificadas_acumuladas": 6,
+          "dias_activo": 21
+        },
+        "meta_ads": {
+          "calificadas_acumuladas": 3,
+          "cpcc_acumulado": 300.0
+        }
+      }
+    },
+    "decision": {
+      "estado": "decision",
+      "estados_canal": {
+        "google_ads": "evaluable",
+        "meta_ads": "evaluable"
+      },
+      "reparto_actual": {
+        "google_ads": 0.727,
+        "meta_ads": 0.273
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.727,
+        "meta_ads": 0.273
+      },
+      "alertas": []
+    }
+  },
+  "acciones_contienen": [
+    "Ningún canal tiene ventaja sostenida de CPCC"
+  ],
+  "acciones_no_contienen": [
+    "Mover"
+  ]
+}

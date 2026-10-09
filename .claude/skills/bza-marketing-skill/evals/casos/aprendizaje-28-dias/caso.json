@@ -1,0 +1,38 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-23",
+  "descripcion": "Google: 28 días pero 2 calificadas; Meta: 3 calificadas pero 7 días. Cualquiera de los dos mínimos que falte mantiene el aprendizaje.",
+  "esperado": {
+    "kpis": {
+      "pagados": {
+        "google_ads": {
+          "dias_activo": 28,
+          "calificadas_acumuladas": 2
+        },
+        "meta_ads": {
+          "dias_activo": 7,
+          "calificadas_acumuladas": 3
+        }
+      }
+    },
+    "decision": {
+      "estado": "aprendizaje",
+      "estados_canal": {
+        "google_ads": "aprendizaje",
+        "meta_ads": "aprendizaje"
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.769,
+        "meta_ads": 0.231
+      }
+    }
+  },
+  "acciones_contienen": [
+    "Google Ads sigue en aprendizaje (28 días, 2 calificadas)",
+    "Meta Ads sigue en aprendizaje (7 días, 3 calificadas)"
+  ],
+  "acciones_no_contienen": [
+    "Mover",
+    "Ningún canal tiene ventaja"
+  ]
+}

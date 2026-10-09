@@ -1,0 +1,26 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "Primera semana pagada: no se mueve presupuesto.",
+  "esperado": {
+    "decision": {
+      "estado": "aprendizaje",
+      "estados_canal": {
+        "google_ads": "aprendizaje",
+        "meta_ads": "aprendizaje"
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.811,
+        "meta_ads": 0.189
+      },
+      "alertas": []
+    }
+  },
+  "acciones_contienen": [
+    "Google Ads sigue en aprendizaje",
+    "Meta Ads sigue en aprendizaje"
+  ],
+  "acciones_no_contienen": [
+    "Fase 0 pendiente"
+  ]
+}

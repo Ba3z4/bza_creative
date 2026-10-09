@@ -1,0 +1,42 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "Exactamente 150 contactos, 6 semanas de contenido y 4 calificadas (<5): alarma de oferta. La semana siguiente llega la quinta calificada: con 5 ya no hay alarma.",
+  "esperado": {
+    "kpis": {
+      "prospeccion": {
+        "contactos_acumulados": 150
+      },
+      "contenido": {
+        "semanas_con_contenido": 6
+      },
+      "embudo": {
+        "calificadas_totales": 4
+      }
+    }
+  },
+  "alertas_contienen": [
+    "Alarma de oferta: 150 contactos y 6 semanas de contenido con solo 4"
+  ],
+  "otras_semanas": [
+    {
+      "semana": "2026-11-09",
+      "esperado": {
+        "kpis": {
+          "prospeccion": {
+            "contactos_acumulados": 150
+          },
+          "contenido": {
+            "semanas_con_contenido": 6
+          },
+          "embudo": {
+            "calificadas_totales": 5
+          }
+        },
+        "decision": {
+          "alertas": []
+        }
+      }
+    }
+  ]
+}

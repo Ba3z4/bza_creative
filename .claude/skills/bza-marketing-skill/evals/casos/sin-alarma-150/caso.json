@@ -1,0 +1,22 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-09",
+  "descripcion": "150 contactos y 0 calificadas, pero solo 2 semanas de contenido: todavía no se dispara la alarma de oferta (requiere las tres condiciones).",
+  "esperado": {
+    "kpis": {
+      "prospeccion": {
+        "contactos_acumulados": 150
+      },
+      "contenido": {
+        "semanas_con_contenido": 2
+      },
+      "embudo": {
+        "calificadas_totales": 0
+      }
+    },
+    "decision": {
+      "estado": "sin_inversion",
+      "alertas": []
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "tipo": "calendario",
+  "bloque": "bloque.json",
+  "descripcion": "Acento en palabra clave, pieza inexistente, 6 hashtags, palabra repetida, reel sin video, fecha fuera del bloque y utm inválido.",
+  "valido": false,
+  "errores_contienen": [
+    "MAYÚSCULAS sin acentos",
+    "no existe dist/assets/no-existe.png",
+    "6 hashtags",
+    "palabra clave WEB repetida",
+    "un reel necesita un .mp4",
+    "fuera del bloque",
+    "utm_content 'Mal Valor'"
+  ]
+}

@@ -23,7 +23,7 @@ La oferta se presentará mediante canales compatibles:
 **Destino:**
 
 ```text
-https://bza-creative.ingluisbaeza.workers.dev/campana/?utm_source=facebook&utm_medium=organic_social&utm_campaign=lanzamiento_bza_2026&utm_content=presentacion
+https://bzacreative.com/campana/?utm_source=facebook&utm_medium=organic_social&utm_campaign=lanzamiento_bza_2026&utm_content=presentacion
 ```
 
 No se publicará un precio hasta definir alcance, entregables y condiciones comerciales.

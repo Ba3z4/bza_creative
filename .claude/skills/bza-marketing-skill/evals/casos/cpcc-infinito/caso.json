@@ -1,0 +1,28 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-23",
+  "descripcion": "Ambos evaluables; las últimas dos semanas los dos gastan sin calificadas (CPCC infinito): ninguno gana, no se mueve presupuesto y ambos generan alerta de tope.",
+  "esperado": {
+    "decision": {
+      "estado": "decision",
+      "estados_canal": {
+        "google_ads": "evaluable",
+        "meta_ads": "evaluable"
+      },
+      "reparto_sugerido": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      }
+    }
+  },
+  "alertas_contienen": [
+    "Google Ads supera el CPCC máximo",
+    "Meta Ads supera el CPCC máximo"
+  ],
+  "acciones_contienen": [
+    "Ningún canal tiene ventaja sostenida de CPCC"
+  ],
+  "acciones_no_contienen": [
+    "Mover"
+  ]
+}

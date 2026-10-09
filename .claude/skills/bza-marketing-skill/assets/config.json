@@ -1,0 +1,60 @@
+{
+  "marca": "BZA Creative",
+  "sitio": "https://bzacreative.com/",
+  "landing": "https://bzacreative.com/campana/",
+  "assets_publicos": "https://bzacreative.com/",
+  "zona_horaria": "America/Mexico_City",
+  "utc_offset": "-06:00",
+  "whatsapp": "+52 33 4278 1554",
+  "redes": ["facebook", "instagram"],
+  "utm_campaign_organico": "contenido_bza_2026",
+  "utm_campaign_pagado": "validacion_bza_2026",
+  "aprobacion_requerida": true,
+  "metas_semanales": {
+    "_nota": "Umbrales internos del plan de 90 días (docs/plan-mercadotecnia-90-dias.md). Subir diagnosticos a 4 y propuestas a 2 a partir del segundo mes.",
+    "publicaciones": 3,
+    "contactos_personalizados": 20,
+    "tasa_respuesta_prospeccion": 0.08,
+    "conversaciones_calificadas": 2,
+    "diagnosticos": 2,
+    "propuestas": 1
+  },
+  "reglas": {
+    "_nota": "Ver docs/analisis-google-vs-facebook.md, sección 5.",
+    "cpcc_maximo_mxn": 858,
+    "dias_minimos": 14,
+    "calificadas_minimas": 3,
+    "ventaja_relativa": 0.30,
+    "semanas_consecutivas": 2,
+    "transferencia": 0.20,
+    "piso_canal": 0.10,
+    "alarma_contactos": 150,
+    "alarma_semanas_contenido": 6,
+    "alarma_calificadas_minimas": 5,
+    "ventana_contenido_dias": 28
+  },
+  "presupuesto": {
+    "fase": "fase0",
+    "reparto_inicial": {"google_ads": 0.8, "meta_ads": 0.2},
+    "diario_total_fase1_mxn": 300,
+    "_nota": "fase0 = $0 en anuncios. Cambiar a fase1 cuando se apruebe el presupuesto de validación."
+  },
+  "pendientes_fase0": [
+    {"id": "metricool", "texto": "Conectar el conector de Metricool en claude.ai (Configuración → Conectores)", "hecho": false},
+    {"id": "search_console", "texto": "Verificar bzacreative.com en Google Search Console y enviar el sitemap", "hecho": false},
+    {"id": "ga4", "texto": "Crear la propiedad de GA4, actualizar la sección 04 de /privacidad/ y después pegar el ID G-… en dist/campaign.js (MEASUREMENT.ga4Id)", "hecho": false},
+    {"id": "meta_pixel", "texto": "Antes del retargeting en Meta: crear el píxel y pegar metaPixelId en dist/campaign.js (con /privacidad/ actualizado)", "hecho": false},
+    {"id": "privacidad", "texto": "Completar nombre legal, domicilio y correo del responsable en /privacidad/", "hecho": false},
+    {"id": "presupuesto", "texto": "Aprobar el presupuesto de validación y cambiar presupuesto.fase a fase1 en assets/config.json", "hecho": false}
+  ],
+  "publicacion": {
+    "dias_publicacion": [0, 2, 4],
+    "hora_publicacion": "10:00",
+    "dia_reel": 5,
+    "hora_reel": "18:00",
+    "reel_cada_semanas": 2,
+    "max_hashtags": 5,
+    "max_caracteres": 2200,
+    "dias_sin_repetir_palabra": 14
+  }
+}

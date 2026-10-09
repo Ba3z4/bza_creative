@@ -1,0 +1,35 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "Sin inversión, sin pendientes de la Fase 0 y presupuesto.fase = fase1: acción alta para lanzar la campaña de validación, sin la acción genérica de la Fase 0.",
+  "config": {
+    "presupuesto": {
+      "fase": "fase1"
+    },
+    "pendientes_fase0": [
+      {
+        "id": "presupuesto",
+        "texto": "Aprobar el presupuesto de validación",
+        "hecho": true
+      }
+    ]
+  },
+  "esperado": {
+    "decision": {
+      "estado": "sin_inversion",
+      "pendientes_fase0": [],
+      "reparto_sugerido": {
+        "google_ads": 0.8,
+        "meta_ads": 0.2
+      }
+    }
+  },
+  "acciones_contienen": [
+    "Lanzar la campaña de validación aprobada (requiere aprobación explícita antes de activar gasto)."
+  ],
+  "acciones_no_contienen": [
+    "Completar la Fase 0",
+    "Fase 0 pendiente",
+    "landing por servicio"
+  ]
+}

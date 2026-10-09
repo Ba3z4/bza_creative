@@ -1,0 +1,23 @@
+{
+  "tipo": "pipeline",
+  "semana": "2026-11-02",
+  "descripcion": "180 contactos y 6 semanas de contenido con 2 calificadas: alarma de oferta.",
+  "esperado": {
+    "kpis": {
+      "prospeccion": {
+        "contactos_acumulados": 180,
+        "contactos_semana": 30,
+        "tasa_respuesta": 0.0333
+      },
+      "contenido": {
+        "semanas_con_contenido": 6
+      }
+    },
+    "decision": {
+      "estado": "sin_inversion"
+    }
+  },
+  "alertas_contienen": [
+    "Alarma de oferta"
+  ]
+}

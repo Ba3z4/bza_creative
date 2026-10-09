@@ -1,0 +1,57 @@
+{
+  "bloque": "prueba-metricool",
+  "inicio": "2026-10-26",
+  "fin": "2026-10-31",
+  "utm_campaign": "contenido_bza_2026",
+  "publicaciones": [
+    {
+      "id": "m-01",
+      "fecha": "2026-10-26T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Tema m-01",
+      "palabra_clave": "GOOGLE",
+      "piezas": [
+        "dist/assets/campaign-search.png"
+      ],
+      "texto": "Gancho.\n\nEscríbenos GOOGLE por mensaje.\n\n#DiseñoWeb #Guadalajara",
+      "utm_content": "m_01"
+    },
+    {
+      "id": "m-02",
+      "fecha": "2026-10-28T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "carrusel",
+      "tema": "Tema m-02",
+      "palabra_clave": "LANDING",
+      "piezas": [
+        "dist/assets/campaign-web.png",
+        "PENDIENTE: segunda lámina"
+      ],
+      "texto": "Gancho.\n\nEscríbenos LANDING por mensaje.\n\n#DiseñoWeb #Guadalajara",
+      "utm_content": "m_02"
+    },
+    {
+      "id": "m-03",
+      "fecha": "2026-10-31T18:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "reel",
+      "tema": "Tema m-03",
+      "palabra_clave": "SISTEMA",
+      "piezas": [
+        "dist/assets/brand-kit/reels/reel-operacion-digital.mp4"
+      ],
+      "texto": "Gancho.\n\nEscríbenos SISTEMA por mensaje.\n\n#DiseñoWeb #Guadalajara",
+      "utm_content": "m_03"
+    }
+  ]
+}

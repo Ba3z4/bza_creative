@@ -1,0 +1,24 @@
+{
+  "bloque": "prueba-escapes",
+  "inicio": "2026-10-26",
+  "fin": "2026-10-31",
+  "utm_campaign": "contenido_bza_2026",
+  "publicaciones": [
+    {
+      "id": "e-01",
+      "fecha": "2026-10-26T10:00",
+      "redes": [
+        "facebook",
+        "instagram"
+      ],
+      "formato": "imagen",
+      "tema": "Antes < después & \"comillas\"",
+      "palabra_clave": "PRECIO",
+      "piezas": [
+        "dist/assets/campaign-search.png"
+      ],
+      "texto": "Precio <b>fijo</b> & \"sin sorpresas\".\n<script>alert(1)</script>\n\nEscríbenos PRECIO por mensaje.\n\n#DiseñoWeb",
+      "utm_content": "e_01"
+    }
+  ]
+}
