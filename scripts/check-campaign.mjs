@@ -16,10 +16,12 @@ if (configuredIds.length) {
   const privacy = (await readFile(new URL('../dist/privacidad/index.html', import.meta.url), 'utf8'))
     .replace(/&iacute;/g, 'í')
     .replace(/\s+/g, ' ');
-  if (privacy.includes('no usa herramientas de analítica')) {
+  const contradiction = ['no usa herramientas de analítica', 'no hay herramientas de analítica']
+    .find(phrase => privacy.toLowerCase().includes(phrase));
+  if (contradiction) {
     console.error([
       `ERROR: la medición está ACTIVA en dist/campaign.js (${configuredIds.join(', ')}), pero dist/privacidad/index.html`,
-      'todavía dice que el sitio «no usa herramientas de analítica».',
+      `todavía dice «${contradiction}».`,
       'Antes de publicar los IDs, actualiza la sección 04 «Este sitio y la medición» de /privacidad/: qué herramientas se usan',
       '(Google Analytics, Google Ads, píxel de Meta), para qué (medir conversaciones y remarketing) y cómo cambiar la elección.',
       'O deja los IDs vacíos en dist/campaign.js hasta que el aviso esté actualizado.'
@@ -32,6 +34,7 @@ if (configuredIds.length) {
 // en Safari/iOS viejos un error de sintaxis o un método inexistente rompería también el origen de WhatsApp.
 const code = source.replace(/\/\/.*$/gm, '');
 assert.doesNotMatch(code, /\.at\(/, 'campaign.js no usa Array.prototype.at');
+assert.doesNotMatch(code, /\.replaceAll\(/, 'campaign.js no usa String.prototype.replaceAll (Safari/iOS anteriores a 13.4)');
 assert.doesNotMatch(code, /\?\.(?!\d)|\?\?|\|\|=|&&=/, 'campaign.js no usa ?. ?? ||= ni &&=');
 
 const withIds = ids => source.replace(block[0], `const MEASUREMENT = ${JSON.stringify({ ga4Id: '', googleAdsId: '', googleAdsWhatsappLabel: '', metaPixelId: '', ...ids })};`);
@@ -55,6 +58,11 @@ class FakeElement {
   remove() { if (this.parent) this.parent.children = this.parent.children.filter(child => child !== this); this.parent = null; }
   get isConnected() { let node = this; while (node.parent) node = node.parent; return node === this.owner.documentElement; }
   focus() { this.owner.activeElement = this; }
+  contains(node) {
+    if (this.choices.includes(node)) return true;
+    for (let current = node; current; current = current.parent) if (current === this) return true;
+    return false;
+  }
   getBoundingClientRect() { return { height: 150 }; }
   set innerHTML(html) {
     this.html = html;
@@ -175,7 +183,7 @@ function run({
   }
   vm.createContext(sandbox);
   // Como Safari/iOS anteriores a 15.4: sin Array.prototype.at ni String.prototype.at.
-  vm.runInContext('delete Array.prototype.at; delete String.prototype.at;', sandbox);
+  vm.runInContext('delete Array.prototype.at; delete String.prototype.at; delete String.prototype.replaceAll;', sandbox);
   let script = withIds(ids);
   if (ids === null) script = source;
   if (measurementBlock) script = source.replace(block[0], measurementBlock);
@@ -307,7 +315,8 @@ const assertAttribution = (env, label) => {
   reset.click();
   assert.equal(env.localStorage.map.has('bza_consent'), false);
   assert.deepEqual(last(env.gtagCalls('consent')), ['consent', 'update', denied]);
-  assert.deepEqual(last(env.fbqQueue()), ['consent', 'revoke']);
+  assert.deepEqual(env.fbqQueue()[0], ['consent', 'revoke'], 'la revocación queda primero en la cola del píxel');
+  assert.ok(!env.fbqQueue().some(call => /^track/.test(call[0])), 'sin eventos de Meta pendientes tras retirar');
   assert.deepEqual([env.disabled('G-TEST123'), env.disabled('AW-123')], [true, true], 'ga-disable al retirar el permiso');
   assert.deepEqual(env.jar.list(), ['keep@host-only'], 'borra cookies de medición');
   assert.ok(env.document.activeElement === env.banner(), 'el foco pasa al aviso');
@@ -378,7 +387,8 @@ const assertAttribution = (env, label) => {
   assert.notDeepEqual(last(env.gtagCalls('consent')), ['consent', 'update', denied], 'pageshow normal no resincroniza');
   env.fire('pageshow', { persisted: true });
   assert.deepEqual(last(env.gtagCalls('consent')), ['consent', 'update', denied], 'bfcache: aplica el rechazo');
-  assert.deepEqual(last(env.fbqQueue()), ['consent', 'revoke']);
+  assert.deepEqual(env.fbqQueue()[0], ['consent', 'revoke'], 'bfcache: revocación primero en la cola del píxel');
+  assert.ok(!env.fbqQueue().some(call => /^track/.test(call[0])), 'bfcache: sin eventos de Meta pendientes');
   assert.deepEqual([env.disabled('G-TEST123'), env.disabled('AW-123')], [true, true], 'bfcache: ga-disable');
   assert.equal(env.banner(), undefined, 'bfcache: rechazo sin aviso');
   const before = env.sent();
@@ -426,7 +436,8 @@ const assertAttribution = (env, label) => {
   env.localStorage.map.delete('bza_consent');
   const before = env.sent();
   env.document.links[0].click();
-  assert.deepEqual(env.sent(), before, 'el clic sin permiso guardado no envía nada');
+  assert.equal(env.sent().gtag, before.gtag, 'el clic sin permiso guardado no envía nada a Google');
+  assert.ok(!env.fbqQueue().some(call => /^track/.test(call[0])), 'el clic sin permiso guardado no deja eventos de Meta en cola');
   assert.deepEqual(last(env.gtagCalls('consent')), ['consent', 'update', denied]);
   assert.ok(env.banner(), 'y vuelve a preguntar');
   assert.equal(env.events('whatsapp_click').length, 1);
@@ -501,6 +512,46 @@ const assertAttribution = (env, label) => {
 }
 
 // 15. Los IDs publicados en dist/campaign.js tienen formato válido.
+// 15. Un emoji partido en el corte de 180 caracteres no rompe el enlace de WhatsApp ni bza_page_view.
+{
+  const campaign = `${'x'.repeat(179)}😀`;
+  for (const ids of [{}, testIds]) {
+    const env = run({ ids, url: `https://bzacreative.com/campana/?utm_source=google&utm_medium=cpc&utm_campaign=${encodeURIComponent(campaign)}` });
+    assert.match(env.document.links[0].href, /^https:\/\/wa\.me\/523342781554\?text=.*Origen%20de%20la%20consulta/, 'emoji en el corte: el enlace conserva el origen');
+    assert.equal(env.events('bza_page_view').length, 1, 'emoji en el corte: bza_page_view');
+    assert.equal(env.events('bza_page_view')[0].campaign_name, 'x'.repeat(179), 'emoji en el corte: sin medio emoji');
+  }
+}
+
+// 16. Rechazo antes de que llegue fbevents.js: la cola del píxel no conserva eventos aceptados y la cookie _fbp
+// que la biblioteca cree al llegar se borra.
+{
+  const env = run({ ids: testIds, resets: 1 });
+  env.choose('Aceptar');
+  env.document.links[0].click();
+  assert.ok(env.fbqQueue().some(call => call[0] === 'track' && call[1] === 'Contact'), 'Contact en cola antes de retirar');
+  env.document.resets[0].click();
+  env.choose('Rechazar');
+  assert.deepEqual(env.fbqQueue()[0], ['consent', 'revoke'], 'la revocación va primero');
+  assert.ok(!env.fbqQueue().some(call => /^track/.test(call[0])), 'sin PageView ni Contact pendientes');
+  env.document.cookie = '_fbp=fb.1.1; domain=.bzacreative.com; path=/';
+  const fbevents = env.document.head.children.find(child => child.tagName === 'SCRIPT' && /fbevents/.test(child.src));
+  (fbevents.listeners.load || []).forEach(listener => listener({}));
+  assert.ok(!env.jar.list().some(name => name.startsWith('_fbp')), 'al cargar fbevents.js sin permiso se borra _fbp');
+}
+
+// 17. Si otra pestaña cierra el aviso abierto con "Cambiar mis preferencias", el foco vuelve al botón.
+{
+  const env = run({ ids: testIds, local: { bza_consent: 'granted' }, resets: 1 });
+  const reset = env.document.resets[0];
+  reset.click();
+  assert.ok(env.document.activeElement === env.banner(), 'el foco pasa al aviso');
+  env.localStorage.map.set('bza_consent', 'granted');
+  env.fire('storage', { key: 'bza_consent' });
+  assert.equal(env.banner(), undefined, 'otra pestaña aceptó: se cierra el aviso');
+  assert.ok(env.document.activeElement === reset, 'el foco regresa al botón de preferencias');
+}
+
 const published = run({ ids: null, resets: 1 });
 const warnings = published.log.filter(entry => entry.startsWith('warn:'));
 assert.deepEqual(warnings, [], `IDs con formato incorrecto en dist/campaign.js: ${warnings.join(' | ')}`);

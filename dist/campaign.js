@@ -21,7 +21,11 @@
 
   const params = new URLSearchParams(window.location.search);
   const trackedKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
-  const clean = value => String(value || '').trim().slice(0, 180);
+  // Recorta a 180 caracteres sin dejar medio emoji, que haría fallar encodeURIComponent.
+  const clean = value => {
+    const text = String(value || '').trim().slice(0, 180);
+    return /[\uD800-\uDBFF]$/.test(text) ? text.slice(0, -1) : text;
+  };
   let attribution = {};
 
   try {
@@ -60,11 +64,15 @@
   document.querySelectorAll('a[href*="wa.me/"]').forEach(link => {
     const source = attribution.utm_source || 'directo';
     const medium = attribution.utm_medium || 'sitio';
-    const campaign = attribution.utm_campaign || window.location.pathname.replaceAll('/', '') || 'inicio';
+    const campaign = attribution.utm_campaign || window.location.pathname.replace(/\//g, '') || 'inicio';
     const baseMessage = link.dataset.message || 'Hola, BZA Creative. Quiero hablar de mi proyecto.';
     const origin = `Origen de la consulta: ${source} / ${medium} / ${campaign}`;
 
-    link.href = `https://wa.me/523342781554?text=${encodeURIComponent(`${baseMessage}\n\n${origin}`)}`;
+    try {
+      link.href = `https://wa.me/523342781554?text=${encodeURIComponent(`${baseMessage}\n\n${origin}`)}`;
+    } catch (error) {
+      console.warn('BZA Creative: no se pudo agregar el origen al enlace de WhatsApp.', error);
+    }
     link.addEventListener('click', () => {
       const details = {
         link_text: clean(link.textContent),
@@ -151,6 +159,7 @@
       script.async = true;
       script.src = src;
       document.head.append(script);
+      return script;
     };
 
     // Si la visita llegó desde un anuncio y acepta en otra página, se le pasa a Google el origen guardado en la sesión.
@@ -171,7 +180,10 @@
         Object.assign(fbq, { push: fbq, loaded: true, version: '2.0', queue: [] });
         window.fbq = fbq;
         if (!window._fbq) window._fbq = fbq;
-        loadScript('https://connect.facebook.net/en_US/fbevents.js');
+        // Si la visita rechazó mientras la biblioteca cargaba, se borra la cookie que pudiera crear al llegar.
+        loadScript('https://connect.facebook.net/en_US/fbevents.js').addEventListener('load', () => {
+          if (consent !== 'granted') clearMeasurementCookies();
+        });
       }
       window.fbq('init', pixelId);
       window.fbq('track', 'PageView');
@@ -217,10 +229,23 @@
       if (pixelId) window.fbq('consent', 'grant');
     };
 
+    // Antes de que llegue fbevents.js, los eventos esperan en fbq.queue: al rechazar se descartan y la revocación va
+    // primero, para que la biblioteca no envíe nada aceptado antes de procesarla.
+    const revokeMetaPixel = () => {
+      const fbq = window.fbq;
+      if (!fbq) return;
+      if (!fbq.callMethod && Array.isArray(fbq.queue)) {
+        fbq.queue = fbq.queue.filter(args => !/^track/.test(String(args[0])));
+        fbq.queue.unshift(['consent', 'revoke']);
+        return;
+      }
+      fbq('consent', 'revoke');
+    };
+
     const deny = () => {
       if (tagsLoaded) disableGoogleTags(true);
       gtag('consent', 'update', deniedState);
-      if (tagsLoaded && pixelId) window.fbq('consent', 'revoke');
+      if (tagsLoaded && pixelId) revokeMetaPixel();
       clearMeasurementCookies();
     };
 
@@ -303,10 +328,14 @@ html.motion-paused .bza-consent{animation:none}
 
     const hideBanner = () => {
       if (!banner) return;
+      const hadFocus = banner.contains(document.activeElement);
       if (spaceObserver) spaceObserver.disconnect();
       banner.remove();
       document.documentElement.classList.remove('bza-consent-open');
       document.documentElement.style.removeProperty('--bza-consent-space');
+      // Si el aviso tenía el foco (también cuando lo cierra otra pestaña), vuelve al botón que lo abrió.
+      if (hadFocus && returnFocus && returnFocus.isConnected) returnFocus.focus();
+      if (hadFocus) returnFocus = null;
     };
 
     const applyChoice = (value, fromBanner) => {
