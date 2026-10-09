@@ -45,6 +45,7 @@ for (const file of pages) {
   assert.equal(meta('og:description'), decode(description), `${relative}: og:description matches description`);
   assert.match(html, /aria-current="page"/, `${relative}: current page indicator`);
   assert.match(html, /campaign\.js/, `${relative}: campaign attribution script`);
+  assert.match(html, /<button type="button" class="footer-consent" data-consent-reset hidden>Preferencias de cookies<\/button>/, `${relative}: footer cookie preferences link`);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
   assert.equal(new Set(ids).size, ids.length, `${relative}: no duplicate IDs`);
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
