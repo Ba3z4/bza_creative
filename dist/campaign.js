@@ -4,8 +4,8 @@
   // document.currentScript solo existe mientras este archivo se ejecuta; con él se arma el enlace al aviso de privacidad.
   const scriptSrc = document.currentScript ? document.currentScript.src : '';
 
-  // Medición con consentimiento. Pega aquí los IDs para activarla. Mientras todos estén vacíos, el sitio
-  // no muestra el aviso, no usa localStorage y no carga ninguna etiqueta de Google ni de Meta.
+  // Medición con consentimiento. Pega aquí los IDs para activarla. El aviso de cookies aparece siempre en la primera
+  // visita y bloquea el sitio hasta elegir; con los IDs vacíos no se carga ninguna etiqueta de Google ni de Meta.
   // Antes de pegarlos, actualiza la sección 04 de /privacidad/ (node scripts/check-campaign.mjs lo exige).
   // - ga4Id: Google Analytics > Administrar > Flujos de datos > tu flujo web > "ID de medición" (G-XXXXXXXXXX).
   // - googleAdsId: Google Ads > Objetivos > Conversiones > tu conversión de WhatsApp > Configuración de la etiqueta >
@@ -90,8 +90,8 @@
     });
   });
 
-  // Lee los IDs y, si hay alguno válido, fija el consentimiento denegado por defecto (debe ir antes de bza_page_view).
-  // Devuelve la función que arranca el aviso y las etiquetas, o null si la medición está apagada.
+  // Lee los IDs y prepara el aviso de cookies. Con Google configurado, fija el consentimiento denegado por defecto
+  // (debe ir antes de bza_page_view). Devuelve la función que muestra el aviso y aplica la elección guardada.
   const prepareMeasurement = () => {
     // IDs válidos de MEASUREMENT; un valor con formato incorrecto se ignora y se avisa en la consola.
     const readId = (name, pattern, pick = value => value) => {
@@ -108,14 +108,13 @@
     const pixelId = readId('metaPixelId', /^\d+$/);
     if (adsLabel && !googleAdsId) console.warn('BZA Creative: googleAdsWhatsappLabel necesita googleAdsId para medir conversiones.');
     const googleIds = [ga4Id, googleAdsId].filter(Boolean);
-    if (!googleIds.length && !pixelId) return null;
 
     const CONSENT_KEY = 'bza_consent';
     let consent = null;
     let storageReliable = true;
     let banner = null;
     let returnFocus = null;
-    let spaceObserver = null;
+    let inerted = [];
 
     function gtag() {
       window.dataLayer.push(arguments);
@@ -127,18 +126,17 @@
       analytics_storage: analytics
     });
     const deniedState = consentState('denied', 'denied');
-    // Elecciones guardadas: 'granted' (todo), 'denied' (nada), 'analytics' (solo analítica) o 'ads' (solo publicidad).
-    // Analítica = Google Analytics; publicidad = Google Ads y píxel de Meta. Solo se concede lo que está configurado.
-    const CHOICES = ['granted', 'denied', 'analytics', 'ads'];
-    const hasAnalytics = Boolean(ga4Id);
-    const hasAds = Boolean(googleAdsId || pixelId);
-    const allows = (choice, category) => choice === 'granted' || choice === category;
-    const analyticsOn = choice => hasAnalytics && allows(choice, 'analytics');
-    const adsOn = choice => hasAds && allows(choice, 'ads');
+    // Dos categorías: necesarias (siempre activas) y publicidad y medición (Google Analytics, Google Ads y píxel de Meta).
+    // Elecciones guardadas: 'granted' (aceptar todas) o 'denied' (solo necesarias). Solo se concede lo configurado.
+    const CHOICES = ['granted', 'denied'];
+    const analyticsOn = choice => Boolean(ga4Id) && choice === 'granted';
+    const adsOn = choice => Boolean(googleAdsId || pixelId) && choice === 'granted';
     const stateFor = choice => consentState(googleAdsId && adsOn(choice) ? 'granted' : 'denied', analyticsOn(choice) ? 'granted' : 'denied');
 
-    window.gtag = gtag;
-    gtag('consent', 'default', { ...deniedState, wait_for_update: 500 });
+    if (googleIds.length) {
+      window.gtag = gtag;
+      gtag('consent', 'default', { ...deniedState, wait_for_update: 500 });
+    }
 
     // undefined: no se puede leer el almacenamiento; null: todavía no hay elección.
     const readChoice = () => {
@@ -200,7 +198,7 @@
       window.fbq('track', 'PageView');
     };
 
-    // Carga gtag.js una sola vez y configura cada ID de Google la primera vez que su categoría se acepta.
+    // Carga gtag.js una sola vez y configura cada ID de Google la primera vez que se acepta.
     const loadGoogle = (ids, pageLocation) => {
       if (!gtagLoaded) {
         gtagLoaded = true;
@@ -218,7 +216,7 @@
       window[`ga-disable-${id}`] = active.indexOf(id) < 0;
     });
 
-    // Borra las cookies de cada categoría que no está aceptada.
+    // Borra las cookies de medición que no están aceptadas.
     const clearMeasurementCookies = (keepAnalytics, keepAds) => {
       const names = document.cookie
         .split(';')
@@ -248,10 +246,12 @@
 
     // Aplica una elección: actualiza el modo de consentimiento, carga solo lo aceptado y apaga y limpia lo demás.
     const applyPermissions = (choice, fromBanner) => {
-      const active = [analyticsOn(choice) && ga4Id, adsOn(choice) && googleAdsId].filter(Boolean);
-      if (gtagLoaded) setGoogleDisabled(active);
-      gtag('consent', 'update', choice === 'denied' ? deniedState : stateFor(choice));
-      if (active.length) loadGoogle(active, fromBanner ? attributedLocation() : '');
+      if (googleIds.length) {
+        const active = [analyticsOn(choice) && ga4Id, adsOn(choice) && googleAdsId].filter(Boolean);
+        if (gtagLoaded) setGoogleDisabled(active);
+        gtag('consent', 'update', choice === 'granted' ? stateFor(choice) : deniedState);
+        if (active.length) loadGoogle(active, fromBanner ? attributedLocation() : '');
+      }
       if (pixelId) {
         if (adsOn(choice)) {
           if (pixelLoaded) window.fbq('consent', 'grant');
@@ -265,31 +265,36 @@
 
     const deny = () => applyPermissions('denied', false);
 
+    // En el aviso de privacidad (<body data-consent-readable>) el aviso no bloquea: hay que poder leerlo antes de decidir.
+    const blocking = !(document.body && document.body.hasAttribute && document.body.hasAttribute('data-consent-readable'));
+
     const bannerStyles = `
-.bza-consent{position:fixed;z-index:90;left:16px;right:16px;bottom:16px;max-width:860px;max-height:calc(100vh - 32px);overflow-y:auto;margin-inline:auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding:18px 20px;background:#F7F7F5;color:#171717;border:1px solid #171717;border-top:4px solid #083D3A;box-shadow:0 18px 40px rgba(23,23,23,.18);font-family:var(--font,Arial,Helvetica,sans-serif);font-size:.875rem;line-height:1.55;animation:bza-consent-in .3s ease-out both}
-.bza-consent:focus{outline:none}
-.bza-consent p{margin:0;flex:1 1 300px}
-.bza-consent-panel{flex:1 1 100%;border-top:1px solid #D6D6CF;padding-top:14px}
-.bza-consent-panel fieldset{border:0;margin:0 0 12px;padding:0;display:grid;gap:10px}
-.bza-consent-panel legend{font-weight:600;margin-bottom:8px}
-.bza-consent-option{display:flex;gap:10px;align-items:flex-start}
-.bza-consent-option input{width:20px;height:20px;margin:2px 0 0;accent-color:#083D3A;flex:none}
-.bza-consent-option span{display:block}
+.bza-consent{position:fixed;z-index:1000;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;background:rgba(23,23,23,.62);font-family:var(--font,Arial,Helvetica,sans-serif);font-size:.9375rem;line-height:1.55;color:#171717;animation:bza-consent-fade .25s ease-out both}
+.bza-consent.is-readable{inset:auto 0 0;align-items:flex-end;background:transparent;pointer-events:none}
+.bza-consent-box{position:relative;width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow-y:auto;margin:auto;padding:28px;background:#F7F7F5;border:1px solid #171717;border-top:4px solid #083D3A;box-shadow:0 24px 60px rgba(23,23,23,.3);pointer-events:auto;animation:bza-consent-in .3s ease-out both}
+.bza-consent.is-readable .bza-consent-box{max-width:860px;margin:0 auto}
+.bza-consent-box:focus{outline:none}
+.bza-consent h2{margin:0 0 12px;font-size:1.375rem;font-weight:600;line-height:1.25;letter-spacing:-.02em}
+.bza-consent p{margin:0 0 12px}
+.bza-consent ul{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:10px}
+.bza-consent li{padding-left:14px;border-left:3px solid #083D3A}
 .bza-consent strong{font-weight:600}
 .bza-consent a{color:#083D3A;font-weight:600;text-decoration:underline;text-underline-offset:3px}
-.bza-consent-actions{display:flex;gap:10px;flex:none}
-.bza-consent button{min-height:44px;min-width:112px;padding:10px 18px;border:1px solid #083D3A;border-radius:0;font:inherit;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
-.bza-consent [data-consent-choice="denied"],.bza-consent [data-consent-config],.bza-consent [data-consent-save]{background:transparent;color:#083D3A}
-.bza-consent [data-consent-choice="denied"]:hover,.bza-consent [data-consent-config]:hover,.bza-consent [data-consent-save]:hover{background:#E6ECEB}
+.bza-consent-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.bza-consent button{flex:1 1 180px;min-height:48px;padding:12px 18px;border:1px solid #083D3A;border-radius:0;font:inherit;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.bza-consent [data-consent-choice="denied"]{background:transparent;color:#083D3A}
+.bza-consent [data-consent-choice="denied"]:hover{background:#E6ECEB}
 .bza-consent [data-consent-choice="granted"]{background:#083D3A;color:#F7F7F5}
 .bza-consent [data-consent-choice="granted"]:hover{background:#0F5550}
-.bza-consent a:focus-visible,.bza-consent button:focus-visible,.bza-consent input:focus-visible{outline:3px solid #D92E22;outline-offset:3px}
+.bza-consent a:focus-visible,.bza-consent button:focus-visible{outline:3px solid #D92E22;outline-offset:3px}
+html.bza-consent-lock,html.bza-consent-lock body{overflow:hidden}
 html.bza-consent-open{scroll-padding-bottom:var(--bza-consent-space,0px)}
 html.bza-consent-open body{padding-bottom:var(--bza-consent-space,0px)}
+@keyframes bza-consent-fade{from{opacity:0}}
 @keyframes bza-consent-in{from{opacity:0;transform:translateY(16px)}}
-@media(max-width:640px){.bza-consent{left:0;right:0;bottom:0;flex-direction:column;align-items:stretch;gap:14px;padding:16px;border-inline:0;border-bottom:0}.bza-consent-actions{flex-wrap:wrap}.bza-consent-actions button{flex:1 1 0;min-width:96px}}
-@media(prefers-reduced-motion:reduce){.bza-consent{animation:none}.bza-consent button{transition:none}}
-html.motion-paused .bza-consent{animation:none}
+@media(max-width:640px){.bza-consent{padding:12px}.bza-consent-box{padding:22px 18px}.bza-consent.is-readable{padding:0}.bza-consent.is-readable .bza-consent-box{border-inline:0;border-bottom:0}}
+@media(prefers-reduced-motion:reduce){.bza-consent,.bza-consent-box{animation:none}.bza-consent button{transition:none}}
+html.motion-paused .bza-consent,html.motion-paused .bza-consent-box{animation:none}
 @media print{.bza-consent{display:none}}`;
 
     // Enlace relativo a la ubicación de campaign.js (raíz del sitio), igual que los demás enlaces del sitio.
@@ -303,26 +308,55 @@ html.motion-paused .bza-consent{animation:none}
     };
     const escapeAttribute = value => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
-    const bannerText = () => {
-      const tools = [ga4Id && 'Google Analytics', googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean);
-      const toolList = tools.length > 1 ? `${tools.slice(0, -1).join(', ')} y ${tools[tools.length - 1]}` : tools[0];
-      const remarketing = googleAdsId || pixelId ? ' y para volver a mostrar anuncios de BZA Creative a quienes visitaron el sitio (remarketing)' : '';
-      return `<strong>Cookies con tu permiso.</strong> Usamos ${toolList} para medir qué anuncios y páginas generan conversaciones${remarketing}. Nada de eso se carga si no lo aceptas: puedes aceptar todo, rechazar todo o elegir por categoría. <a href="${escapeAttribute(privacyHref())}">Aviso de privacidad</a>`;
+    // Nombra las herramientas configuradas; si todavía no hay ninguna, las que el sitio podrá activar.
+    const adTools = () => {
+      const configuredTools = [ga4Id && 'Google Analytics', googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean);
+      const tools = configuredTools.length ? configuredTools : ['Google Analytics', 'Google Ads', 'el píxel de Meta'];
+      return tools.length > 1 ? `${tools.slice(0, -1).join(', ')} y ${tools[tools.length - 1]}` : tools[0];
     };
 
-    // Casillas de las categorías configuradas; sin marcar por defecto.
-    const categoryOptions = () => {
-      const options = [];
-      if (hasAnalytics) options.push('<label class="bza-consent-option"><input type="checkbox" data-consent-category="analytics"> <span><strong>Analítica.</strong> Google Analytics: qué páginas se visitan y cuáles generan conversaciones.</span></label>');
-      if (hasAds) {
-        const adTools = [googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean).join(' y ');
-        options.push(`<label class="bza-consent-option"><input type="checkbox" data-consent-category="ads"> <span><strong>Publicidad.</strong> ${adTools}: medir nuestros anuncios y volver a mostrarte anuncios de BZA Creative (remarketing).</span></label>`);
+    const bannerMarkup = () => `
+      <div class="bza-consent-box" role="dialog" aria-modal="${blocking}" aria-labelledby="bza-consent-title" aria-describedby="bza-consent-text" tabindex="-1">
+        <h2 id="bza-consent-title">Antes de continuar, elige tus cookies</h2>
+        <p id="bza-consent-text">Este sitio solo usa dos tipos de cookies y almacenamiento:</p>
+        <ul>
+          <li><strong>Necesarias (siempre activas).</strong> Hacen que el sitio funcione: guardan tu elección y el origen de tu visita para el mensaje de WhatsApp.</li>
+          <li><strong>Publicidad y medición (solo si aceptas).</strong> ${adTools()}: medir qué anuncios generan conversaciones y volver a mostrarte anuncios de BZA Creative (remarketing).</li>
+        </ul>
+        <p>Puedes cambiar tu elección cuando quieras en «Preferencias de cookies», al pie de cada página. <a href="${escapeAttribute(privacyHref())}">Aviso de privacidad</a></p>
+        <div class="bza-consent-actions">
+          <button type="button" data-consent-choice="denied">Solo necesarias</button>
+          <button type="button" data-consent-choice="granted">Aceptar todas</button>
+        </div>
+      </div>`;
+
+    // Mantiene el foco dentro del aviso mientras bloquea el sitio; Escape no lo cierra porque hay que elegir.
+    const trapFocus = event => {
+      if (!blocking || !banner) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        return;
       }
-      return options.map(option => `\n          ${option}`).join('');
+      if (event.key !== 'Tab') return;
+      const focusable = Array.prototype.slice.call(banner.querySelectorAll('a[href], button'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const lastItem = focusable[focusable.length - 1];
+      const current = document.activeElement;
+      if (event.shiftKey && (current === first || !banner.contains(current) || current === dialog())) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && (current === lastItem || !banner.contains(current))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
+    const dialog = () => (banner ? banner.querySelector('[role="dialog"]') : null);
 
     const reserveSpace = () => {
-      const space = banner && banner.isConnected ? banner.getBoundingClientRect().height + 16 : 0;
+      const box = dialog();
+      const space = !blocking && banner && banner.isConnected && box ? box.getBoundingClientRect().height : 0;
       document.documentElement.style.setProperty('--bza-consent-space', `${Math.ceil(space)}px`);
     };
 
@@ -332,70 +366,48 @@ html.motion-paused .bza-consent{animation:none}
       document.head.append(style);
 
       const element = document.createElement('div');
-      element.className = 'bza-consent';
-      element.setAttribute('role', 'region');
-      element.setAttribute('aria-label', 'Preferencias de cookies');
-      element.setAttribute('aria-describedby', 'bza-consent-text');
-      element.tabIndex = -1;
-      element.innerHTML = `
-      <p id="bza-consent-text">${bannerText()}</p>
-      <div class="bza-consent-actions">
-        <button type="button" data-consent-choice="denied">Rechazar todo</button>
-        <button type="button" data-consent-config aria-expanded="false" aria-controls="bza-consent-panel">Configurar</button>
-        <button type="button" data-consent-choice="granted">Aceptar todo</button>
-      </div>
-      <div class="bza-consent-panel" id="bza-consent-panel" data-consent-panel hidden>
-        <fieldset>
-          <legend>Elige qué permites</legend>
-          <label class="bza-consent-option"><input type="checkbox" checked disabled> <span><strong>Necesarias.</strong> Guardan tu elección y el origen de la visita para el mensaje de WhatsApp. Siempre activas.</span></label>${categoryOptions()}
-        </fieldset>
-        <button type="button" data-consent-save>Guardar selección</button>
-      </div>`;
+      element.className = blocking ? 'bza-consent' : 'bza-consent is-readable';
+      element.innerHTML = bannerMarkup();
       element.querySelectorAll('[data-consent-choice]').forEach(button => {
         button.addEventListener('click', () => choose(button.dataset.consentChoice));
       });
-      const panel = element.querySelector('[data-consent-panel]');
-      const configButton = element.querySelector('[data-consent-config]');
-      configButton.addEventListener('click', () => {
-        panel.hidden = !panel.hidden;
-        configButton.setAttribute('aria-expanded', String(!panel.hidden));
-        const first = element.querySelector('[data-consent-category]');
-        if (!panel.hidden && first) first.focus();
-        reserveSpace();
-      });
-      element.querySelector('[data-consent-save]').addEventListener('click', () => {
-        const picked = Array.prototype.filter.call(element.querySelectorAll('[data-consent-category]'), box => box.checked)
-          .map(box => box.dataset.consentCategory);
-        const analytics = picked.indexOf('analytics') >= 0;
-        const ads = picked.indexOf('ads') >= 0;
-        choose(analytics && ads ? 'granted' : analytics ? 'analytics' : ads ? 'ads' : 'denied');
-      });
-      if ('ResizeObserver' in window) spaceObserver = new ResizeObserver(reserveSpace);
+      element.addEventListener('keydown', trapFocus);
       return element;
+    };
+
+    // Con el aviso abierto, el resto de la página queda inerte: no se puede hacer clic, enfocar ni desplazar.
+    const lockPage = () => {
+      if (!blocking) return;
+      document.documentElement.classList.add('bza-consent-lock');
+      Array.prototype.forEach.call(document.body.children, child => {
+        if (child === banner || child.inert) return;
+        child.inert = true;
+        inerted.push(child);
+      });
+    };
+    const unlockPage = () => {
+      document.documentElement.classList.remove('bza-consent-lock');
+      inerted.forEach(child => {
+        child.inert = false;
+      });
+      inerted = [];
     };
 
     const showBanner = focus => {
       banner = banner || createBanner();
-      const panel = banner.querySelector('[data-consent-panel]');
-      if (panel && !panel.hidden) {
-        panel.hidden = true;
-        banner.querySelector('[data-consent-config]').setAttribute('aria-expanded', 'false');
-      }
-      Array.prototype.forEach.call(banner.querySelectorAll('[data-consent-category]'), box => {
-        box.checked = allows(consent, box.dataset.consentCategory);
-      });
       if (!banner.isConnected) document.body.append(banner);
+      lockPage();
       document.documentElement.classList.add('bza-consent-open');
-      if (spaceObserver) spaceObserver.observe(banner);
       reserveSpace();
-      if (focus) banner.focus();
+      const box = dialog();
+      if ((focus || blocking) && box) box.focus();
     };
 
     const hideBanner = () => {
       if (!banner) return;
       const hadFocus = banner.contains(document.activeElement);
-      if (spaceObserver) spaceObserver.disconnect();
       banner.remove();
+      unlockPage();
       document.documentElement.classList.remove('bza-consent-open');
       document.documentElement.style.removeProperty('--bza-consent-space');
       // Si el aviso tenía el foco (también cuando lo cierra otra pestaña), vuelve al botón que lo abrió.
@@ -405,7 +417,7 @@ html.motion-paused .bza-consent{animation:none}
 
     const applyChoice = (value, fromBanner) => {
       consent = value;
-      if (value && value !== 'denied') {
+      if (value === 'granted') {
         hideBanner();
         applyPermissions(value, fromBanner);
       } else if (value === 'denied') {
@@ -433,7 +445,7 @@ html.motion-paused .bza-consent{animation:none}
     };
 
     const trackWhatsapp = details => {
-      if (!consent || consent === 'denied') return;
+      if (consent !== 'granted') return;
       const stored = readChoice();
       if (stored !== undefined && stored !== consent) {
         syncChoice();
@@ -466,7 +478,7 @@ html.motion-paused .bza-consent{animation:none}
 
       const stored = readChoice();
       consent = stored === undefined ? null : stored;
-      if (consent && consent !== 'denied') applyPermissions(consent, false);
+      if (consent === 'granted') applyPermissions(consent, false);
       else if (!consent) showBanner(false);
     };
   };
