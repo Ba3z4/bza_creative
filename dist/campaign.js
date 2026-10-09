@@ -1,8 +1,12 @@
 'use strict';
 
 (() => {
+  // document.currentScript solo existe mientras este archivo se ejecuta; con él se arma el enlace al aviso de privacidad.
+  const scriptSrc = document.currentScript ? document.currentScript.src : '';
+
   // Medición con consentimiento. Pega aquí los IDs para activarla. Mientras todos estén vacíos, el sitio
   // no muestra el aviso, no usa localStorage y no carga ninguna etiqueta de Google ni de Meta.
+  // Antes de pegarlos, actualiza la sección 04 de /privacidad/ (node scripts/check-campaign.mjs lo exige).
   // - ga4Id: Google Analytics > Administrar > Flujos de datos > tu flujo web > "ID de medición" (G-XXXXXXXXXX).
   // - googleAdsId: Google Ads > Objetivos > Conversiones > tu conversión de WhatsApp > Configuración de la etiqueta >
   //   instalarla tú mismo: en el fragmento de evento, send_to: 'AW-XXXXXXXXXX/etiqueta'; aquí va la parte antes de la diagonal.
@@ -49,140 +53,178 @@
   window.dataLayer = window.dataLayer || [];
   const pushEvent = (event, details = {}) => window.dataLayer.push({ event, ...details });
 
-  // IDs válidos de MEASUREMENT; un valor con formato incorrecto se ignora y se avisa en la consola.
-  const readId = (name, pattern, pick = value => value) => {
-    const value = pick(String(MEASUREMENT[name] || '').trim());
-    if (value && !pattern.test(value)) {
-      console.warn(`BZA Creative: ${name} "${value}" no tiene el formato esperado; no se usará.`);
-      return '';
-    }
-    return value;
-  };
-  const ga4Id = readId('ga4Id', /^G-[A-Z0-9]+$/);
-  const googleAdsId = readId('googleAdsId', /^AW-\d+$/, value => value.split('/')[0]);
-  const adsLabel = readId('googleAdsWhatsappLabel', /^[\w-]+$/, value => value.split('/').pop());
-  const pixelId = readId('metaPixelId', /^\d+$/);
-  if (adsLabel && !googleAdsId) console.warn('BZA Creative: googleAdsWhatsappLabel necesita googleAdsId para medir conversiones.');
-  const googleIds = [ga4Id, googleAdsId].filter(Boolean);
-  const measuring = googleIds.length > 0 || Boolean(pixelId);
+  // El origen en el mensaje de WhatsApp va antes que cualquier código de medición. La medición reemplaza esta
+  // función solo si arranca; si falla, el enlace y el evento whatsapp_click de dataLayer siguen funcionando.
+  let measureWhatsappClick = () => {};
 
-  const CONSENT_KEY = 'bza_consent';
-  let consent = null;
-  let tagsLoaded = false;
-  let banner = null;
-  let returnFocus = null;
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(link => {
+    const source = attribution.utm_source || 'directo';
+    const medium = attribution.utm_medium || 'sitio';
+    const campaign = attribution.utm_campaign || window.location.pathname.replaceAll('/', '') || 'inicio';
+    const baseMessage = link.dataset.message || 'Hola, BZA Creative. Quiero hablar de mi proyecto.';
+    const origin = `Origen de la consulta: ${source} / ${medium} / ${campaign}`;
 
-  function gtag() {
-    window.dataLayer.push(arguments);
-  }
-  const consentState = value => ({
-    ad_storage: value,
-    ad_user_data: value,
-    ad_personalization: value,
-    analytics_storage: value
-  });
-
-  if (measuring) {
-    window.gtag = gtag;
-    gtag('consent', 'default', { ...consentState('denied'), wait_for_update: 500 });
-  }
-
-  pushEvent('bza_page_view', {
-    page_path: window.location.pathname,
-    campaign_source: attribution.utm_source || 'direct',
-    campaign_medium: attribution.utm_medium || 'none',
-    campaign_name: attribution.utm_campaign || 'none'
-  });
-
-  const readChoice = () => {
-    try {
-      const value = localStorage.getItem(CONSENT_KEY);
-      return value === 'granted' || value === 'denied' ? value : null;
-    } catch {
-      return null;
-    }
-  };
-  const saveChoice = value => {
-    try {
-      if (value) localStorage.setItem(CONSENT_KEY, value);
-      else localStorage.removeItem(CONSENT_KEY);
-    } catch {
-      // Sin almacenamiento, la elección vale solo para esta página.
-    }
-  };
-
-  const loadScript = src => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = src;
-    document.head.append(script);
-  };
-
-  // Si la visita llegó desde un anuncio y acepta en otra página, se le pasa a Google el origen guardado en la sesión.
-  const attributedLocation = () => {
-    const keys = trackedKeys.filter(key => attribution[key]);
-    if (!keys.length || trackedKeys.some(key => params.has(key))) return '';
-    const url = new URL(window.location.href);
-    keys.forEach(key => url.searchParams.set(key, attribution[key]));
-    return url.href;
-  };
-
-  const loadMetaPixel = () => {
-    if (!window.fbq) {
-      const fbq = function fbq() {
-        if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
-        else fbq.queue.push(arguments);
+    link.href = `https://wa.me/523342781554?text=${encodeURIComponent(`${baseMessage}\n\n${origin}`)}`;
+    link.addEventListener('click', () => {
+      const details = {
+        link_text: clean(link.textContent),
+        page_path: window.location.pathname,
+        campaign_source: source,
+        campaign_medium: medium,
+        campaign_name: campaign
       };
-      Object.assign(fbq, { push: fbq, loaded: true, version: '2.0', queue: [] });
-      window.fbq = fbq;
-      if (!window._fbq) window._fbq = fbq;
-      loadScript('https://connect.facebook.net/en_US/fbevents.js');
+      pushEvent('whatsapp_click', details);
+      try {
+        measureWhatsappClick(details);
+      } catch (error) {
+        console.warn('BZA Creative: no se pudo medir el clic de WhatsApp.', error);
+      }
+    });
+  });
+
+  // Lee los IDs y, si hay alguno válido, fija el consentimiento denegado por defecto (debe ir antes de bza_page_view).
+  // Devuelve la función que arranca el aviso y las etiquetas, o null si la medición está apagada.
+  const prepareMeasurement = () => {
+    // IDs válidos de MEASUREMENT; un valor con formato incorrecto se ignora y se avisa en la consola.
+    const readId = (name, pattern, pick = value => value) => {
+      const value = pick(String(MEASUREMENT[name] || '').trim());
+      if (value && !pattern.test(value)) {
+        console.warn(`BZA Creative: ${name} "${value}" no tiene el formato esperado; no se usará.`);
+        return '';
+      }
+      return value;
+    };
+    const ga4Id = readId('ga4Id', /^G-[A-Z0-9]+$/);
+    const googleAdsId = readId('googleAdsId', /^AW-\d+$/, value => value.split('/')[0]);
+    const adsLabel = readId('googleAdsWhatsappLabel', /^[\w-]+$/, value => value.split('/').pop());
+    const pixelId = readId('metaPixelId', /^\d+$/);
+    if (adsLabel && !googleAdsId) console.warn('BZA Creative: googleAdsWhatsappLabel necesita googleAdsId para medir conversiones.');
+    const googleIds = [ga4Id, googleAdsId].filter(Boolean);
+    if (!googleIds.length && !pixelId) return null;
+
+    const CONSENT_KEY = 'bza_consent';
+    let consent = null;
+    let storageReliable = true;
+    let tagsLoaded = false;
+    let banner = null;
+    let returnFocus = null;
+    let spaceObserver = null;
+
+    function gtag() {
+      window.dataLayer.push(arguments);
     }
-    window.fbq('init', pixelId);
-    window.fbq('track', 'PageView');
-  };
+    const consentState = (ads, analytics) => ({
+      ad_storage: ads,
+      ad_user_data: ads,
+      ad_personalization: ads,
+      analytics_storage: analytics
+    });
+    const deniedState = consentState('denied', 'denied');
+    // Aceptar solo concede lo que usan las herramientas configuradas: analítica con GA4 y publicidad con Google Ads.
+    const grantedState = consentState(googleAdsId ? 'granted' : 'denied', ga4Id ? 'granted' : 'denied');
 
-  const loadTags = pageLocation => {
-    if (tagsLoaded) return;
-    tagsLoaded = true;
-    if (googleIds.length) {
-      loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(googleIds[0])}`);
-      gtag('js', new Date());
-      googleIds.forEach(id => gtag('config', id, pageLocation ? { page_location: pageLocation } : {}));
-    }
-    if (pixelId) loadMetaPixel();
-  };
+    window.gtag = gtag;
+    gtag('consent', 'default', { ...deniedState, wait_for_update: 500 });
 
-  const clearMeasurementCookies = () => {
-    const names = document.cookie
-      .split(';')
-      .map(cookie => cookie.split('=')[0].trim())
-      .filter(name => /^(_ga|_gid|_gat|_gcl_|_fbp|_fbc)/.test(name));
-    if (!names.length) return;
-    const parts = window.location.hostname.split('.');
-    const domains = [''];
-    for (let index = 0; index < parts.length - 1; index++) domains.push(`; domain=.${parts.slice(index).join('.')}`);
-    names.forEach(name => domains.forEach(domain => {
-      document.cookie = `${name}=; Max-Age=0; path=/${domain}`;
-    }));
-  };
+    // undefined: no se puede leer el almacenamiento; null: todavía no hay elección.
+    const readChoice = () => {
+      if (!storageReliable) return undefined;
+      try {
+        const value = localStorage.getItem(CONSENT_KEY);
+        return value === 'granted' || value === 'denied' ? value : null;
+      } catch {
+        return undefined;
+      }
+    };
+    const saveChoice = value => {
+      try {
+        if (value) localStorage.setItem(CONSENT_KEY, value);
+        else localStorage.removeItem(CONSENT_KEY);
+      } catch {
+        // Sin almacenamiento, la elección vale solo para esta página y manda sobre lo que quedara guardado.
+        storageReliable = false;
+      }
+    };
 
-  const grant = fromBanner => {
-    gtag('consent', 'update', consentState('granted'));
-    if (tagsLoaded) {
+    const loadScript = src => {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = src;
+      document.head.append(script);
+    };
+
+    // Si la visita llegó desde un anuncio y acepta en otra página, se le pasa a Google el origen guardado en la sesión.
+    const attributedLocation = () => {
+      const keys = trackedKeys.filter(key => attribution[key]);
+      if (!keys.length || trackedKeys.some(key => params.has(key))) return '';
+      const url = new URL(window.location.href);
+      keys.forEach(key => url.searchParams.set(key, attribution[key]));
+      return url.href;
+    };
+
+    const loadMetaPixel = () => {
+      if (!window.fbq) {
+        const fbq = function fbq() {
+          if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
+          else fbq.queue.push(arguments);
+        };
+        Object.assign(fbq, { push: fbq, loaded: true, version: '2.0', queue: [] });
+        window.fbq = fbq;
+        if (!window._fbq) window._fbq = fbq;
+        loadScript('https://connect.facebook.net/en_US/fbevents.js');
+      }
+      window.fbq('init', pixelId);
+      window.fbq('track', 'PageView');
+    };
+
+    const loadTags = pageLocation => {
+      if (tagsLoaded) return;
+      tagsLoaded = true;
+      if (googleIds.length) {
+        loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(googleIds[0])}`);
+        gtag('js', new Date());
+        googleIds.forEach(id => gtag('config', id, pageLocation ? { page_location: pageLocation } : {}));
+      }
+      if (pixelId) loadMetaPixel();
+    };
+
+    // Con gtag.js ya cargado, ga-disable detiene también los envíos sin cookies del modo de consentimiento.
+    const disableGoogleTags = disabled => googleIds.forEach(id => {
+      window[`ga-disable-${id}`] = disabled;
+    });
+
+    const clearMeasurementCookies = () => {
+      const names = document.cookie
+        .split(';')
+        .map(cookie => cookie.split('=')[0].trim())
+        .filter(name => /^(_ga|_gid|_gat|_gcl_|_fbp|_fbc)/.test(name));
+      if (!names.length) return;
+      const parts = window.location.hostname.split('.');
+      const domains = [''];
+      for (let index = 0; index < parts.length - 1; index++) domains.push(`; domain=.${parts.slice(index).join('.')}`);
+      names.forEach(name => domains.forEach(domain => {
+        document.cookie = `${name}=; Max-Age=0; path=/${domain}`;
+      }));
+    };
+
+    const grant = fromBanner => {
+      if (tagsLoaded) disableGoogleTags(false);
+      gtag('consent', 'update', grantedState);
+      if (!tagsLoaded) {
+        loadTags(fromBanner ? attributedLocation() : '');
+        return;
+      }
       if (pixelId) window.fbq('consent', 'grant');
-      return;
-    }
-    loadTags(fromBanner ? attributedLocation() : '');
-  };
+    };
 
-  const deny = () => {
-    gtag('consent', 'update', consentState('denied'));
-    if (tagsLoaded && pixelId) window.fbq('consent', 'revoke');
-    clearMeasurementCookies();
-  };
+    const deny = () => {
+      if (tagsLoaded) disableGoogleTags(true);
+      gtag('consent', 'update', deniedState);
+      if (tagsLoaded && pixelId) window.fbq('consent', 'revoke');
+      clearMeasurementCookies();
+    };
 
-  const bannerStyles = `
+    const bannerStyles = `
 .bza-consent{position:fixed;z-index:90;left:16px;right:16px;bottom:16px;max-width:780px;margin-inline:auto;display:flex;align-items:center;gap:16px 28px;padding:18px 20px;background:#F7F7F5;color:#171717;border:1px solid #171717;border-top:4px solid #083D3A;box-shadow:0 18px 40px rgba(23,23,23,.18);font-family:var(--font,Arial,Helvetica,sans-serif);font-size:.875rem;line-height:1.55;animation:bza-consent-in .3s ease-out both}
 .bza-consent:focus{outline:none}
 .bza-consent p{margin:0;flex:1 1 auto}
@@ -203,108 +245,157 @@ html.bza-consent-open body{padding-bottom:var(--bza-consent-space,0px)}
 html.motion-paused .bza-consent{animation:none}
 @media print{.bza-consent{display:none}}`;
 
-  const toolNames = [ga4Id && 'Google Analytics', googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean);
-  const toolList = toolNames.length > 1 ? `${toolNames.slice(0, -1).join(', ')} y ${toolNames.at(-1)}` : toolNames[0];
+    // Enlace relativo a la ubicación de campaign.js (raíz del sitio), igual que los demás enlaces del sitio.
+    const privacyHref = () => {
+      try {
+        if (scriptSrc) return new URL('privacidad/#sitio-web', scriptSrc).href;
+      } catch {
+        // Sin una URL válida del script se usa la ruta del sitio publicado.
+      }
+      return '/privacidad/#sitio-web';
+    };
+    const escapeAttribute = value => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
-  let spaceObserver = null;
-  const reserveSpace = () => {
-    const space = banner?.isConnected ? banner.getBoundingClientRect().height + 16 : 0;
-    document.documentElement.style.setProperty('--bza-consent-space', `${Math.ceil(space)}px`);
-  };
+    const bannerText = () => {
+      const tools = [ga4Id && 'Google Analytics', googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean);
+      const toolList = tools.length > 1 ? `${tools.slice(0, -1).join(', ')} y ${tools[tools.length - 1]}` : tools[0];
+      const remarketing = googleAdsId || pixelId ? ' y para volver a mostrar anuncios de BZA Creative a quienes visitaron el sitio (remarketing)' : '';
+      return `<strong>Medición con tu permiso.</strong> Usamos ${toolList} para medir qué anuncios y páginas generan conversaciones${remarketing}. Si rechazas, no se cargan. <a href="${escapeAttribute(privacyHref())}">Aviso de privacidad</a>`;
+    };
 
-  const createBanner = () => {
-    const style = document.createElement('style');
-    style.textContent = bannerStyles;
-    document.head.append(style);
+    const reserveSpace = () => {
+      const space = banner && banner.isConnected ? banner.getBoundingClientRect().height + 16 : 0;
+      document.documentElement.style.setProperty('--bza-consent-space', `${Math.ceil(space)}px`);
+    };
 
-    const element = document.createElement('div');
-    element.className = 'bza-consent';
-    element.setAttribute('role', 'region');
-    element.setAttribute('aria-label', 'Preferencias de medición');
-    element.setAttribute('aria-describedby', 'bza-consent-text');
-    element.tabIndex = -1;
-    element.innerHTML = `
-      <p id="bza-consent-text"><strong>Medición con tu permiso.</strong> Usamos ${toolList} solo para medir qué anuncios y páginas generan conversaciones. Si rechazas, no se cargan. <a href="/privacidad/#sitio-web">Aviso de privacidad</a></p>
+    const createBanner = () => {
+      const style = document.createElement('style');
+      style.textContent = bannerStyles;
+      document.head.append(style);
+
+      const element = document.createElement('div');
+      element.className = 'bza-consent';
+      element.setAttribute('role', 'region');
+      element.setAttribute('aria-label', 'Preferencias de medición');
+      element.setAttribute('aria-describedby', 'bza-consent-text');
+      element.tabIndex = -1;
+      element.innerHTML = `
+      <p id="bza-consent-text">${bannerText()}</p>
       <div class="bza-consent-actions">
         <button type="button" data-consent-choice="denied">Rechazar</button>
         <button type="button" data-consent-choice="granted">Aceptar</button>
       </div>`;
-    element.querySelectorAll('[data-consent-choice]').forEach(button => {
-      button.addEventListener('click', () => choose(button.dataset.consentChoice));
-    });
-    if ('ResizeObserver' in window) spaceObserver = new ResizeObserver(reserveSpace);
-    return element;
+      element.querySelectorAll('[data-consent-choice]').forEach(button => {
+        button.addEventListener('click', () => choose(button.dataset.consentChoice));
+      });
+      if ('ResizeObserver' in window) spaceObserver = new ResizeObserver(reserveSpace);
+      return element;
+    };
+
+    const showBanner = focus => {
+      banner = banner || createBanner();
+      if (!banner.isConnected) document.body.append(banner);
+      document.documentElement.classList.add('bza-consent-open');
+      if (spaceObserver) spaceObserver.observe(banner);
+      reserveSpace();
+      if (focus) banner.focus();
+    };
+
+    const hideBanner = () => {
+      if (!banner) return;
+      if (spaceObserver) spaceObserver.disconnect();
+      banner.remove();
+      document.documentElement.classList.remove('bza-consent-open');
+      document.documentElement.style.removeProperty('--bza-consent-space');
+    };
+
+    const applyChoice = (value, fromBanner) => {
+      consent = value;
+      if (value === 'granted') {
+        hideBanner();
+        grant(fromBanner);
+      } else if (value === 'denied') {
+        deny();
+        hideBanner();
+      } else {
+        deny();
+        showBanner(false);
+      }
+    };
+
+    const choose = value => {
+      const choice = value === 'granted' ? 'granted' : 'denied';
+      saveChoice(choice);
+      applyChoice(choice, true);
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+      returnFocus = null;
+    };
+
+    // Aplica lo guardado si cambió en otra pestaña o mientras la página estaba en la caché de ir atrás/adelante.
+    const syncChoice = () => {
+      const stored = readChoice();
+      if (stored === undefined || stored === consent) return;
+      applyChoice(stored, false);
+    };
+
+    const trackWhatsapp = details => {
+      if (consent !== 'granted') return;
+      const stored = readChoice();
+      if (stored !== undefined && stored !== 'granted') {
+        syncChoice();
+        return;
+      }
+      if (ga4Id) gtag('event', 'whatsapp_click', { ...details, send_to: ga4Id });
+      if (googleAdsId && adsLabel) gtag('event', 'conversion', { send_to: `${googleAdsId}/${adsLabel}` });
+      if (pixelId) window.fbq('track', 'Contact');
+    };
+
+    return () => {
+      measureWhatsappClick = trackWhatsapp;
+      window.addEventListener('pageshow', event => {
+        if (event.persisted) syncChoice();
+      });
+      window.addEventListener('storage', event => {
+        if (event.key === CONSENT_KEY || event.key === null) syncChoice();
+      });
+
+      document.querySelectorAll('[data-consent-reset]').forEach(button => {
+        button.hidden = false;
+        button.addEventListener('click', () => {
+          consent = null;
+          saveChoice(null);
+          deny();
+          returnFocus = button;
+          showBanner(true);
+        });
+      });
+
+      const stored = readChoice();
+      consent = stored === undefined ? null : stored;
+      if (consent === 'granted') grant(false);
+      else if (!consent) showBanner(false);
+    };
   };
 
-  const showBanner = focus => {
-    banner = banner || createBanner();
-    if (!banner.isConnected) document.body.append(banner);
-    document.documentElement.classList.add('bza-consent-open');
-    spaceObserver?.observe(banner);
-    reserveSpace();
-    if (focus) banner.focus();
-  };
+  let startMeasurement = null;
+  try {
+    startMeasurement = prepareMeasurement();
+  } catch (error) {
+    console.warn('BZA Creative: la medición no pudo prepararse.', error);
+  }
 
-  const hideBanner = () => {
-    if (!banner) return;
-    spaceObserver?.disconnect();
-    banner.remove();
-    document.documentElement.classList.remove('bza-consent-open');
-    document.documentElement.style.removeProperty('--bza-consent-space');
-  };
-
-  const choose = value => {
-    consent = value === 'granted' ? 'granted' : 'denied';
-    saveChoice(consent);
-    hideBanner();
-    if (consent === 'granted') grant(true);
-    else deny();
-    if (returnFocus?.isConnected) returnFocus.focus();
-    returnFocus = null;
-  };
-
-  const trackWhatsapp = details => {
-    if (consent !== 'granted') return;
-    if (ga4Id) gtag('event', 'whatsapp_click', { ...details, send_to: ga4Id });
-    if (googleAdsId && adsLabel) gtag('event', 'conversion', { send_to: `${googleAdsId}/${adsLabel}` });
-    if (pixelId) window.fbq('track', 'Contact');
-  };
-
-  document.querySelectorAll('a[href*="wa.me/"]').forEach(link => {
-    const source = attribution.utm_source || 'directo';
-    const medium = attribution.utm_medium || 'sitio';
-    const campaign = attribution.utm_campaign || window.location.pathname.replaceAll('/', '') || 'inicio';
-    const baseMessage = link.dataset.message || 'Hola, BZA Creative. Quiero hablar de mi proyecto.';
-    const origin = `Origen de la consulta: ${source} / ${medium} / ${campaign}`;
-
-    link.href = `https://wa.me/523342781554?text=${encodeURIComponent(`${baseMessage}\n\n${origin}`)}`;
-    link.addEventListener('click', () => {
-      const details = {
-        link_text: clean(link.textContent),
-        page_path: window.location.pathname,
-        campaign_source: source,
-        campaign_medium: medium,
-        campaign_name: campaign
-      };
-      pushEvent('whatsapp_click', details);
-      trackWhatsapp(details);
-    });
+  pushEvent('bza_page_view', {
+    page_path: window.location.pathname,
+    campaign_source: attribution.utm_source || 'direct',
+    campaign_medium: attribution.utm_medium || 'none',
+    campaign_name: attribution.utm_campaign || 'none'
   });
 
-  if (!measuring) return;
-
-  consent = readChoice();
-  if (consent === 'granted') grant(false);
-  else if (!consent) showBanner(false);
-
-  document.querySelectorAll('[data-consent-reset]').forEach(button => {
-    button.hidden = false;
-    button.addEventListener('click', () => {
-      consent = null;
-      saveChoice(null);
-      deny();
-      returnFocus = button;
-      showBanner(true);
-    });
-  });
+  if (startMeasurement) {
+    try {
+      startMeasurement();
+    } catch (error) {
+      console.warn('BZA Creative: la medición no pudo iniciar.', error);
+    }
+  }
 })();
