@@ -72,9 +72,31 @@ class FakeElement {
       button.textContent = label;
       return button;
     });
+    // Panel de categorías: botón Configurar, panel, casillas y botón Guardar.
+    const child = tag => { const element = new FakeElement(tag, this.owner); element.parent = this; return element; };
+    this.config = /data-consent-config/.test(html) ? child('button') : null;
+    this.panel = /data-consent-panel/.test(html) ? Object.assign(child('div'), { hidden: true }) : null;
+    this.save = /data-consent-save/.test(html) ? child('button') : null;
+    this.categories = [...html.matchAll(/data-consent-category="([^"]+)"/g)].map(([, category]) => {
+      const box = child('input');
+      Object.assign(box, { checked: false });
+      box.dataset.consentCategory = category;
+      return box;
+    });
   }
   get innerHTML() { return this.html || ''; }
-  querySelectorAll(selector) { return selector === '[data-consent-choice]' ? this.choices : []; }
+  querySelectorAll(selector) {
+    if (selector === '[data-consent-choice]') return this.choices;
+    if (selector === '[data-consent-category]') return this.categories || [];
+    return [];
+  }
+  querySelector(selector) {
+    if (selector === '[data-consent-config]') return this.config;
+    if (selector === '[data-consent-panel]') return this.panel;
+    if (selector === '[data-consent-save]') return this.save;
+    if (selector === '[data-consent-category]') return (this.categories || [])[0] || null;
+    return null;
+  }
 }
 
 // Cookies por (nombre, dominio), como el navegador: una cookie con Domain solo se borra con el mismo Domain.
@@ -212,7 +234,7 @@ const general = 'Hola, BZA Creative. Quiero hablar de mi proyecto.';
 const privacyLink = '<a href="https://bzacreative.com/privacidad/#sitio-web">Aviso de privacidad</a>';
 const remarketing = ' y para volver a mostrar anuncios de BZA Creative a quienes visitaron el sitio (remarketing)';
 const expectedText = (tools, withRemarketing, link = privacyLink) =>
-  `<strong>Medición con tu permiso.</strong> Usamos ${tools} para medir qué anuncios y páginas generan conversaciones${withRemarketing ? remarketing : ''}. Si rechazas, no se cargan. ${link}`;
+  `<strong>Cookies con tu permiso.</strong> Usamos ${tools} para medir qué anuncios y páginas generan conversaciones${withRemarketing ? remarketing : ''}. Nada de eso se carga si no lo aceptas: puedes aceptar todo, rechazar todo o elegir por categoría. ${link}`;
 
 // Atribución completa de WhatsApp: hrefs con el origen, bza_page_view y whatsapp_click en dataLayer.
 const assertAttribution = (env, label) => {
@@ -259,14 +281,14 @@ const assertAttribution = (env, label) => {
   const banner = env.banner();
   assert.ok(banner, 'aviso visible');
   assert.equal(banner.getAttribute('role'), 'region');
-  assert.equal(banner.getAttribute('aria-label'), 'Preferencias de medición');
+  assert.equal(banner.getAttribute('aria-label'), 'Preferencias de cookies');
   assert.equal(env.bannerText(), expectedText('Google Analytics, Google Ads y el píxel de Meta', true));
-  assert.deepEqual(banner.choices.map(button => button.textContent), ['Rechazar', 'Aceptar']);
+  assert.deepEqual(banner.choices.map(button => button.textContent), ['Rechazar todo', 'Aceptar todo']);
   assert.deepEqual(env.scripts(), [], 'sin etiquetas antes de elegir');
   assertAttribution(env, 'IDs antes de elegir');
   assert.deepEqual(env.gtagCalls('event'), [], 'sin eventos antes de elegir');
 
-  env.choose('Aceptar');
+  env.choose('Aceptar todo');
   assert.equal(env.localStorage.map.get('bza_consent'), 'granted');
   assert.equal(env.banner(), undefined, 'el aviso se cierra');
   assert.deepEqual(env.scripts(), ['https://www.googletagmanager.com/gtag/js?id=G-TEST123', 'https://connect.facebook.net/en_US/fbevents.js']);
@@ -288,7 +310,7 @@ const assertAttribution = (env, label) => {
   assert.equal(accepted.banner(), undefined);
   assert.equal(accepted.scripts().length, 2);
   const rejected = run({ ids: testIds });
-  rejected.choose('Rechazar');
+  rejected.choose('Rechazar todo');
   assert.equal(rejected.localStorage.map.get('bza_consent'), 'denied');
   assert.deepEqual(rejected.scripts(), []);
   rejected.document.links[0].click();
@@ -301,7 +323,7 @@ const assertAttribution = (env, label) => {
 // 4. Aceptar en otra página: Google recibe el origen de la sesión.
 {
   const env = run({ ids: testIds, url: 'https://bzacreative.com/servicios/', session: { bza_campaign: JSON.stringify({ utm_source: 'google', utm_medium: 'cpc', utm_campaign: 'test', gclid: 'abc' }) } });
-  env.choose('Aceptar');
+  env.choose('Aceptar todo');
   const location = new URL(env.gtagCalls('config')[0][2].page_location);
   assert.deepEqual([location.pathname, location.searchParams.get('utm_campaign'), location.searchParams.get('gclid')], ['/servicios/', 'test', 'abc']);
 }
@@ -320,11 +342,11 @@ const assertAttribution = (env, label) => {
   assert.deepEqual([env.disabled('G-TEST123'), env.disabled('AW-123')], [true, true], 'ga-disable al retirar el permiso');
   assert.deepEqual(env.jar.list(), ['keep@host-only'], 'borra cookies de medición');
   assert.ok(env.document.activeElement === env.banner(), 'el foco pasa al aviso');
-  env.choose('Rechazar');
+  env.choose('Rechazar todo');
   assert.ok(env.document.activeElement === reset, 'el foco regresa al botón');
   assert.deepEqual([env.disabled('G-TEST123'), env.disabled('AW-123')], [true, true], 'ga-disable sigue al rechazar');
   reset.click();
-  env.choose('Aceptar');
+  env.choose('Aceptar todo');
   assert.equal(env.scripts().length, 2, 'no duplica etiquetas');
   assert.deepEqual(last(env.fbqQueue()), ['consent', 'grant']);
   assert.deepEqual([env.disabled('G-TEST123'), env.disabled('AW-123')], [false, false], 'ga-disable se quita al volver a aceptar');
@@ -335,7 +357,7 @@ const assertAttribution = (env, label) => {
 {
   const env = run({ ids: { ga4Id: 'UA-1', googleAdsId: ' AW-555 ', googleAdsWhatsappLabel: 'AW-555/xYz-9' } });
   assert.ok(env.log.some(entry => entry.startsWith('warn:') && entry.includes('ga4Id')));
-  env.choose('Aceptar');
+  env.choose('Aceptar todo');
   assert.deepEqual(env.scripts(), ['https://www.googletagmanager.com/gtag/js?id=AW-555']);
   env.document.links[0].click();
   assert.deepEqual(env.gtagCalls('event'), [['event', 'conversion', { send_to: 'AW-555/xYz-9' }]]);
@@ -349,23 +371,23 @@ const assertAttribution = (env, label) => {
 {
   const ga4 = run({ ids: { ga4Id: 'G-TEST123' } });
   assert.equal(ga4.bannerText(), expectedText('Google Analytics', false), 'solo GA4: sin remarketing en el aviso');
-  ga4.choose('Aceptar');
+  ga4.choose('Aceptar todo');
   assert.deepEqual(last(ga4.gtagCalls('consent')), ['consent', 'update', { ...denied, analytics_storage: 'granted' }], 'solo GA4: ad_* siguen denegados');
 
   const ads = run({ ids: { googleAdsId: 'AW-123', googleAdsWhatsappLabel: 'abc' } });
   assert.equal(ads.bannerText(), expectedText('Google Ads', true), 'Google Ads: aviso con remarketing');
-  ads.choose('Aceptar');
+  ads.choose('Aceptar todo');
   assert.deepEqual(last(ads.gtagCalls('consent')), ['consent', 'update', { ...granted, analytics_storage: 'denied' }], 'solo Google Ads: analytics_storage sigue denegado');
 
   const pixel = run({ ids: { metaPixelId: '123' } });
   assert.equal(pixel.bannerText(), expectedText('el píxel de Meta', true), 'píxel: aviso con remarketing');
-  pixel.choose('Aceptar');
+  pixel.choose('Aceptar todo');
   assert.deepEqual(last(pixel.gtagCalls('consent')), ['consent', 'update', denied], 'solo píxel: nada de Google se concede');
   assert.deepEqual(pixel.scripts(), ['https://connect.facebook.net/en_US/fbevents.js']);
 
   const ga4Ads = run({ ids: { ga4Id: 'G-TEST123', googleAdsId: 'AW-123' } });
   assert.equal(ga4Ads.bannerText(), expectedText('Google Analytics y Google Ads', true));
-  ga4Ads.choose('Rechazar');
+  ga4Ads.choose('Rechazar todo');
   assert.deepEqual(last(ga4Ads.gtagCalls('consent')), ['consent', 'update', denied], 'Rechazar deniega todo');
 }
 
@@ -448,7 +470,7 @@ const assertAttribution = (env, label) => {
   const blocked = run({ ids: testIds, localStorageThrows: true });
   assert.ok(blocked.banner(), 'sin localStorage se pregunta');
   assertAttribution(blocked, 'sin localStorage');
-  blocked.choose('Aceptar');
+  blocked.choose('Aceptar todo');
   blocked.document.links[0].click();
   assert.equal(blocked.sent().gtag, 2, 'sin localStorage: la elección en memoria permite medir');
   blocked.fire('pageshow', { persisted: true });
@@ -464,7 +486,7 @@ const assertAttribution = (env, label) => {
   assert.equal(lost.banner(), undefined, 'y no se vuelve a preguntar');
 
   const readOnly = run({ ids: testIds, localStorageWriteThrows: true });
-  readOnly.choose('Aceptar');
+  readOnly.choose('Aceptar todo');
   readOnly.document.links[0].click();
   assert.equal(readOnly.sent().gtag, 2, 'si no se puede guardar, manda la elección en memoria');
 }
@@ -507,7 +529,7 @@ const assertAttribution = (env, label) => {
     assert.deepEqual(env.jar.list(), ['keep@.bzacreative.com', 'keep@host-only'], `${host}: se borran las cookies de medición de todos los dominios`);
   }
   const rejected = run({ ids: testIds, cookies: seeded('bzacreative.com') });
-  rejected.choose('Rechazar');
+  rejected.choose('Rechazar todo');
   assert.deepEqual(rejected.jar.list(), ['keep@.bzacreative.com', 'keep@host-only'], 'Rechazar también borra cookies previas');
 }
 
@@ -527,11 +549,11 @@ const assertAttribution = (env, label) => {
 // que la biblioteca cree al llegar se borra.
 {
   const env = run({ ids: testIds, resets: 1 });
-  env.choose('Aceptar');
+  env.choose('Aceptar todo');
   env.document.links[0].click();
   assert.ok(env.fbqQueue().some(call => call[0] === 'track' && call[1] === 'Contact'), 'Contact en cola antes de retirar');
   env.document.resets[0].click();
-  env.choose('Rechazar');
+  env.choose('Rechazar todo');
   assert.deepEqual(env.fbqQueue()[0], ['consent', 'revoke'], 'la revocación va primero');
   assert.ok(!env.fbqQueue().some(call => /^track/.test(call[0])), 'sin PageView ni Contact pendientes');
   env.document.cookie = '_fbp=fb.1.1; domain=.bzacreative.com; path=/';
@@ -550,6 +572,74 @@ const assertAttribution = (env, label) => {
   env.fire('storage', { key: 'bza_consent' });
   assert.equal(env.banner(), undefined, 'otra pestaña aceptó: se cierra el aviso');
   assert.ok(env.document.activeElement === reset, 'el foco regresa al botón de preferencias');
+}
+
+// 18. Configurar por categoría: casillas solo de lo configurado, sin marcar; cada categoría carga y mide solo lo suyo.
+{
+  const pick = (env, categories) => {
+    const banner = env.banner();
+    banner.config.click();
+    assert.equal(banner.panel.hidden, false, 'Configurar abre el panel');
+    banner.categories.forEach(box => { box.checked = categories.includes(box.dataset.consentCategory); });
+    banner.save.click();
+  };
+  const fbTracks = env => env.fbqQueue().filter(call => call[0] === 'track').map(call => call[1]);
+
+  const full = run({ ids: testIds });
+  assert.deepEqual(full.banner().categories.map(box => [box.dataset.consentCategory, box.checked]), [['analytics', false], ['ads', false]], 'casillas sin marcar');
+  const onlyGa = run({ ids: { ga4Id: 'G-TEST123' } });
+  assert.deepEqual(onlyGa.banner().categories.map(box => box.dataset.consentCategory), ['analytics'], 'solo GA4: solo casilla de analítica');
+
+  const analytics = run({ ids: testIds });
+  pick(analytics, ['analytics']);
+  assert.equal(analytics.localStorage.map.get('bza_consent'), 'analytics');
+  assert.equal(analytics.banner(), undefined, 'guardar cierra el aviso');
+  assert.deepEqual(analytics.scripts(), ['https://www.googletagmanager.com/gtag/js?id=G-TEST123'], 'solo analítica: sin píxel');
+  assert.deepEqual(last(analytics.gtagCalls('consent')), ['consent', 'update', { ...denied, analytics_storage: 'granted' }]);
+  assert.deepEqual(analytics.gtagCalls('config').map(call => call[1]), ['G-TEST123'], 'solo se configura GA4');
+  analytics.document.links[0].click();
+  assert.deepEqual(analytics.gtagCalls('event').map(call => call[1]), ['whatsapp_click'], 'solo analítica: sin conversión de Ads');
+  assert.equal(analytics.sandbox.fbq, undefined, 'solo analítica: sin fbq');
+
+  const ads = run({ ids: testIds, cookies: [['_ga', 'GA1.1', '.bzacreative.com']] });
+  pick(ads, ['ads']);
+  assert.equal(ads.localStorage.map.get('bza_consent'), 'ads');
+  assert.deepEqual(ads.scripts(), ['https://www.googletagmanager.com/gtag/js?id=AW-123', 'https://connect.facebook.net/en_US/fbevents.js']);
+  assert.deepEqual(last(ads.gtagCalls('consent')), ['consent', 'update', { ...granted, analytics_storage: 'denied' }]);
+  assert.deepEqual(ads.gtagCalls('config').map(call => call[1]), ['AW-123'], 'solo se configura Google Ads');
+  assert.ok(!ads.jar.list().some(name => name.startsWith('_ga@')), 'sin analítica se borra _ga');
+  ads.document.links[0].click();
+  assert.deepEqual(ads.gtagCalls('event').map(call => call[1]), ['conversion'], 'solo publicidad: sin evento de GA4');
+  assert.deepEqual(fbTracks(ads), ['PageView', 'Contact']);
+
+  const none = run({ ids: testIds });
+  pick(none, []);
+  assert.equal(none.localStorage.map.get('bza_consent'), 'denied', 'guardar sin casillas = rechazar todo');
+  assert.deepEqual(none.scripts(), [], 'sin categorías no se carga nada');
+
+  const both = run({ ids: testIds });
+  pick(both, ['analytics', 'ads']);
+  assert.equal(both.localStorage.map.get('bza_consent'), 'granted', 'ambas casillas = aceptar todo');
+
+  // Cambiar de analítica a publicidad desde "Preferencias de cookies": GA4 se apaga, sus cookies se borran y el píxel carga.
+  const change = run({ ids: testIds, local: { bza_consent: 'analytics' }, resets: 1, cookies: [['_ga', 'GA1.1', '.bzacreative.com'], ['_gid', '1', '.bzacreative.com']] });
+  assert.deepEqual(change.scripts(), ['https://www.googletagmanager.com/gtag/js?id=G-TEST123'], 'carga lo guardado: solo analítica');
+  change.document.resets[0].click();
+  assert.deepEqual(change.banner().categories.map(box => box.checked), [false, false], 'tras restablecer, casillas sin marcar');
+  pick(change, ['ads']);
+  assert.deepEqual([change.disabled('G-TEST123'), change.disabled('AW-123')], [true, false], 'GA4 apagado, Ads activo');
+  assert.deepEqual(change.gtagCalls('config').map(call => call[1]), ['G-TEST123', 'AW-123'], 'Ads se configura una vez');
+  assert.ok(!change.jar.list().some(name => /^_g(a|id)@/.test(name)), 'se borran las cookies de analítica');
+  assert.ok(change.scripts().some(src => /fbevents/.test(src)), 'carga el píxel');
+
+  // Otra pestaña guarda solo analítica: esta página deja de enviar a Meta y a Google Ads.
+  const tabs = run({ ids: testIds, local: { bza_consent: 'granted' } });
+  tabs.localStorage.map.set('bza_consent', 'analytics');
+  tabs.fire('storage', { key: 'bza_consent' });
+  const before = tabs.gtagCalls('event').length;
+  tabs.document.links[0].click();
+  assert.deepEqual(tabs.gtagCalls('event').slice(before).map(call => call[1]), ['whatsapp_click']);
+  assert.ok(!fbTracks(tabs).includes('Contact'), 'sin Contact tras retirar publicidad en otra pestaña');
 }
 
 const published = run({ ids: null, resets: 1 });

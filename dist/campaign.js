@@ -113,7 +113,6 @@
     const CONSENT_KEY = 'bza_consent';
     let consent = null;
     let storageReliable = true;
-    let tagsLoaded = false;
     let banner = null;
     let returnFocus = null;
     let spaceObserver = null;
@@ -128,8 +127,15 @@
       analytics_storage: analytics
     });
     const deniedState = consentState('denied', 'denied');
-    // Aceptar solo concede lo que usan las herramientas configuradas: analítica con GA4 y publicidad con Google Ads.
-    const grantedState = consentState(googleAdsId ? 'granted' : 'denied', ga4Id ? 'granted' : 'denied');
+    // Elecciones guardadas: 'granted' (todo), 'denied' (nada), 'analytics' (solo analítica) o 'ads' (solo publicidad).
+    // Analítica = Google Analytics; publicidad = Google Ads y píxel de Meta. Solo se concede lo que está configurado.
+    const CHOICES = ['granted', 'denied', 'analytics', 'ads'];
+    const hasAnalytics = Boolean(ga4Id);
+    const hasAds = Boolean(googleAdsId || pixelId);
+    const allows = (choice, category) => choice === 'granted' || choice === category;
+    const analyticsOn = choice => hasAnalytics && allows(choice, 'analytics');
+    const adsOn = choice => hasAds && allows(choice, 'ads');
+    const stateFor = choice => consentState(googleAdsId && adsOn(choice) ? 'granted' : 'denied', analyticsOn(choice) ? 'granted' : 'denied');
 
     window.gtag = gtag;
     gtag('consent', 'default', { ...deniedState, wait_for_update: 500 });
@@ -139,7 +145,7 @@
       if (!storageReliable) return undefined;
       try {
         const value = localStorage.getItem(CONSENT_KEY);
-        return value === 'granted' || value === 'denied' ? value : null;
+        return CHOICES.indexOf(value) >= 0 ? value : null;
       } catch {
         return undefined;
       }
@@ -171,7 +177,12 @@
       return url.href;
     };
 
+    let gtagLoaded = false;
+    let pixelLoaded = false;
+    const configured = [];
+
     const loadMetaPixel = () => {
+      pixelLoaded = true;
       if (!window.fbq) {
         const fbq = function fbq() {
           if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
@@ -182,34 +193,37 @@
         if (!window._fbq) window._fbq = fbq;
         // Si la visita rechazó mientras la biblioteca cargaba, se borra la cookie que pudiera crear al llegar.
         loadScript('https://connect.facebook.net/en_US/fbevents.js').addEventListener('load', () => {
-          if (consent !== 'granted') clearMeasurementCookies();
+          clearMeasurementCookies(analyticsOn(consent), adsOn(consent));
         });
       }
       window.fbq('init', pixelId);
       window.fbq('track', 'PageView');
     };
 
-    const loadTags = pageLocation => {
-      if (tagsLoaded) return;
-      tagsLoaded = true;
-      if (googleIds.length) {
-        loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(googleIds[0])}`);
+    // Carga gtag.js una sola vez y configura cada ID de Google la primera vez que su categoría se acepta.
+    const loadGoogle = (ids, pageLocation) => {
+      if (!gtagLoaded) {
+        gtagLoaded = true;
+        loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ids[0])}`);
         gtag('js', new Date());
-        googleIds.forEach(id => gtag('config', id, pageLocation ? { page_location: pageLocation } : {}));
       }
-      if (pixelId) loadMetaPixel();
+      ids.filter(id => configured.indexOf(id) < 0).forEach(id => {
+        configured.push(id);
+        gtag('config', id, pageLocation ? { page_location: pageLocation } : {});
+      });
     };
 
     // Con gtag.js ya cargado, ga-disable detiene también los envíos sin cookies del modo de consentimiento.
-    const disableGoogleTags = disabled => googleIds.forEach(id => {
-      window[`ga-disable-${id}`] = disabled;
+    const setGoogleDisabled = active => googleIds.forEach(id => {
+      window[`ga-disable-${id}`] = active.indexOf(id) < 0;
     });
 
-    const clearMeasurementCookies = () => {
+    // Borra las cookies de cada categoría que no está aceptada.
+    const clearMeasurementCookies = (keepAnalytics, keepAds) => {
       const names = document.cookie
         .split(';')
         .map(cookie => cookie.split('=')[0].trim())
-        .filter(name => /^(_ga|_gid|_gat|_gcl_|_fbp|_fbc)/.test(name));
+        .filter(name => (!keepAnalytics && /^(_ga|_gid|_gat)/.test(name)) || (!keepAds && /^(_gcl_|_fbp|_fbc)/.test(name)));
       if (!names.length) return;
       const parts = window.location.hostname.split('.');
       const domains = [''];
@@ -217,16 +231,6 @@
       names.forEach(name => domains.forEach(domain => {
         document.cookie = `${name}=; Max-Age=0; path=/${domain}`;
       }));
-    };
-
-    const grant = fromBanner => {
-      if (tagsLoaded) disableGoogleTags(false);
-      gtag('consent', 'update', grantedState);
-      if (!tagsLoaded) {
-        loadTags(fromBanner ? attributedLocation() : '');
-        return;
-      }
-      if (pixelId) window.fbq('consent', 'grant');
     };
 
     // Antes de que llegue fbevents.js, los eventos esperan en fbq.queue: al rechazar se descartan y la revocación va
@@ -242,30 +246,48 @@
       fbq('consent', 'revoke');
     };
 
-    const deny = () => {
-      if (tagsLoaded) disableGoogleTags(true);
-      gtag('consent', 'update', deniedState);
-      if (tagsLoaded && pixelId) revokeMetaPixel();
-      clearMeasurementCookies();
+    // Aplica una elección: actualiza el modo de consentimiento, carga solo lo aceptado y apaga y limpia lo demás.
+    const applyPermissions = (choice, fromBanner) => {
+      const active = [analyticsOn(choice) && ga4Id, adsOn(choice) && googleAdsId].filter(Boolean);
+      if (gtagLoaded) setGoogleDisabled(active);
+      gtag('consent', 'update', choice === 'denied' ? deniedState : stateFor(choice));
+      if (active.length) loadGoogle(active, fromBanner ? attributedLocation() : '');
+      if (pixelId) {
+        if (adsOn(choice)) {
+          if (pixelLoaded) window.fbq('consent', 'grant');
+          else loadMetaPixel();
+        } else if (pixelLoaded) {
+          revokeMetaPixel();
+        }
+      }
+      clearMeasurementCookies(analyticsOn(choice), adsOn(choice));
     };
 
+    const deny = () => applyPermissions('denied', false);
+
     const bannerStyles = `
-.bza-consent{position:fixed;z-index:90;left:16px;right:16px;bottom:16px;max-width:780px;margin-inline:auto;display:flex;align-items:center;gap:16px 28px;padding:18px 20px;background:#F7F7F5;color:#171717;border:1px solid #171717;border-top:4px solid #083D3A;box-shadow:0 18px 40px rgba(23,23,23,.18);font-family:var(--font,Arial,Helvetica,sans-serif);font-size:.875rem;line-height:1.55;animation:bza-consent-in .3s ease-out both}
+.bza-consent{position:fixed;z-index:90;left:16px;right:16px;bottom:16px;max-width:860px;max-height:calc(100vh - 32px);overflow-y:auto;margin-inline:auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;padding:18px 20px;background:#F7F7F5;color:#171717;border:1px solid #171717;border-top:4px solid #083D3A;box-shadow:0 18px 40px rgba(23,23,23,.18);font-family:var(--font,Arial,Helvetica,sans-serif);font-size:.875rem;line-height:1.55;animation:bza-consent-in .3s ease-out both}
 .bza-consent:focus{outline:none}
-.bza-consent p{margin:0;flex:1 1 auto}
+.bza-consent p{margin:0;flex:1 1 300px}
+.bza-consent-panel{flex:1 1 100%;border-top:1px solid #D6D6CF;padding-top:14px}
+.bza-consent-panel fieldset{border:0;margin:0 0 12px;padding:0;display:grid;gap:10px}
+.bza-consent-panel legend{font-weight:600;margin-bottom:8px}
+.bza-consent-option{display:flex;gap:10px;align-items:flex-start}
+.bza-consent-option input{width:20px;height:20px;margin:2px 0 0;accent-color:#083D3A;flex:none}
+.bza-consent-option span{display:block}
 .bza-consent strong{font-weight:600}
 .bza-consent a{color:#083D3A;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .bza-consent-actions{display:flex;gap:10px;flex:none}
 .bza-consent button{min-height:44px;min-width:112px;padding:10px 18px;border:1px solid #083D3A;border-radius:0;font:inherit;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
-.bza-consent [data-consent-choice="denied"]{background:transparent;color:#083D3A}
-.bza-consent [data-consent-choice="denied"]:hover{background:#E6ECEB}
+.bza-consent [data-consent-choice="denied"],.bza-consent [data-consent-config],.bza-consent [data-consent-save]{background:transparent;color:#083D3A}
+.bza-consent [data-consent-choice="denied"]:hover,.bza-consent [data-consent-config]:hover,.bza-consent [data-consent-save]:hover{background:#E6ECEB}
 .bza-consent [data-consent-choice="granted"]{background:#083D3A;color:#F7F7F5}
 .bza-consent [data-consent-choice="granted"]:hover{background:#0F5550}
-.bza-consent a:focus-visible,.bza-consent button:focus-visible{outline:3px solid #D92E22;outline-offset:3px}
+.bza-consent a:focus-visible,.bza-consent button:focus-visible,.bza-consent input:focus-visible{outline:3px solid #D92E22;outline-offset:3px}
 html.bza-consent-open{scroll-padding-bottom:var(--bza-consent-space,0px)}
 html.bza-consent-open body{padding-bottom:var(--bza-consent-space,0px)}
 @keyframes bza-consent-in{from{opacity:0;transform:translateY(16px)}}
-@media(max-width:640px){.bza-consent{left:0;right:0;bottom:0;flex-direction:column;align-items:stretch;gap:14px;padding:16px;border-inline:0;border-bottom:0}.bza-consent-actions button{flex:1 1 0;min-width:0}}
+@media(max-width:640px){.bza-consent{left:0;right:0;bottom:0;flex-direction:column;align-items:stretch;gap:14px;padding:16px;border-inline:0;border-bottom:0}.bza-consent-actions{flex-wrap:wrap}.bza-consent-actions button{flex:1 1 0;min-width:96px}}
 @media(prefers-reduced-motion:reduce){.bza-consent{animation:none}.bza-consent button{transition:none}}
 html.motion-paused .bza-consent{animation:none}
 @media print{.bza-consent{display:none}}`;
@@ -285,7 +307,18 @@ html.motion-paused .bza-consent{animation:none}
       const tools = [ga4Id && 'Google Analytics', googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean);
       const toolList = tools.length > 1 ? `${tools.slice(0, -1).join(', ')} y ${tools[tools.length - 1]}` : tools[0];
       const remarketing = googleAdsId || pixelId ? ' y para volver a mostrar anuncios de BZA Creative a quienes visitaron el sitio (remarketing)' : '';
-      return `<strong>Medición con tu permiso.</strong> Usamos ${toolList} para medir qué anuncios y páginas generan conversaciones${remarketing}. Si rechazas, no se cargan. <a href="${escapeAttribute(privacyHref())}">Aviso de privacidad</a>`;
+      return `<strong>Cookies con tu permiso.</strong> Usamos ${toolList} para medir qué anuncios y páginas generan conversaciones${remarketing}. Nada de eso se carga si no lo aceptas: puedes aceptar todo, rechazar todo o elegir por categoría. <a href="${escapeAttribute(privacyHref())}">Aviso de privacidad</a>`;
+    };
+
+    // Casillas de las categorías configuradas; sin marcar por defecto.
+    const categoryOptions = () => {
+      const options = [];
+      if (hasAnalytics) options.push('<label class="bza-consent-option"><input type="checkbox" data-consent-category="analytics"> <span><strong>Analítica.</strong> Google Analytics: qué páginas se visitan y cuáles generan conversaciones.</span></label>');
+      if (hasAds) {
+        const adTools = [googleAdsId && 'Google Ads', pixelId && 'el píxel de Meta'].filter(Boolean).join(' y ');
+        options.push(`<label class="bza-consent-option"><input type="checkbox" data-consent-category="ads"> <span><strong>Publicidad.</strong> ${adTools}: medir nuestros anuncios y volver a mostrarte anuncios de BZA Creative (remarketing).</span></label>`);
+      }
+      return options.map(option => `\n          ${option}`).join('');
     };
 
     const reserveSpace = () => {
@@ -301,17 +334,41 @@ html.motion-paused .bza-consent{animation:none}
       const element = document.createElement('div');
       element.className = 'bza-consent';
       element.setAttribute('role', 'region');
-      element.setAttribute('aria-label', 'Preferencias de medición');
+      element.setAttribute('aria-label', 'Preferencias de cookies');
       element.setAttribute('aria-describedby', 'bza-consent-text');
       element.tabIndex = -1;
       element.innerHTML = `
       <p id="bza-consent-text">${bannerText()}</p>
       <div class="bza-consent-actions">
-        <button type="button" data-consent-choice="denied">Rechazar</button>
-        <button type="button" data-consent-choice="granted">Aceptar</button>
+        <button type="button" data-consent-choice="denied">Rechazar todo</button>
+        <button type="button" data-consent-config aria-expanded="false" aria-controls="bza-consent-panel">Configurar</button>
+        <button type="button" data-consent-choice="granted">Aceptar todo</button>
+      </div>
+      <div class="bza-consent-panel" id="bza-consent-panel" data-consent-panel hidden>
+        <fieldset>
+          <legend>Elige qué permites</legend>
+          <label class="bza-consent-option"><input type="checkbox" checked disabled> <span><strong>Necesarias.</strong> Guardan tu elección y el origen de la visita para el mensaje de WhatsApp. Siempre activas.</span></label>${categoryOptions()}
+        </fieldset>
+        <button type="button" data-consent-save>Guardar selección</button>
       </div>`;
       element.querySelectorAll('[data-consent-choice]').forEach(button => {
         button.addEventListener('click', () => choose(button.dataset.consentChoice));
+      });
+      const panel = element.querySelector('[data-consent-panel]');
+      const configButton = element.querySelector('[data-consent-config]');
+      configButton.addEventListener('click', () => {
+        panel.hidden = !panel.hidden;
+        configButton.setAttribute('aria-expanded', String(!panel.hidden));
+        const first = element.querySelector('[data-consent-category]');
+        if (!panel.hidden && first) first.focus();
+        reserveSpace();
+      });
+      element.querySelector('[data-consent-save]').addEventListener('click', () => {
+        const picked = Array.prototype.filter.call(element.querySelectorAll('[data-consent-category]'), box => box.checked)
+          .map(box => box.dataset.consentCategory);
+        const analytics = picked.indexOf('analytics') >= 0;
+        const ads = picked.indexOf('ads') >= 0;
+        choose(analytics && ads ? 'granted' : analytics ? 'analytics' : ads ? 'ads' : 'denied');
       });
       if ('ResizeObserver' in window) spaceObserver = new ResizeObserver(reserveSpace);
       return element;
@@ -319,6 +376,14 @@ html.motion-paused .bza-consent{animation:none}
 
     const showBanner = focus => {
       banner = banner || createBanner();
+      const panel = banner.querySelector('[data-consent-panel]');
+      if (panel && !panel.hidden) {
+        panel.hidden = true;
+        banner.querySelector('[data-consent-config]').setAttribute('aria-expanded', 'false');
+      }
+      Array.prototype.forEach.call(banner.querySelectorAll('[data-consent-category]'), box => {
+        box.checked = allows(consent, box.dataset.consentCategory);
+      });
       if (!banner.isConnected) document.body.append(banner);
       document.documentElement.classList.add('bza-consent-open');
       if (spaceObserver) spaceObserver.observe(banner);
@@ -340,9 +405,9 @@ html.motion-paused .bza-consent{animation:none}
 
     const applyChoice = (value, fromBanner) => {
       consent = value;
-      if (value === 'granted') {
+      if (value && value !== 'denied') {
         hideBanner();
-        grant(fromBanner);
+        applyPermissions(value, fromBanner);
       } else if (value === 'denied') {
         deny();
         hideBanner();
@@ -353,7 +418,7 @@ html.motion-paused .bza-consent{animation:none}
     };
 
     const choose = value => {
-      const choice = value === 'granted' ? 'granted' : 'denied';
+      const choice = CHOICES.indexOf(value) >= 0 ? value : 'denied';
       saveChoice(choice);
       applyChoice(choice, true);
       if (returnFocus && returnFocus.isConnected) returnFocus.focus();
@@ -368,15 +433,15 @@ html.motion-paused .bza-consent{animation:none}
     };
 
     const trackWhatsapp = details => {
-      if (consent !== 'granted') return;
+      if (!consent || consent === 'denied') return;
       const stored = readChoice();
-      if (stored !== undefined && stored !== 'granted') {
+      if (stored !== undefined && stored !== consent) {
         syncChoice();
         return;
       }
-      if (ga4Id) gtag('event', 'whatsapp_click', { ...details, send_to: ga4Id });
-      if (googleAdsId && adsLabel) gtag('event', 'conversion', { send_to: `${googleAdsId}/${adsLabel}` });
-      if (pixelId) window.fbq('track', 'Contact');
+      if (analyticsOn(consent)) gtag('event', 'whatsapp_click', { ...details, send_to: ga4Id });
+      if (googleAdsId && adsLabel && adsOn(consent)) gtag('event', 'conversion', { send_to: `${googleAdsId}/${adsLabel}` });
+      if (pixelId && adsOn(consent)) window.fbq('track', 'Contact');
     };
 
     return () => {
@@ -401,7 +466,7 @@ html.motion-paused .bza-consent{animation:none}
 
       const stored = readChoice();
       consent = stored === undefined ? null : stored;
-      if (consent === 'granted') grant(false);
+      if (consent && consent !== 'denied') applyPermissions(consent, false);
       else if (!consent) showBanner(false);
     };
   };
