@@ -1,7 +1,7 @@
 {
   "tipo": "pipeline",
   "semana": "2026-11-02",
-  "descripcion": "Una conversación de octubre llega a diagnóstico y propuesta en noviembre y se gana la semana siguiente; las filas sin fechas de etapa usan la fecha de la conversación; una perdida con fecha de diagnóstico cuenta ese diagnóstico.",
+  "descripcion": "Una conversación de octubre llega a diagnóstico y propuesta en noviembre y se gana la semana siguiente; las filas sin fechas de etapa usan la fecha de la conversación; una perdida con fecha de diagnóstico cuenta ese diagnóstico. Una venta perdida con fecha_cierre y valor_cerrado no cuenta como ganada.",
   "esperado": {
     "kpis": {
       "embudo": {
@@ -25,7 +25,7 @@
         "kpis": {
           "embudo": {
             "semana": {
-              "conversaciones": 2,
+              "conversaciones": 3,
               "calificadas": 2,
               "diagnosticos": 1,
               "propuestas": 1,
@@ -51,7 +51,7 @@
             "pipeline": {
               "ganado": 2,
               "propuesta": 1,
-              "perdido": 1
+              "perdido": 2
             },
             "valor_pipeline_mxn": 15000
           }

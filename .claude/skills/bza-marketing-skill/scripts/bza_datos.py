@@ -106,8 +106,9 @@ def datos_por_defecto() -> Path:
 def leer_csv(ruta: Path, columnas: List[str], opcionales: Iterable[str] = ()) -> List[Dict[str, str]]:
     """Lee un CSV con encabezado. Si no existe devuelve lista vacía.
 
-    Falla con un mensaje claro cuando faltan columnas obligatorias o una fila trae
-    más valores que el encabezado. Las columnas `opcionales` que no estén en el
+    Falla con un mensaje claro cuando faltan columnas obligatorias. Una fila con más o
+    menos valores que el encabezado se devuelve como `{"_fila", "_error"}` para que
+    `validar_datos` la reporte junto con los demás errores. Las columnas `opcionales` que no estén en el
     archivo quedan como texto vacío. Cada fila guarda en `_fila` la línea del archivo
     donde empieza (la misma que muestra una hoja de cálculo; el encabezado es la 1).
     """
@@ -128,16 +129,30 @@ def _leer_csv(ruta: Path, columnas: List[str], opcionales: Iterable[str]) -> Lis
         if faltan:
             raise ValueError(f"{ruta.name}: faltan columnas {', '.join(faltan)}")
         filas = []
+        saltos_previos = 0  # saltos de línea dentro de celdas de filas anteriores
         for fila in lector:
-            # line_num es la última línea leída; se restan los saltos de línea dentro de celdas.
-            numero_fila = lector.line_num - sum(str(v).count("\n") for v in fila.values() if v)
-            if None in fila:
-                raise ValueError(
-                    f"{ruta.name} fila {numero_fila}: tiene {len(fila[None])} valor(es) más que el encabezado. "
-                    "Si un número lleva coma de miles, escríbelo entre comillas (\"1,400\") o sin coma (1400).")
-            limpia = {(k or "").strip(): (v or "").strip() for k, v in fila.items()}
-            if not any(limpia.values()):
+            # line_num es la última línea física leída. Para dar la fila que muestra una hoja de
+            # cálculo se restan los saltos dentro de las celdas de esta fila y de las anteriores.
+            saltos = sum(str(v).count("\n") for v in fila.values() if isinstance(v, str))
+            numero_fila = lector.line_num - saltos - saltos_previos
+            saltos_previos += saltos
+            sobran = fila.get(None)
+            faltantes = sum(1 for k, v in fila.items() if k is not None and v is None)
+            presentes = [v for k, v in fila.items() if k is not None and v]
+            if not sobran and not presentes:
                 continue
+            # Una fila con valores de más o de menos se reporta y no se usa: sus cifras quedarían en
+            # otras columnas. Se sigue leyendo para dar todos los errores juntos.
+            if sobran:
+                filas.append({"_fila": str(numero_fila), "_error": (
+                    f"tiene {len(sobran)} valor(es) más que el encabezado. Si un número lleva coma de "
+                    "miles, escríbelo entre comillas (\"1,400\") o sin coma (1400).")})
+                continue
+            if faltantes:
+                filas.append({"_fila": str(numero_fila), "_error": (
+                    f"tiene {faltantes} valor(es) menos que el encabezado (falta una coma o un valor).")})
+                continue
+            limpia = {(k or "").strip(): (v or "").strip() for k, v in fila.items()}
             for columna in opcionales:
                 limpia.setdefault(columna, "")
             limpia["_fila"] = str(numero_fila)
@@ -258,6 +273,9 @@ def validar_datos(datos: Dict[str, List[Dict[str, str]]]) -> None:
         vistos: Dict[Any, str] = {}
         for fila in datos.get(clave, []):
             prefijo = f"{nombre} fila {fila.get('_fila', '?')}"
+            if "_error" in fila:
+                errores.append(f"{prefijo}: {fila['_error']}")
+                continue
             problemas = _validar_fila(clave, fila, vistos)
             errores.extend(f"{prefijo}: {problema}" for problema in problemas)
     if errores:

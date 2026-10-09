@@ -78,7 +78,7 @@ Error en los datos de …/marketing/datos (corregir y repetir):
   conversaciones.csv fila 8: canal 'WhatsApp' no es válido (usar: facebook, instagram, google_ads, meta_ads, google_organico, sitio, prospeccion, referido, directo)
 ```
 
-Hay que corregir todas las filas de la lista y repetir. También son errores un `id` repetido en `conversaciones.csv`, dos filas de la misma semana y canal en `metricas-semanales.csv` y un archivo que no esté en UTF-8 (en Excel: *Guardar como → CSV UTF-8 (delimitado por comas)*).
+La lista trae todos los errores de los tres archivos a la vez: hay que corregir todas las filas y repetir. También son errores una fila con más o menos valores que el encabezado (falta o sobra una coma), un `id` repetido en `conversaciones.csv`, dos filas de la misma semana y canal en `metricas-semanales.csv`, un número negativo, una fecha de etapa anterior a la conversación o anotada sin que la etapa haya ocurrido, y un archivo que no esté en UTF-8 (en Excel: *Guardar como → CSV UTF-8 (delimitado por comas)*).
 
 Para revisar los datos y generar el reporte de una semana, desde la raíz del repositorio:
 

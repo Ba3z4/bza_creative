@@ -1,0 +1,9 @@
+id,fecha,canal,palabra_clave,servicio,sector,calificada,etapa,fecha_diagnostico,fecha_propuesta,fecha_cierre,valor_estimado_mxn,valor_cerrado_mxn,notas
+C1,2026-11-03,google_ads,,,,si,calificado,,,,,,"línea uno
+línea dos
+línea tres"
+C2,2026-11-03,tiktok,,,,si,calificado,,,,,,
+C1,2026-11-04,google_ads,,,,si,calificado,,,,,,
+C4,2026-11-04,google_ads,WEB,web,servicios,si,calificado,,,,,
+C5,2026-11-05,google_ads,,,,si,diagnostico,2026-11-01,,,,,
+C6,2026-11-05,google_ads,,,,si,calificado,,2026-11-06,,,,
